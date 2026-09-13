@@ -1,0 +1,30 @@
+[project]
+name = "abox-labs"
+version = "0.0.0"
+description = "Lab scripts for the abox sandbox (see docs/labs/)"
+requires-python = ">=3.13"
+dependencies = [
+  "requests>=2.32",
+]
+
+[dependency-groups]
+dev = [
+  "ruff>=0.14",
+  "pyright>=1.1",
+]
+
+[tool.uv]
+required-version = ">=0.12"
+
+# Single source of lint/type rules for the editor, the agents and CI.
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.pyright]
+include = ["docs/labs"]
+pythonVersion = "3.13"
+typeCheckingMode = "basic"

@@ -41,3 +41,8 @@ CLAUDE.md
 
 # Local lab models, builds and recordings
 .local/
+
+# Python
+.venv/
+__pycache__/
+.ruff_cache/
