@@ -20,6 +20,7 @@ abox is a **local AI infrastructure sandbox**. A single `make run` provisions a 
 | AI gateway | agentgateway | v2.2.1 |
 | Agent runtime | kagent | 0.10.1 |
 | Gateway API | gateway-api (experimental channel) | v1.6.2 |
+| Agent registry | agentregistry | chart 0.5.16 / image 0.5.18 |
 | Vector database | qdrant | 1.19.1 |
 | LLM observability | Arize Phoenix | 12.0.10 |
 | OCI artifact store | GHCR | — |
@@ -65,23 +66,28 @@ There is no Git polling. The cluster reconciles from OCI artifacts:
 make push → git tag v* → CI: flux push artifact → RSIP detects new tag → ResourceSet reconciles
 ```
 
-The RSIP filter `^\d+\.\d+\.\d+$` matches only clean semver tags. Pre-release and build metadata tags are ignored.
+The RSIP filter `^\d+\.\d+\.\d+$` matches only clean semver tags and `semver: ">=0.0.0"` sorts them as versions, so `0.6.10` correctly wins over `0.6.9`. Pre-release and build metadata tags are ignored.
 
 ### Directory layout
 
 ```
 bootstrap/           OpenTofu: cluster.tf, flux.tf, providers.tf, variables.tf
+  flux-instance.yaml FluxInstance applied by the bootstrap Job (no .spec.sync — Git-less)
 releases/
-  crds/              CRD HelmReleases (must reconcile before releases/)
-    gateway-api-crds.yaml
-    agentgateway-crds.yaml
-    kagent-crds.yaml
+  crds/              CRDs (must reconcile before releases/)
+    gateway-api-crds.yaml   GitRepository + Kustomization (experimental channel)
+    agentgateway-crds.yaml  HelmRelease
+    kagent-crds.yaml        HelmRelease
     kustomization.yaml
   agentgateway.yaml  agentgateway HelmRelease + Gateway resource
-  kagent.yaml        kagent HelmRelease + HTTPRoute + ReferenceGrant
+  agentregistry.yaml agentregistry HelmRelease
+  kagent.yaml        kagent HelmRelease (+ postRenderer) + HTTPRoute + ReferenceGrant
+  phoenix.yaml       Arize Phoenix HelmRelease
+  qdrant.yaml        Qdrant HelmRelease (HelmRepository source)
   kustomization.yaml
 scripts/
   setup.sh           Called by make run
+  fix-egress.sh      Repairs nested-Docker egress on Codespaces; no-op elsewhere
 .github/
   workflows/
     flux-push.yaml   Publishes releases/ as OCI artifact on v* tags
@@ -96,6 +102,9 @@ scripts/
 | kagent | `kagent` | AI agent runtime; exposes MCP server on `:8083`, UI on `:8080` |
 | HTTPRoute `kagent` | `kagent` | Routes `/api` → kagent MCP, `/` → kagent UI |
 | ReferenceGrant `kagent` | `kagent` | Allows the HTTPRoute to reference the gateway in a different namespace |
+| agentregistry | `agentregistry` | Agent/MCP inventory (`disableAuth: true` for the sandbox) |
+| qdrant | `qdrant` | Vector database |
+| phoenix | `phoenix` | LLM tracing/evals; startup probe widened to 10m for first-boot Alembic migrations |
 
 ---
 
@@ -128,7 +137,6 @@ scripts/
 | App HelmRelease without `dependsOn` pointing to its CRD release | CRD may not exist when app reconciles |
 | HTTPRoute referencing a gateway in another namespace without ReferenceGrant | Route will be rejected by the gateway controller |
 | Namespace resource only in `releases/crds/` when the app is in `releases/` | CRD kustomization runs in a separate reconcile; namespace may not exist when app installs |
-| Patch version > 9 without bumping minor | RSIP uses lexicographic sort: `0.3.10` < `0.3.9` |
 | `kubectl_manifest` replaced with `hashicorp/kubernetes` provider for RSIP/ResourceSet | `hashicorp/kubernetes` validates against CRD schema at plan time, breaking single-pass apply |
 | Pushing without verifying `flux get all` shows Ready | Broken releases are published to GHCR and reconciled automatically |
 
@@ -140,8 +148,10 @@ scripts/
 
 **`gavinbunney/kubectl` provider** — Used for RSIP and ResourceSet manifests because it skips CRD schema validation at plan time. This allows a single `tofu apply` to install Flux and immediately create Flux CRD instances.
 
-**kagent pinned to `0.7.23`** — Newer versions embed `+` build metadata in label values, which Kubernetes rejects as invalid. Do not upgrade without verifying label values are clean semver.
+**kagent `+` build metadata** — Flux appends the OCI digest to the chart version (`0.10.1+<digest>`), and kagent's chart leaks it into `app.kubernetes.io/version` and image tags, which Kubernetes rejects. `releases/kagent.yaml` fixes this with a `postRenderer` label patch and explicit image tags. A version bump must update the chart tag, the three image tags and the postRenderer value together.
 
-**`gateway-api-crds` as a Helm chart** — Managed via HelmRelease (`ghcr.io/den-vasyliev/gateway-api-crds:1.4.0`), not a raw Kustomization. This gives Flux lifecycle management (install, upgrade, uninstall) over the CRDs.
+**agentgateway held at `v2.2.1`** — Newer charts reference controller images that were never published.
+
+**Gateway API CRDs from Git, experimental channel** — `GitRepository` + `Kustomization` at `config/crd/experimental`, not a Helm chart. Experimental is required: agentgateway needs `v1alpha2` TLSRoute/TCPRoute served, and only that channel serves it.
 
 **Gateway listener allows all namespaces** — `allowedRoutes.namespaces.from: All` on the listener. This is intentional for a local sandbox — every new component can add an HTTPRoute without modifying the Gateway.

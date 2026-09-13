@@ -35,3 +35,9 @@ terraform.rc
 # Claude
 CLAUDE.md
 
+
+# macOS
+.DS_Store
+
+# Local lab models, builds and recordings
+.local/

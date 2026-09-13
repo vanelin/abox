@@ -39,7 +39,7 @@ make run  →  scripts/setup.sh
   → tofu apply (bootstrap/)
       → KinD cluster
       → Flux Operator + FluxInstance   via the upstream flux-operator-bootstrap module
-      → ResourceSetInputProvider   polls oci://ghcr.io/den-vasyliev/abox/releases
+      → ResourceSetInputProvider   polls oci://ghcr.io/vanelin/abox/releases
       → ResourceSet                creates OCIRepository + 2 Kustomizations
           → releases/crds/    gateway-api-crds, agentgateway-crds, kagent-crds
           → releases/         agentgateway (Gateway + GatewayClass)
@@ -54,7 +54,6 @@ Everything after the cluster is **gitless GitOps via OCI**: no Git polling, no d
 make push   # bumps patch version, tags, pushes → CI publishes OCI artifact → cluster reconciles
 ```
 
-> **Note:** RSIP tag sorting is lexicographic. If the patch version would exceed 9, bump the minor instead: `git tag vX.Y+1.0`.
 
 ## Directory layout
 

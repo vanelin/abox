@@ -67,7 +67,7 @@ When unsure: default to `[suggestion]`.
 - **Version bump** — Are all tag references updated consistently (chart + image tags)?
 - **RSIP / ResourceSet changes** — Is the `kubectl_manifest` provider still used (not `hashicorp/kubernetes`)? Does the filter regex still match only clean semver?
 - **Gateway changes** — Are `allowedRoutes` still correct? Does the GatewayClass name still match `agentgateway`?
-- **make push / CI changes** — Does the version bump logic still avoid patch > 9 without a minor bump?
+- **make push / CI changes** — Does the tag still match the RSIP filter (`^\d+\.\d+\.\d+$`, sorted by `semver`)?
 
 ### Skip (don't comment on these)
 
@@ -88,8 +88,8 @@ When unsure: default to `[suggestion]`.
 
 **Flag `[important]`:**
 - `hashicorp/kubernetes` provider used instead of `gavinbunney/kubectl` for RSIP or ResourceSet — breaks single-pass `tofu apply`
-- kagent bumped past `0.7.23` without verifying label values — `+` build metadata in labels is invalid in Kubernetes
-- Patch version in `make push` logic allowed to exceed 9 — RSIP lexicographic sort will stop picking it up
+- kagent version bumped without updating the chart tag, the three image tags and the `postRenderer` label value together — Flux appends `+<digest>` to the chart version and any place left on the chart default breaks with an invalid label or image tag
+- RSIP filter changed so tags are no longer matched as clean semver or no longer sorted with `semver` — a newer release will silently not be picked up
 
 **Suggest `[suggestion]`:**
 - A component exposes a UI but has no HTTPRoute to reach it
@@ -124,11 +124,11 @@ Every HelmRelease in `releases/` that uses a custom resource type must declare `
 **Cross-namespace ReferenceGrant**
 The Gateway lives in `agentgateway-system`. HTTPRoutes for new apps will be in their own namespaces. A ReferenceGrant is required in the app's namespace to allow the HTTPRoute to reference the gateway. Without it, the route is silently rejected. This is `[critical]`.
 
-**Lexicographic tag sorting**
-RSIP sorts OCI artifact tags lexicographically. `0.3.10` sorts before `0.3.9`, so RSIP won't detect `0.3.10` as newer. The `make push` logic must bump minor (not patch) when patch would exceed 9. Any change to `make push` or the RSIP filter that breaks this is `[important]`.
+**Semver tag selection**
+`make push` creates a Git tag `vX.Y.Z`; the workflow strips the `v` and publishes the OCI artifact as `X.Y.Z`. The RSIP selects the newest **OCI** tag with `includeTag: ^\d+\.\d+\.\d+$` and `semver: ">=0.0.0"`. Any change to `make push`, the workflow or the RSIP filter that produces OCI tags outside that pattern, or drops the `semver` sort, means new releases stop being detected. This is `[important]`.
 
 **kagent `+` build metadata**
-Kubernetes rejects label values containing `+`. kagent versions newer than `0.7.23` embed `+` in their labels. Do not approve a version bump without confirmation that label values are clean. This is `[important]`.
+Flux appends the OCI digest to the chart version (`0.10.1+<digest>`) and the kagent chart leaks it into `app.kubernetes.io/version` and default image tags, which Kubernetes rejects. `releases/kagent.yaml` pins the chart tag, `tag`, `controller.image.tag`, `ui.image.tag` and the `postRenderer` label value. A version bump that does not update all of them together is `[important]`.
 
 **`latest` tags**
 `ref.tag: latest` is non-reproducible and Flux treats it as a static tag (no update detection). Always use an explicit version. This is `[critical]`.

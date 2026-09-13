@@ -76,8 +76,8 @@ Use CODEBASE.md §Forbidden Patterns and REVIEW.md §What to Flag as your checkl
 - `ref.tag: latest` in any HelmRelease or OCIRepository
 - HTTPRoute referencing a gateway in another namespace without a ReferenceGrant
 - `hashicorp/kubernetes` provider used for RSIP or ResourceSet (must be `gavinbunney/kubectl`)
-- kagent version bumped past `0.7.23` without label validation
-- `make push` patch logic that would allow patch > 9
+- kagent version bumped without updating chart tag, image tags and the `postRenderer` label value together
+- RSIP filter, workflow or `make push` changed so the published **OCI** tags (`X.Y.Z`, Git tag minus the `v`) no longer match `^\d+\.\d+\.\d+$` or lose the `semver` sort
 
 ### False Positives
 
