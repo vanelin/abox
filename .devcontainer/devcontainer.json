@@ -41,6 +41,7 @@
         "ms-azuretools.vscode-containers",
         "timonwong.shellcheck",
         "github.vscode-github-actions",
+        "mhutchie.git-graph",
         // work on top of the cluster: agents / evals / RAG are Python
         "ms-python.python",
         "ms-python.vscode-pylance",
