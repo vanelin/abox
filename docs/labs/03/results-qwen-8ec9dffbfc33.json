@@ -1,0 +1,828 @@
+{
+ "model": "qwen",
+ "file": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+ "pooling": "last",
+ "layernorm_before_truncate": false,
+ "run_id": "8ec9dffbfc33",
+ "corpus_sha256": "ddea3b90df9aa4025e0448c1e90c610a99b18b70e3ad8ca0c14f060b1e2c9257",
+ "questions_sha256": "42c384bf267da96669dd99b6afed7b303a4bb257095f986b57f24194551e8ebf",
+ "model_sha256": "06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439",
+ "model_pin_source": "Makefile MODEL_SPECS",
+ "runtime_version": "version: 0.4.0-dev (build 1, commit 5266f24)\nbuilt with GNU 13.3.0 for Linux x86_64",
+ "postprocessing": "truncate -> L2 (including full)",
+ "settings": {
+  "threads": 2,
+  "threads_batch": 2,
+  "parallel": 1,
+  "ctx_size": 2048,
+  "batch": 8
+ },
+ "full_dim": 1024,
+ "max_tokens": 724,
+ "max_query_tokens": 49,
+ "over_ctx": [],
+ "embedding_seconds": 256.8,
+ "rss_mb": 1741,
+ "query_p50_ms": 31.4,
+ "summary": {
+  "1024": {
+   "all": {
+    "hit1": "6/10",
+    "hit3": "8/10"
+   },
+   "en": {
+    "hit1": "5/7",
+    "hit3": "6/7"
+   },
+   "uk": {
+    "hit1": "1/3",
+    "hit3": "2/3"
+   }
+  },
+  "256": {
+   "all": {
+    "hit1": "7/10",
+    "hit3": "9/10"
+   },
+   "en": {
+    "hit1": "5/7",
+    "hit3": "7/7"
+   },
+   "uk": {
+    "hit1": "2/3",
+    "hit3": "2/3"
+   }
+  },
+  "128": {
+   "all": {
+    "hit1": "6/10",
+    "hit3": "9/10"
+   },
+   "en": {
+    "hit1": "5/7",
+    "hit3": "7/7"
+   },
+   "uk": {
+    "hit1": "1/3",
+    "hit3": "2/3"
+   }
+  }
+ },
+ "lexical_baseline": {
+  "all": {
+   "hit1": "3/10",
+   "hit3": "5/10"
+  },
+  "en": {
+   "hit1": "2/7",
+   "hit3": "4/7"
+  },
+  "uk": {
+   "hit1": "1/3",
+   "hit3": "1/3"
+  }
+ },
+ "details": {
+  "1024": [
+   {
+    "q": "q01",
+    "lang": "en",
+    "top3": [
+     "bootstrap/variables.tf:12-17",
+     ".github/workflows/flux-push.yaml:1-47",
+     "CODEBASE.md:61-70"
+    ],
+    "hit1": false,
+    "hit3": false
+   },
+   {
+    "q": "q02",
+    "lang": "en",
+    "top3": [
+     "releases/kagent.yaml:16-90",
+     "docs/adr/0001-embedding-model.md:8-13",
+     "releases/kagent.yaml:1-4"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q03",
+    "lang": "uk",
+    "top3": [
+     ".github/workflows/flux-push.yaml:1-47",
+     "README.md:51-57",
+     "releases/crds/kagent-crds.yaml:5-15"
+    ],
+    "hit1": false,
+    "hit3": true
+   },
+   {
+    "q": "q04",
+    "lang": "en",
+    "top3": [
+     "releases/agentgateway.yaml:5-18",
+     "releases/crds/agentgateway-crds.yaml:5-15",
+     "CODEBASE.md:145-157"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q05",
+    "lang": "en",
+    "top3": [
+     "scripts/setup.sh:104-132",
+     "CODEBASE.md:71-95",
+     "CODEBASE.md:33-60"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q06",
+    "lang": "uk",
+    "top3": [
+     "CODEBASE.md:71-95",
+     "CODEBASE.md:33-60",
+     "README.md:58-68"
+    ],
+    "hit1": false,
+    "hit3": false
+   },
+   {
+    "q": "q07",
+    "lang": "en",
+    "top3": [
+     "README.md:69-76",
+     "REVIEW.md:63-71",
+     "CODEBASE.md:33-60"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q08",
+    "lang": "en",
+    "top3": [
+     "scripts/fix-egress.sh:1-21",
+     "Makefile:26-29",
+     "scripts/fix-egress.sh:51-79"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q09",
+    "lang": "uk",
+    "top3": [
+     "docs/adr/0001-embedding-model.md:14-22",
+     "Makefile:50-62",
+     "docs/adr/0001-embedding-model.md:23-42"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q10",
+    "lang": "en",
+    "top3": [
+     "Makefile:50-62",
+     "docs/adr/0001-embedding-model.md:14-22",
+     "docs/adr/0001-embedding-model.md:23-42"
+    ],
+    "hit1": false,
+    "hit3": true
+   }
+  ],
+  "256": [
+   {
+    "q": "q01",
+    "lang": "en",
+    "top3": [
+     "bootstrap/variables.tf:12-17",
+     "bootstrap/flux.tf:23-51",
+     "CODEBASE.md:61-70"
+    ],
+    "hit1": false,
+    "hit3": true
+   },
+   {
+    "q": "q02",
+    "lang": "en",
+    "top3": [
+     "CODEBASE.md:145-157",
+     "docs/adr/0001-embedding-model.md:8-13",
+     "releases/kagent.yaml:16-90"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q03",
+    "lang": "uk",
+    "top3": [
+     "README.md:51-57",
+     ".github/workflows/flux-push.yaml:1-47",
+     "CODEBASE.md:71-95"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q04",
+    "lang": "en",
+    "top3": [
+     "releases/agentgateway.yaml:5-18",
+     "releases/crds/agentgateway-crds.yaml:5-15",
+     "CODEBASE.md:145-157"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q05",
+    "lang": "en",
+    "top3": [
+     "scripts/setup.sh:104-132",
+     "CODEBASE.md:71-95",
+     "CODEBASE.md:33-60"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q06",
+    "lang": "uk",
+    "top3": [
+     "CODEBASE.md:71-95",
+     "README.md:58-68",
+     "CODEBASE.md:33-60"
+    ],
+    "hit1": false,
+    "hit3": false
+   },
+   {
+    "q": "q07",
+    "lang": "en",
+    "top3": [
+     "README.md:69-76",
+     "CODEBASE.md:33-60",
+     "releases/crds/kagent-crds.yaml:16-31"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q08",
+    "lang": "en",
+    "top3": [
+     "scripts/fix-egress.sh:1-21",
+     "Makefile:26-29",
+     "scripts/fix-egress.sh:51-79"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q09",
+    "lang": "uk",
+    "top3": [
+     "docs/adr/0001-embedding-model.md:14-22",
+     "Makefile:50-62",
+     "CODEBASE.md:13-30"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q10",
+    "lang": "en",
+    "top3": [
+     "Makefile:50-62",
+     "docs/adr/0001-embedding-model.md:14-22",
+     "docs/adr/0001-embedding-model.md:23-42"
+    ],
+    "hit1": false,
+    "hit3": true
+   }
+  ],
+  "128": [
+   {
+    "q": "q01",
+    "lang": "en",
+    "top3": [
+     "bootstrap/variables.tf:12-17",
+     "CODEBASE.md:61-70",
+     "bootstrap/flux.tf:23-51"
+    ],
+    "hit1": false,
+    "hit3": true
+   },
+   {
+    "q": "q02",
+    "lang": "en",
+    "top3": [
+     "CODEBASE.md:145-157",
+     "releases/kagent.yaml:5-15",
+     "releases/kagent.yaml:16-90"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q03",
+    "lang": "uk",
+    "top3": [
+     ".github/workflows/flux-push.yaml:1-47",
+     "README.md:51-57",
+     "README.md:69-76"
+    ],
+    "hit1": false,
+    "hit3": true
+   },
+   {
+    "q": "q04",
+    "lang": "en",
+    "top3": [
+     "releases/agentgateway.yaml:5-18",
+     "releases/crds/agentgateway-crds.yaml:5-15",
+     "CODEBASE.md:145-157"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q05",
+    "lang": "en",
+    "top3": [
+     "scripts/setup.sh:104-132",
+     "CODEBASE.md:33-60",
+     "CODEBASE.md:71-95"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q06",
+    "lang": "uk",
+    "top3": [
+     "CODEBASE.md:71-95",
+     "README.md:58-68",
+     "CONTRIBUTING.md:7-13"
+    ],
+    "hit1": false,
+    "hit3": false
+   },
+   {
+    "q": "q07",
+    "lang": "en",
+    "top3": [
+     "README.md:69-76",
+     "CONTRIBUTING.md:32-38",
+     "REVIEW.md:116-137"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q08",
+    "lang": "en",
+    "top3": [
+     "scripts/fix-egress.sh:1-21",
+     "Makefile:26-29",
+     "scripts/fix-egress.sh:51-79"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q09",
+    "lang": "uk",
+    "top3": [
+     "docs/adr/0001-embedding-model.md:14-22",
+     "Makefile:50-62",
+     "CODEBASE.md:13-30"
+    ],
+    "hit1": true,
+    "hit3": true
+   },
+   {
+    "q": "q10",
+    "lang": "en",
+    "top3": [
+     "Makefile:50-62",
+     "docs/adr/0001-embedding-model.md:23-42",
+     "docs/adr/0001-embedding-model.md:14-22"
+    ],
+    "hit1": false,
+    "hit3": true
+   }
+  ]
+ },
+ "baseline_details": [
+  {
+   "q": "q01",
+   "lang": "en",
+   "top3": [
+    "REVIEW.md:116-137",
+    "CODEBASE.md:71-95",
+    "CODEBASE.md:33-60"
+   ],
+   "hit1": false,
+   "hit3": false
+  },
+  {
+   "q": "q02",
+   "lang": "en",
+   "top3": [
+    "docs/adr/0001-embedding-model.md:8-13",
+    "REVIEW.md:116-137",
+    "CODEBASE.md:145-157"
+   ],
+   "hit1": false,
+   "hit3": true
+  },
+  {
+   "q": "q03",
+   "lang": "uk",
+   "top3": [
+    ".github/workflows/flux-push.yaml:1-47",
+    "CODEBASE.md:13-30",
+    "CODEBASE.md:33-60"
+   ],
+   "hit1": false,
+   "hit3": false
+  },
+  {
+   "q": "q04",
+   "lang": "en",
+   "top3": [
+    "CODEBASE.md:145-157",
+    "releases/agentgateway.yaml:5-18",
+    "CODEBASE.md:13-30"
+   ],
+   "hit1": true,
+   "hit3": true
+  },
+  {
+   "q": "q05",
+   "lang": "en",
+   "top3": [
+    "CODEBASE.md:132-144",
+    "CONTRIBUTING.md:32-38",
+    "README.md:35-50"
+   ],
+   "hit1": false,
+   "hit3": false
+  },
+  {
+   "q": "q06",
+   "lang": "uk",
+   "top3": [
+    ".devcontainer/Dockerfile:1-37",
+    ".github/workflows/flux-push.yaml:1-47",
+    "CODEBASE.md:7-12"
+   ],
+   "hit1": false,
+   "hit3": false
+  },
+  {
+   "q": "q07",
+   "lang": "en",
+   "top3": [
+    "CODEBASE.md:33-60",
+    "CODEBASE.md:71-95",
+    "CODEBASE.md:132-144"
+   ],
+   "hit1": true,
+   "hit3": true
+  },
+  {
+   "q": "q08",
+   "lang": "en",
+   "top3": [
+    "CODEBASE.md:71-95",
+    "Makefile:1-14",
+    "scripts/fix-egress.sh:1-21"
+   ],
+   "hit1": false,
+   "hit3": true
+  },
+  {
+   "q": "q09",
+   "lang": "uk",
+   "top3": [
+    "docs/adr/0001-embedding-model.md:14-22",
+    "docs/adr/0001-embedding-model.md:23-42",
+    "docs/adr/0001-embedding-model.md:47-54"
+   ],
+   "hit1": true,
+   "hit3": true
+  },
+  {
+   "q": "q10",
+   "lang": "en",
+   "top3": [
+    "REVIEW.md:54-62",
+    "REVIEW.md:116-137",
+    "docs/adr/0001-embedding-model.md:14-22"
+   ],
+   "hit1": false,
+   "hit3": false
+  }
+ ],
+ "qdrant": {
+  "1024": {
+   "collection": "lab03_qwen_1024_8ec9dffbfc33",
+   "top3_agree": "9/10",
+   "upsert_seconds": 0.164,
+   "details": [
+    {
+     "q": "q01",
+     "top3": [
+      "bootstrap/variables.tf:12-17",
+      ".github/workflows/flux-push.yaml:1-47",
+      "CODEBASE.md:61-70"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q02",
+     "top3": [
+      "releases/kagent.yaml:16-90",
+      "docs/adr/0001-embedding-model.md:8-13",
+      "releases/crds/kagent-crds.yaml:1-4"
+     ],
+     "agrees": false
+    },
+    {
+     "q": "q03",
+     "top3": [
+      ".github/workflows/flux-push.yaml:1-47",
+      "README.md:51-57",
+      "releases/crds/kagent-crds.yaml:5-15"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q04",
+     "top3": [
+      "releases/agentgateway.yaml:5-18",
+      "releases/crds/agentgateway-crds.yaml:5-15",
+      "CODEBASE.md:145-157"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q05",
+     "top3": [
+      "scripts/setup.sh:104-132",
+      "CODEBASE.md:71-95",
+      "CODEBASE.md:33-60"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q06",
+     "top3": [
+      "CODEBASE.md:71-95",
+      "CODEBASE.md:33-60",
+      "README.md:58-68"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q07",
+     "top3": [
+      "README.md:69-76",
+      "REVIEW.md:63-71",
+      "CODEBASE.md:33-60"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q08",
+     "top3": [
+      "scripts/fix-egress.sh:1-21",
+      "Makefile:26-29",
+      "scripts/fix-egress.sh:51-79"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q09",
+     "top3": [
+      "docs/adr/0001-embedding-model.md:14-22",
+      "Makefile:50-62",
+      "docs/adr/0001-embedding-model.md:23-42"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q10",
+     "top3": [
+      "Makefile:50-62",
+      "docs/adr/0001-embedding-model.md:14-22",
+      "docs/adr/0001-embedding-model.md:23-42"
+     ],
+     "agrees": true
+    }
+   ]
+  },
+  "256": {
+   "collection": "lab03_qwen_256_8ec9dffbfc33",
+   "top3_agree": "10/10",
+   "upsert_seconds": 0.048,
+   "details": [
+    {
+     "q": "q01",
+     "top3": [
+      "bootstrap/variables.tf:12-17",
+      "bootstrap/flux.tf:23-51",
+      "CODEBASE.md:61-70"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q02",
+     "top3": [
+      "CODEBASE.md:145-157",
+      "docs/adr/0001-embedding-model.md:8-13",
+      "releases/kagent.yaml:16-90"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q03",
+     "top3": [
+      "README.md:51-57",
+      ".github/workflows/flux-push.yaml:1-47",
+      "CODEBASE.md:71-95"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q04",
+     "top3": [
+      "releases/agentgateway.yaml:5-18",
+      "releases/crds/agentgateway-crds.yaml:5-15",
+      "CODEBASE.md:145-157"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q05",
+     "top3": [
+      "scripts/setup.sh:104-132",
+      "CODEBASE.md:71-95",
+      "CODEBASE.md:33-60"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q06",
+     "top3": [
+      "CODEBASE.md:71-95",
+      "README.md:58-68",
+      "CODEBASE.md:33-60"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q07",
+     "top3": [
+      "README.md:69-76",
+      "CODEBASE.md:33-60",
+      "releases/crds/kagent-crds.yaml:16-31"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q08",
+     "top3": [
+      "scripts/fix-egress.sh:1-21",
+      "Makefile:26-29",
+      "scripts/fix-egress.sh:51-79"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q09",
+     "top3": [
+      "docs/adr/0001-embedding-model.md:14-22",
+      "Makefile:50-62",
+      "CODEBASE.md:13-30"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q10",
+     "top3": [
+      "Makefile:50-62",
+      "docs/adr/0001-embedding-model.md:14-22",
+      "docs/adr/0001-embedding-model.md:23-42"
+     ],
+     "agrees": true
+    }
+   ]
+  },
+  "128": {
+   "collection": "lab03_qwen_128_8ec9dffbfc33",
+   "top3_agree": "10/10",
+   "upsert_seconds": 0.031,
+   "details": [
+    {
+     "q": "q01",
+     "top3": [
+      "bootstrap/variables.tf:12-17",
+      "CODEBASE.md:61-70",
+      "bootstrap/flux.tf:23-51"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q02",
+     "top3": [
+      "CODEBASE.md:145-157",
+      "releases/kagent.yaml:5-15",
+      "releases/kagent.yaml:16-90"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q03",
+     "top3": [
+      ".github/workflows/flux-push.yaml:1-47",
+      "README.md:51-57",
+      "README.md:69-76"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q04",
+     "top3": [
+      "releases/agentgateway.yaml:5-18",
+      "releases/crds/agentgateway-crds.yaml:5-15",
+      "CODEBASE.md:145-157"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q05",
+     "top3": [
+      "scripts/setup.sh:104-132",
+      "CODEBASE.md:33-60",
+      "CODEBASE.md:71-95"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q06",
+     "top3": [
+      "CODEBASE.md:71-95",
+      "README.md:58-68",
+      "CONTRIBUTING.md:7-13"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q07",
+     "top3": [
+      "README.md:69-76",
+      "CONTRIBUTING.md:32-38",
+      "REVIEW.md:116-137"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q08",
+     "top3": [
+      "scripts/fix-egress.sh:1-21",
+      "Makefile:26-29",
+      "scripts/fix-egress.sh:51-79"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q09",
+     "top3": [
+      "docs/adr/0001-embedding-model.md:14-22",
+      "Makefile:50-62",
+      "CODEBASE.md:13-30"
+     ],
+     "agrees": true
+    },
+    {
+     "q": "q10",
+     "top3": [
+      "Makefile:50-62",
+      "docs/adr/0001-embedding-model.md:23-42",
+      "docs/adr/0001-embedding-model.md:14-22"
+     ],
+     "agrees": true
+    }
+   ]
+  }
+ }
+}

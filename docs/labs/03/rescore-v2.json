@@ -1,0 +1,60 @@
+{
+ "label_revision": 2,
+ "rescored_from_saved_top3": true,
+ "rows": {
+  "nomic_768": {
+   "hit1": "5/10",
+   "hit3": "7/10",
+   "uk_hit3": "1/3",
+   "source": "results-nomic-086a6a22fa49.json"
+  },
+  "nomic_256": {
+   "hit1": "3/10",
+   "hit3": "7/10",
+   "uk_hit3": "1/3",
+   "source": "results-nomic-086a6a22fa49.json"
+  },
+  "nomic_128": {
+   "hit1": "2/10",
+   "hit3": "6/10",
+   "uk_hit3": "1/3",
+   "source": "results-nomic-086a6a22fa49.json"
+  },
+  "gemma_768": {
+   "hit1": "6/10",
+   "hit3": "7/10",
+   "uk_hit3": "1/3",
+   "source": "results-gemma-b64b502449fa.json"
+  },
+  "gemma_256": {
+   "hit1": "5/10",
+   "hit3": "6/10",
+   "uk_hit3": "1/3",
+   "source": "results-gemma-b64b502449fa.json"
+  },
+  "gemma_128": {
+   "hit1": "2/10",
+   "hit3": "6/10",
+   "uk_hit3": "1/3",
+   "source": "results-gemma-b64b502449fa.json"
+  },
+  "qwen_1024": {
+   "hit1": "6/10",
+   "hit3": "8/10",
+   "uk_hit3": "2/3",
+   "source": "results-qwen-8ec9dffbfc33.json"
+  },
+  "qwen_256": {
+   "hit1": "7/10",
+   "hit3": "9/10",
+   "uk_hit3": "2/3",
+   "source": "results-qwen-8ec9dffbfc33.json"
+  },
+  "qwen_128": {
+   "hit1": "6/10",
+   "hit3": "9/10",
+   "uk_hit3": "2/3",
+   "source": "results-qwen-8ec9dffbfc33.json"
+  }
+ }
+}

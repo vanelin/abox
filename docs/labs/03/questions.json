@@ -1,0 +1,106 @@
+{
+ "corpus": "chunks.jsonl",
+ "corpus_sha256": "ddea3b90df9aa4025e0448c1e90c610a99b18b70e3ad8ca0c14f060b1e2c9257",
+ "git_head": "5ad70241ec6a010fabf9b14d5539d7b9b7382a14",
+ "note": "Corpus captures working-tree file contents; git_head alone does not identify it. relevant_ids are alternative relevant chunks: any match counts for hit@k. No unanswerable queries are included. Token limits must be checked per model with prompts before indexing.",
+ "questions": [
+  {
+   "id": "q01",
+   "language": "en",
+   "question": "Where is selection of the newest semver tag for the releases OCI artifact configured?",
+   "relevant_ids": [
+    "bootstrap/flux.tf:23-51"
+   ]
+  },
+  {
+   "id": "q02",
+   "language": "en",
+   "question": "Why does kagent need a postRenderer?",
+   "relevant_ids": [
+    "releases/kagent.yaml:16-90",
+    "CODEBASE.md:145-157"
+   ]
+  },
+  {
+   "id": "q03",
+   "language": "uk",
+   "question": "Як зробити реліз у мій GHCR?",
+   "relevant_ids": [
+    "Makefile:39-49",
+    "README.md:51-57",
+    "CODEBASE.md:126-131"
+   ]
+  },
+  {
+   "id": "q04",
+   "language": "en",
+   "question": "Why is agentgateway held at v2.2.1?",
+   "relevant_ids": [
+    "CODEBASE.md:145-157",
+    "releases/agentgateway.yaml:5-18"
+   ]
+  },
+  {
+   "id": "q05",
+   "language": "en",
+   "question": "How does setup verify that Flux has finished reconciling the releases?",
+   "relevant_ids": [
+    "scripts/setup.sh:104-132"
+   ]
+  },
+  {
+   "id": "q06",
+   "language": "uk",
+   "question": "Звідки Flux отримує маніфести застосунків?",
+   "relevant_ids": [
+    "CODEBASE.md:61-70",
+    "README.md:35-50",
+    "bootstrap/flux.tf:52-110"
+   ]
+  },
+  {
+   "id": "q07",
+   "language": "en",
+   "question": "How is installation of CRDs before applications enforced?",
+   "relevant_ids": [
+    "bootstrap/flux.tf:52-110",
+    "CODEBASE.md:33-60",
+    "README.md:69-76"
+   ]
+  },
+  {
+   "id": "q08",
+   "language": "en",
+   "question": "How does fix-egress repair traffic blocked by nested Docker?",
+   "relevant_ids": [
+    "scripts/fix-egress.sh:1-21",
+    "scripts/fix-egress.sh:24-50"
+   ]
+  },
+  {
+   "id": "q09",
+   "language": "uk",
+   "question": "На яких CPU і RAM плануємо запускати embeddings?",
+   "relevant_ids": [
+    "docs/adr/0001-embedding-model.md:14-22"
+   ]
+  },
+  {
+   "id": "q10",
+   "language": "en",
+   "question": "Which embedding models are shortlisted and what are their tradeoffs?",
+   "relevant_ids": [
+    "docs/adr/0001-embedding-model.md:23-42"
+   ]
+  }
+ ],
+ "label_revision": 2,
+ "label_changes": [
+  {
+   "q": "q04",
+   "added": "releases/agentgateway.yaml:5-18",
+   "reason": "OCIRepository comment states why the chart is held at v2.2.1; found first by all three models, missed in v1 labelling",
+   "date": "2026-09-13"
+  }
+ ]
+}

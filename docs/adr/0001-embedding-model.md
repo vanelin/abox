@@ -42,7 +42,7 @@ Further reading: [Awesome Search — Embeddings](https://frutik.github.io/awesom
 
 ## Decision
 
-Choose Qwen3-Embedding-0.6B Q8_0 at 256 dimensions for local repository retrieval, based on the experiment below. This decision applies to our lab corpus and can be revisited with broader evaluation.
+Choose Qwen3-Embedding-0.6B Q8_0 at 256 dimensions for local repository retrieval, based on the experiment below. This decision applies to this repository as tested and can be revisited with broader evaluation.
 
 ## Test after discussion
 
@@ -65,7 +65,7 @@ Query: <question>
 
 Take the first 256 coordinates of each raw 1024-dimensional document/query vector, then L2-normalize and search with cosine similarity. In this comparison, Nomic used LayerNorm before truncation and L2 normalization, including at full dimension; Gemma used truncation then L2. All models used a 2048-token context, two CPU threads for both generation and batch processing, one server slot, and client batches of eight chunks.
 
-The corpus contained 144 chunks and ten labelled questions (seven English, three Ukrainian). Results below use corrected labels v2; hit@k counts questions with any accepted block in the first k results.
+The chunk set contained 144 chunks and ten labelled questions (seven English, three Ukrainian). The latest runs use corrected labels v2 and reproduce the previous corrected retrieval scores; hit@k counts questions with any accepted block in the first k results.
 
 | Model | Dimensions | hit@1 | hit@3 | UA hit@3 |
 |---|---|---|---|---|
@@ -80,23 +80,25 @@ The corpus contained 144 chunks and ten labelled questions (seven English, three
 | Qwen3-Embedding-0.6B | 128 | 6/10 | 9/10 | 2/3 |
 | Lexical baseline | — | 3/10 | 5/10 | 1/3 |
 
-Qwen 256 had the highest hit@1 (7/10) and tied Qwen 128 for the highest hit@3 (9/10). We choose 256 to retain its better first-result ranking. It uses one quarter of the raw vector storage of Qwen full, at the same numeric precision. Nomic was lighter and faster at embedding the corpus, but retrieved fewer labelled answers. Qwen's measured resource use was practical for a sequential run in this Codespace.
+Qwen 256 had the highest hit@1 (7/10) and tied Qwen 128 for the highest hit@3 (9/10). We choose 256 to retain its better first-result ranking. It uses one quarter of the raw vector storage of Qwen full, at the same numeric precision. Nomic was lighter and faster at embedding all chunks, but retrieved fewer labelled answers. Qwen's measured resource use was practical for a sequential run in this Codespace.
 
-| Model | Corpus embedding time | RSS after embedding | Repeated-query p50 |
-|---|---|---|---|
-| Nomic | 61.0 s | 305 MB | 68.7 ms |
-| EmbeddingGemma | 62.6 s | 1239 MB | 109.7 ms |
-| Qwen3-Embedding-0.6B | 254.6 s | 1741 MB | 48.0 ms |
+| Model | Embedding time, all chunks (run 1 / run 2) | RSS after embedding | Repeated-query p50 (run 1 / run 2) | Longest chunk, tokens | Longest query, tokens |
+|---|---|---|---|---|---|
+| Nomic | 61.0 s / 59.9 s | 305 MB | 68.7 ms / 67.7 ms | 720 | 40 |
+| EmbeddingGemma | 62.6 s / 69.4 s | 1239 MB | 109.7 ms / 93.3 ms | 818 | 26 |
+| Qwen3-Embedding-0.6B | 254.6 s / 256.8 s | 1741 MB | 48.0 ms / 31.4 ms | 724 | 49 |
 
-These are preliminary results on ten questions, not evidence of a universal model ranking or guaranteed lossless truncation. Question q06 (“Звідки Flux отримує маніфести застосунків?”) remained a miss at Qwen 256 and is an open weakness for Ukrainian retrieval. Qwen's approximately 255 seconds measure corpus embedding generation, not total Qdrant indexing. RSS was sampled after embedding, not measured as peak memory. The 48 ms p50 comes from ten repetitions of one warmed query and may benefit from caching; it does not measure latency for a new query or establish a pooling-related speed advantage.
+The second full run reproduced all nine corrected hit@1/hit@3 scores and the same sampled RSS; timings changed. The repeated-query p50 (Qwen 48.0 ms then 31.4 ms) is not a measurement of new-query latency. Token maxima cover the same 144 chunks and ten questions, including each model's prompts and special tokens (`add_special=true`, `parse_special=true`). They show context usage against the common 2048-token limit, not tokenizer quality or speed. Maxima alone cannot establish the total token count or work per chunk, and the instruction-only token count was not recorded. Per-language counts, total/median/p95 token counts and tokenization time were not saved.
 
-Qdrant returned the same ordered top-3 as in-memory cosine search for all ten questions in all nine model/dimension collections. This verifies search agreement, not the correctness of labels or the entire embedding pipeline. Language metrics are recorded; chunk-type breakdowns and a separate held-out evaluation were not performed.
+These are preliminary results on ten questions, not evidence of a universal model ranking or guaranteed lossless truncation. Question q06 (“Звідки Flux отримує маніфести застосунків?”) remained a miss at Qwen 256 and is an open weakness for Ukrainian retrieval. Qwen's approximately 255 seconds measure embedding generation for all chunks, not total Qdrant indexing. RSS was sampled after embedding, not measured as peak memory. The repeated-query p50 (48 ms, then 31 ms on the second run) comes from ten repetitions of one warmed query and may benefit from caching; it does not measure latency for a new query or establish a pooling-related speed advantage.
+
+In the latest runs, ordered top-3 IDs agreed with in-memory search on 9/10 questions for Nomic 768, Gemma 256/128 and Qwen 1024, and on 10/10 for the other five variants. Every differing ID refers to an identical Namespace chunk: Nomic q04 and Gemma q02 swap duplicate chunks, while Qwen full q02 substitutes a duplicate at position 3. Top-3 text is identical in all 90 comparisons, and hit@1/hit@3 are unchanged. Raw similarity scores were not saved. This verifies agreement by retrieved content, not label correctness or the entire embedding pipeline. Language metrics are recorded; chunk-type breakdowns and a separate held-out evaluation were not performed.
 
 ### Label correction
 
-After inspecting failures, we added `releases/agentgateway.yaml:5-18` as an alternative correct answer for q04: its comment explains why the chart is held at v2.2.1. Only this label changed. We rescored all nine variants and the baseline from their saved top-3 without rerunning models or changing the corpus. This raised Qwen's hit@1 too; Ukrainian scores and the baseline were unchanged. For q01, the expected RSIP block remains correct: the default release version does not configure newest-semver selection.
+After inspecting failures, we added `releases/agentgateway.yaml:5-18` as an alternative correct answer for q04: its comment explains why the chart is held at v2.2.1. Only this label changed. We rescored all nine variants and the baseline from their saved top-3 without rerunning models or changing the chunk set. This raised Qwen's hit@1 too; Ukrainian scores and the baseline were unchanged. For q01, the expected RSIP block remains correct: the default release version does not configure newest-semver selection.
 
-Original results with v1 labels, for comparison:
+Initial results with v1 labels, for comparison (also reproduced by rescoring the latest saved top-3 with v1):
 
 | Model | Dimensions | hit@1 | hit@3 | UA hit@3 |
 |---|---|---|---|---|
@@ -111,10 +113,12 @@ Original results with v1 labels, for comparison:
 | Qwen3-Embedding-0.6B | 128 | 5/10 | 9/10 | 2/3 |
 | Lexical baseline | — | 3/10 | 5/10 | 1/3 |
 
-Local evidence is stored in gitignored `.local/lab03/`: `questions.v1.json`, corrected `questions.json`, `rescore-v2.json`, and `results-nomic-7bd17b03d9d7.json`, `results-gemma-5acf01fd57aa.json`, `results-qwen-efaf7a1db4f9.json`. Corpus SHA256: `ddea3b90df9aa4025e0448c1e90c610a99b18b70e3ad8ca0c14f060b1e2c9257`. The corpus captures the working tree at preparation time; later ADR edits are not included. The eval/chunking scripts, corpus and raw results are not committed, so this repository records the decision and measurements but does not contain the complete reproduction bundle.
+Evidence is stored in `docs/labs/03/`: the frozen chunk set (`chunks.jsonl`, SHA256 `ddea3b90df9aa4025e0448c1e90c610a99b18b70e3ad8ca0c14f060b1e2c9257`), labels v1 and v2, `rescore-v2.json`, the latest per-run result files (`results-gemma-b64b502449fa.json`, `results-nomic-086a6a22fa49.json`, `results-qwen-8ec9dffbfc33.json`), and the `chunk.py`, `eval.py` and `rescore.py` scripts. The chunk set captures the working tree at preparation time; later edits to this ADR, CHANGELOG and Makefile are not in it, so regenerating from a newer commit gives a different set.
+
+The initial per-run JSON files remain in gitignored `.local/lab03/`; they were replaced in this bundle by the latest runs.
 
 ## Consequences
 
-At the same numeric precision, 256 values take one third of the raw vector storage of 768 and one quarter of 1024; 128 takes one sixth and one eighth. Total Qdrant size also includes text, payload and the index. Shorter vectors do not shrink the model or guarantee unchanged quality. Changing the model requires re-embedding the corpus and queries consistently.
+At the same numeric precision, 256 values take one third of the raw vector storage of 768 and one quarter of 1024; 128 takes one sixth and one eighth. Total Qdrant size also includes text, payload and the index. Shorter vectors do not shrink the model or guarantee unchanged quality. Changing the model requires re-embedding all chunks and queries consistently.
 
 Model selection is accepted for this lab. Kubernetes deployment and agent memory management remain later tasks.
