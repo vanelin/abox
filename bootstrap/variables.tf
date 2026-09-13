@@ -7,13 +7,13 @@ variable "cluster_name" {
 variable "oci_registry" {
   description = "OCI registry base URL"
   type        = string
-  default     = "oci://ghcr.io/den-vasyliev/abox"
+  default     = "oci://ghcr.io/vanelin/abox"
 }
 
 variable "releases_version" {
   description = "Default tag for releases OCI artifact bootstrap"
   type        = string
-  default     = "0.1.0"
+  default     = "0.6.5"
 }
 
 variable "flux_operator_version" {

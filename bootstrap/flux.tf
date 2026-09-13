@@ -42,6 +42,8 @@ resource "kubectl_manifest" "rsip" {
       url: ${var.oci_registry}/releases
       filter:
         includeTag: "^\\d+\\.\\d+\\.\\d+$"
+        # Sort by semver, not lexicographically, so 0.6.10 wins over 0.6.9.
+        semver: ">=0.0.0"
         limit: 1
       defaultValues:
         tag: "${var.releases_version}"

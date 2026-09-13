@@ -25,10 +25,15 @@ if [[ -z "${PLATFORM_OS}" || -z "${PLATFORM_ARCH}" ]]; then
   log "Unsupported platform $(uname -s)/$(uname -m); binary installs will be skipped"
 fi
 
-# Install OpenTofu
-log "Installing OpenTofu..."
-curl -fsSL https://get.opentofu.org/install-opentofu.sh | sh -s -- --install-method standalone
-log "OpenTofu installed"
+# Install OpenTofu, unless a version manager (tenv) already provides it and
+# will pick the version from .opentofu-version.
+if command -v tofu >/dev/null 2>&1; then
+  log "tofu already on PATH ($(command -v tofu)), skipping install"
+else
+  log "Installing OpenTofu..."
+  curl -fsSL https://get.opentofu.org/install-opentofu.sh | sh -s -- --install-method standalone
+  log "OpenTofu installed"
+fi
 
 # Install kind CLI. The cluster itself is created by the tehcyx/kind Terraform
 # provider, which embeds kind, but the CLI is needed for node-level work:
@@ -94,6 +99,34 @@ if [[ -n "${PLATFORM_OS}" && -n "${PLATFORM_ARCH}" ]]; then
   log "cloud-provider-kind started (pid $!)"
 else
   log "Skipping cloud-provider-kind install"
+fi
+
+# tofu apply returns once Flux is bootstrapped, not once the releases are
+# reconciled. The ResourceSet creates the 'releases' Kustomization only after
+# the RSIP has polled the registry, so wait for it to appear, then for Ready
+# (wait: true on it covers every HelmRelease underneath).
+if ! command -v kubectl >/dev/null 2>&1; then
+  log "ERROR: kubectl not found, cannot verify the releases reconciled"
+  exit 1
+fi
+log "Waiting for the releases Kustomization to be created..."
+created=0
+for _ in $(seq 1 60); do
+  if kubectl -n flux-system get kustomization releases >/dev/null 2>&1; then
+    created=1
+    break
+  fi
+  sleep 5
+done
+if [[ "${created}" -eq 0 ]]; then
+  log "ERROR: releases Kustomization never appeared; the RSIP could not read the registry"
+  log "Inspect with: kubectl -n flux-system get resourcesetinputprovider,resourceset -o wide"
+  exit 1
+fi
+log "Waiting for releases to reconcile (up to 20m)..."
+if ! kubectl -n flux-system wait kustomization/releases --for=condition=Ready --timeout=20m; then
+  log "ERROR: releases not Ready; inspect with: kubectl -n flux-system get kustomization,ocirepository"
+  exit 1
 fi
 
 log "=== setup complete ==="

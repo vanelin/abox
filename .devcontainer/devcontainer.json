@@ -1,0 +1,66 @@
+{
+  // Keep project dependencies independent of personal dotfiles.
+  "name": "abox",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "codespace",
+  // Starting point for the three-node cluster; increase if pods are Pending/OOMKilled.
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "32gb"
+  },
+  // Also support tenv when personal dotfiles provide it.
+  "remoteEnv": {
+    "TENV_AUTO_INSTALL": "true"
+  },
+  "postCreateCommand": "git config --local remote.pushDefault origin && git config --local push.default simple",
+  // Local model servers and kubectl port-forwards into the cluster.
+  // The gateway's LoadBalancer IP lives on the kind docker network, so it is
+  // reached via `kubectl port-forward -n agentgateway-system svc/... 8080:80`.
+  "forwardPorts": [11434, 8080, 8081, 6006, 6333],
+  "portsAttributes": {
+    "11434": { "label": "Ollama", "onAutoForward": "notify" },
+    "8080": { "label": "abox gateway", "onAutoForward": "notify" },
+    "8081": { "label": "llama.cpp embeddings", "onAutoForward": "notify" },
+    "6006": { "label": "Phoenix", "onAutoForward": "notify" },
+    "6333": { "label": "Qdrant", "onAutoForward": "notify" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // AI agents
+        "anthropic.claude-code",
+        "openai.chatgpt",
+        // what the repo is made of: OpenTofu, Flux/K8s YAML, shell, GitHub Actions
+        "opentofu.vscode-opentofu",
+        "redhat.vscode-yaml",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-azuretools.vscode-containers",
+        "timonwong.shellcheck",
+        "github.vscode-github-actions",
+        // work on top of the cluster: agents / evals / RAG are Python
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "python.analysis.typeCheckingMode": "basic",
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        },
+        "yaml.schemas": {
+          "kubernetes": "releases/**/*.yaml"
+        },
+        "files.associations": {
+          "*.tf": "opentofu"
+        }
+      }
+    }
+  }
+}
