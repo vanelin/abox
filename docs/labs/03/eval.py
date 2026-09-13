@@ -16,9 +16,12 @@ The lexical baseline does not translate Ukrainian; shared identifiers can still 
 English chunks, so a zero score is possible but not guaranteed.
 Equal in-memory scores use descending chunk ID as a tie-break; Qdrant may order ties
 differently. An empty over_ctx records that the context check passed.
+External mode: --endpoint http://127.0.0.1:8082 [--ctx-size 2048]. Requires /health, /tokenize and raw /v1/embeddings.
+Remote model hash, runtime version and RSS are not inferred from local files; verify and measure them separately.
 stdlib + requests only.
 """
 
+import argparse
 import hashlib
 import json
 import math
@@ -38,6 +41,7 @@ ROOT = HERE.parent.parent.parent
 DATA = ROOT / ".local/lab03"  # generated inputs and outputs; gitignored
 SERVER = ROOT / ".local/llama.cpp/build/bin/llama-server"
 PORT = 8081
+BASE_URL = f"http://127.0.0.1:{PORT}"
 DIMS = [256, 128]
 BATCH = 8
 FULL_DIMS = {"nomic": 768, "gemma": 768, "qwen": 1024}
@@ -150,7 +154,7 @@ def start(model_file, pooling):
 
 
 def embed(texts, expected_dim):
-    r = requests.post(f"http://127.0.0.1:{PORT}/v1/embeddings", json={"input": texts}, timeout=600)
+    r = requests.post(f"{BASE_URL}/v1/embeddings", json={"input": texts}, timeout=600)
     r.raise_for_status()
     data = sorted(r.json()["data"], key=lambda d: d["index"])
     if [d["index"] for d in data] != list(range(len(texts))):
@@ -166,7 +170,7 @@ def embed(texts, expected_dim):
 
 def ntokens(text):
     r = requests.post(
-        f"http://127.0.0.1:{PORT}/tokenize",
+        f"{BASE_URL}/tokenize",
         json={"content": text, "add_special": True, "parse_special": True},
         timeout=60,
     )
@@ -193,10 +197,19 @@ def lexical_rank(question, chunks):
 
 # ---------- main ----------
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in MODELS:
-        sys.exit(__doc__)
-    name = sys.argv[1]
-    qdrant = sys.argv[sys.argv.index("--qdrant") + 1] if "--qdrant" in sys.argv else None
+    global BASE_URL
+    parser = argparse.ArgumentParser(description="Evaluate local or external llama-server embeddings.")
+    parser.add_argument("model", choices=MODELS)
+    parser.add_argument("--qdrant", help="Optional Qdrant base URL")
+    parser.add_argument("--endpoint", help="Existing llama-server base URL; does not start or stop a server")
+    parser.add_argument("--ctx-size", type=int, default=2048, help="External server input limit (default: 2048)")
+    args = parser.parse_args()
+    if args.ctx_size <= 0 or (not args.endpoint and args.ctx_size != 2048):
+        parser.error("Use a positive --ctx-size; local runs require 2048 to preserve the baseline")
+    if args.endpoint and not args.endpoint.startswith(("http://", "https://")):
+        parser.error("--endpoint must be an HTTP(S) base URL")
+    BASE_URL = args.endpoint.rstrip("/") if args.endpoint else f"http://127.0.0.1:{PORT}"
+    name, qdrant = args.model, args.qdrant
     model_file, pooling, dpre, qpre, ln = MODELS[name]
     DATA.mkdir(parents=True, exist_ok=True)
 
@@ -213,19 +226,24 @@ def main():
         sys.exit("Question labels reference missing chunks")
     full_dim = FULL_DIMS[name]
     run_id = uuid.uuid4().hex[:12]
-    model_sha = checked_model_sha(model_file)
-    print(f"Model SHA256 matches Makefile: {model_file}", flush=True)
-    runtime = subprocess.check_output([str(SERVER), "--version"], stderr=subprocess.STDOUT, text=True).strip()
-
-    srv = start(model_file, pooling)
+    srv = None
+    if args.endpoint:
+        requests.get(f"{BASE_URL}/health", timeout=10).raise_for_status()
+        model_sha, runtime = None, None
+        print("External server: verify model SHA256, runtime and raw-vector settings at deployment.", flush=True)
+    else:
+        model_sha = checked_model_sha(model_file)
+        print(f"Model SHA256 matches Makefile: {model_file}", flush=True)
+        runtime = subprocess.check_output([str(SERVER), "--version"], stderr=subprocess.STDOUT, text=True).strip()
+        srv = start(model_file, pooling)
     try:
-        # token check: nothing may exceed ctx 2048 including the prefix
+        # token check: enforce the declared context, including prefixes and special tokens
         toks = [ntokens(dpre + c["text"]) for c in chunks]
-        over = [(c["id"], t) for c, t in zip(chunks, toks, strict=True) if t > 2048]
+        over = [(c["id"], t) for c, t in zip(chunks, toks, strict=True) if t > args.ctx_size]
         qtoks = [ntokens(qpre + q["question"]) for q in qs]
-        over += [(q["id"], t) for q, t in zip(qs, qtoks, strict=True) if t > 2048]
+        over += [(q["id"], t) for q, t in zip(qs, qtoks, strict=True) if t > args.ctx_size]
         if over:
-            sys.exit(f"Inputs exceed 2048 tokens (including prompts/special tokens): {over}")
+            sys.exit(f"Inputs exceed {args.ctx_size} tokens (including prompts/special tokens): {over}")
         print(f"Token check passed: chunks max={max(toks)}, questions max={max(qtoks)}", flush=True)
         # embedding generation
         t0 = time.time()
@@ -233,7 +251,7 @@ def main():
         for i in range(0, len(chunks), BATCH):
             raw += embed([dpre + c["text"] for c in chunks[i : i + BATCH]], full_dim)
         t_index = time.time() - t0
-        rss = rss_mb(srv.pid)
+        rss = rss_mb(srv.pid) if srv else None
         vecs = {d: [prep(v, d, ln) for v in raw] for d in [full_dim] + DIMS}
         # query latency: warm, 10 repeats of one question
         embed([qpre + qs[0]["question"]], full_dim)
@@ -243,6 +261,15 @@ def main():
             embed([qpre + qs[0]["question"]], full_dim)
             lat.append((time.time() - t) * 1000)
         p50 = statistics.median(lat)
+        # query latency: ten distinct questions, one at a time, warm server
+        dlat = []
+        for q in qs:
+            t = time.time()
+            embed([qpre + q["question"]], full_dim)
+            dlat.append((time.time() - t) * 1000)
+        dlat_sorted = sorted(dlat)
+        distinct_p50 = statistics.median(dlat)
+        distinct_p95 = dlat_sorted[max(0, math.ceil(0.95 * len(dlat_sorted)) - 1)]
         # search
         qraw = embed([qpre + q["question"] for q in qs], full_dim)
         results = {}
@@ -298,8 +325,9 @@ def main():
                     "details": comparisons,
                 }
     finally:
-        srv.terminate()
-        srv.wait()
+        if srv is not None:
+            srv.terminate()
+            srv.wait()
 
     baseline = []
     for q in qs:
@@ -331,10 +359,14 @@ def main():
         "corpus_sha256": corpus_sha,
         "questions_sha256": hashlib.sha256(question_bytes).hexdigest(),
         "model_sha256": model_sha,
-        "model_pin_source": "Makefile MODEL_SPECS",
+        "model_pin_source": None if args.endpoint else "Makefile MODEL_SPECS",
+        "endpoint": BASE_URL,
+        "execution_mode": "external" if args.endpoint else "local",
         "runtime_version": runtime,
         "postprocessing": "LayerNorm -> truncate -> L2 (including full)" if ln else "truncate -> L2 (including full)",
-        "settings": {"threads": 2, "threads_batch": 2, "parallel": 1, "ctx_size": 2048, "batch": BATCH},
+        "settings": {"ctx_size": args.ctx_size, "batch": BATCH}
+        if args.endpoint
+        else {"threads": 2, "threads_batch": 2, "parallel": 1, "ctx_size": 2048, "batch": BATCH},
         "full_dim": full_dim,
         "max_tokens": max(toks),
         "total_tokens": sum(toks),
@@ -344,6 +376,8 @@ def main():
         "embedding_seconds": round(t_index, 1),
         "rss_mb": rss,
         "query_p50_ms": round(p50, 1),
+        "distinct_query_p50_ms": round(distinct_p50, 1),
+        "distinct_query_p95_ms": round(distinct_p95, 1),
         "summary": {str(d): summary(results[d]) for d in results},
         "lexical_baseline": summary(baseline),
         "details": {str(d): results[d] for d in results},
@@ -357,7 +391,8 @@ def main():
 
     print(
         f"\n{name}: dim={full_dim} tokens_max={max(toks)} over_ctx={len(over)} "
-        f"embedding={t_index:.1f}s rss={rss}MB query_p50={p50:.0f}ms"
+        f"embedding={t_index:.1f}s rss={str(rss) + 'MB' if rss is not None else 'unmeasured'} "
+        f"repeat_p50={p50:.0f}ms distinct_p50/p95={distinct_p50:.0f}/{distinct_p95:.0f}ms"
     )
     print(f"{'dim':>5} {'all h@1':>8} {'all h@3':>8} {'en h@1':>7} {'en h@3':>7} {'uk h@1':>7} {'uk h@3':>7}")
     for d in results:

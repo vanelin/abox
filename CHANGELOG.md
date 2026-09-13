@@ -4,6 +4,11 @@
 
 ### Added
 
+- Added external llama-server evaluation via `eval.py --endpoint`; remote identity and memory are recorded as unknown and verified separately. Updated deployment plans with measured-resource caveats, Recreate rollouts and Flux-aware shutdown.
+
+- Proposed [ADR-0002](docs/adr/0002-embedding-deployment.md): serve the model in the cluster as one shared Deployment + Service (Qwen, `strategy: Recreate`, starting envelope memory 2Gi/3Gi and CPU 1/2 to be measured then reduced, paused the Flux way when idle), Nomic as the lighter fallback, sidecar documented for a single real consumer, llm-d deferred to an environment that meets its 64 CPU / 64 GB profile. Nothing deployed.
+- `eval.py` gained `--endpoint` to score an already running server (for the in-cluster check) and distinct-question latency p50/p95 next to the repeated-query number.
+- Added agent ToDo lists: [local run](docs/labs/03-local-embeddings.md) (verified on this Codespace) and [cluster: Deployment, sidecar, llm-d](docs/labs/03-cluster-embeddings.md) (plan only).
 - Accepted [ADR-0001](docs/adr/0001-embedding-model.md): Qwen3-Embedding-0.6B Q8_0 at 256 dimensions for local repository retrieval.
 - Added the [lab 3 bundle](docs/labs/03/README.md): evaluation and rescoring scripts, 144 frozen chunks, both label revisions and the latest three runs.
 - Added `make llama`, `make models` and `make clean-llama` for the local runtime and weights, separate from `make run`.
