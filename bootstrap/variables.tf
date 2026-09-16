@@ -28,11 +28,15 @@ variable "releases_artifact" {
   # main publishes to "releases". Every v* tag cut from a feature branch would
   # land in that same stream -- the RSIP filter is ^\d+\.\d+\.\d+$ with
   # limit 1, so the newest tag from any branch would win and a cluster
-  # bootstrapped from main would get this branch's bundle. lab/04-agentic-retrieval
+  # bootstrapped from main would get this branch's bundle. lab/05-agentic-memory
   # therefore has its own repository, matching the name
   # .github/workflows/flux-push.yaml derives from the branch (everything after
   # the last "/", lower-cased, prefixed with "releases-").
-  default = "releases-04-agentic-retrieval"
+  #
+  # It is empty until the first v* tag is cut FROM THIS BRANCH -- the RSIP has
+  # nothing to resolve before that, and the branch must be pushed first or
+  # `git branch -r --contains` in the workflow cannot map the tag back to it.
+  default = "releases-05-agentic-memory"
 }
 
 variable "releases_version" {
