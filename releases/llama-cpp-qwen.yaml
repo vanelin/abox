@@ -1,0 +1,94 @@
+# llama.cpp serving Qwen3-Embedding-0.6B Q8_0 (embeddings URL #3).
+#
+# Lab 4: ADR-0001's winner, deployed so the qdrant-mcp-qwen MCPServer can be
+# scored next to the nomic and official toolsets. The image bakes the exact
+# GGUF ADR-0001 measured (Makefile pins its SHA256); see images/qwen-embed.
+#
+# Differences from llama-cpp-embeddings.yaml that matter:
+#   --pooling last        Qwen3-Embedding pools the last token, not the mean.
+#   --embd-normalize -1   raw vectors; qdrant-mcp truncates to 256 dims and
+#                         L2-normalizes itself (EMBEDDINGS_DIMS), which is the
+#                         truncate -> L2 order ADR-0001 measured.
+#   1024-dim output, 0.6B params: ~640MB of weights, ~4x nomic's per-token
+#   cost on CPU, so requests are higher and ingest is slower.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-cpp-qwen
+  namespace: llama-cpp
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: llama-cpp-qwen
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: llama-cpp-qwen
+    spec:
+      containers:
+        - name: llama-server
+          image: ghcr.io/vanelin/abox/qwen-embed:0.6b-q8_0-b10920
+          args:
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8090"
+            - --embeddings
+            - --pooling
+            - last
+            - --embd-normalize
+            - "-1"
+            # 4 slots x 2048 tokens: the lab 3 chunks fit in 2048 and a 0.6B
+            # model at 8 slots would not fit the memory limit below.
+            - --ctx-size
+            - "8192"
+            - --ubatch-size
+            - "2048"
+            - --model
+            - /models/model.gguf
+            - --parallel
+            - "4"
+          ports:
+            - containerPort: 8090
+              name: http
+          # 640MB mmap'd: 5s x 24 = 120s covers the pull-then-load on first start.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8090
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-cpp-qwen
+  namespace: llama-cpp
+spec:
+  selector:
+    app.kubernetes.io/name: llama-cpp-qwen
+  ports:
+    - name: http
+      port: 8090
+      targetPort: 8090
+      protocol: TCP

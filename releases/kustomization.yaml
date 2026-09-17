@@ -7,6 +7,7 @@ resources:
   - agent-retrieval.yaml
   - kagent.yaml
   - llama-cpp-embeddings.yaml
+  - llama-cpp-qwen.yaml
   - llmd.yaml
   - mcp-servers.yaml
   - metrics-server.yaml

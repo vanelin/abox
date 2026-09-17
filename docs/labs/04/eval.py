@@ -9,20 +9,24 @@ and hit@1 / hit@3 are computed from the ids that come back. That isolates the
 toolset (tool contract + embedding model + collection) from the model driving
 the agent; the agentic pass is separate, see README.md.
 
-Two toolsets are known:
+Three toolsets are known:
 
   official  qdrant/mcp-server-qdrant, fastembed all-MiniLM-L6-v2, 384 dims
             tools qdrant-store / qdrant-find, MCPServer qdrant-mcp-official
   nomic     our Go qdrant-mcp, nomic-embed-text-v1.5 over llama.cpp, 768 dims
             tools vector_store / vector_find, MCPServer qdrant-mcp
+  qwen      the same Go qdrant-mcp on Qwen3-Embedding-0.6B Q8_0, 256 of 1024
+            dims (EMBEDDINGS_DIMS), MCPServer qdrant-mcp-qwen
 
 Port-forward the MCPServer Service first (kmcp serves /mcp on port 3000):
 
   kubectl -n kagent port-forward svc/qdrant-mcp-official 3001:3000
   kubectl -n kagent port-forward svc/qdrant-mcp 3002:3000
+  kubectl -n kagent port-forward svc/qdrant-mcp-qwen 3003:3000
 
   uv run docs/labs/04/eval.py official --ingest
   uv run docs/labs/04/eval.py nomic --ingest
+  uv run docs/labs/04/eval.py qwen --ingest
   uv run docs/labs/04/eval.py official            # search only, corpus already stored
 
 Storing is not idempotent on either server (each call mints new point ids), so
@@ -69,6 +73,14 @@ TOOLSETS: dict[str, dict[str, Any]] = {
         "model": "nomic-embed-text-v1.5 (llama.cpp)",
         "server": "qdrant-mcp",
     },
+    "qwen": {
+        "url": "http://127.0.0.1:3003/mcp",
+        "store": "vector_store",
+        "find": "vector_find",
+        "collection": "abox-qwen256",
+        "model": "Qwen3-Embedding-0.6B Q8_0, 256 dims (llama.cpp)",
+        "server": "qdrant-mcp-qwen",
+    },
 }
 
 ENTRY_RE = re.compile(r"<entry><content>(.*?)</content><metadata>(.*?)</metadata></entry>", re.S)
@@ -96,7 +108,7 @@ def text_of(result: Any) -> str:
 
 def parse_hits(toolset: str, text: str) -> list[dict[str, Any]]:
     """Return hits as [{'id': chunk id or None, 'metadata': {...}}] best first."""
-    if toolset == "nomic":
+    if toolset in ("nomic", "qwen"):
         # JSON list of {score, payload}; payload carries our metadata flat.
         hits = json.loads(text) if text.strip().startswith("[") else []
         return [{"id": h.get("payload", {}).get("id"), "metadata": h.get("payload", {})} for h in hits]

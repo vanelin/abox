@@ -40,7 +40,7 @@ spec:
     # Ours; scaffolded with `kmcp init go`, source in mcp/qdrant-mcp. Replaces
     # mcp-server-qdrant, which could only embed in-process with fastembed and
     # was OOMKilled doing it.
-    image: ghcr.io/den-vasyliev/abox/qdrant-mcp:0.4.0
+    image: ghcr.io/vanelin/abox/qdrant-mcp:0.5.0
     cmd: /app/server
     env:
       # Any OpenAI-compatible /v1/embeddings route. The standalone llama.cpp
@@ -127,3 +127,36 @@ spec:
       limits:
         cpu: "1"
         memory: 1Gi
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: qdrant-mcp-qwen
+  namespace: kagent
+spec:
+  transportType: stdio
+  stdioTransport: {}
+  deployment:
+    # Lab 4, third toolset: the same Go qdrant-mcp as above, pointed at
+    # Qwen3-Embedding-0.6B (releases/llama-cpp-qwen.yaml) and reproducing
+    # ADR-0001's winning configuration -- 256 of 1024 dims, truncate -> L2,
+    # no document prefix, the instruct query template. Same tool contract
+    # (vector_store / vector_find), so the agent prompt is shared unchanged.
+    #
+    # Its vectors are a third space, hence a third collection.
+    image: ghcr.io/vanelin/abox/qdrant-mcp:0.5.0
+    cmd: /app/server
+    env:
+      EMBEDDINGS_BASE_URL: http://llama-cpp-qwen.llama-cpp:8090
+      EMBEDDINGS_DIMS: "256"
+      EMBEDDINGS_DOCUMENT_PREFIX: ""
+      EMBEDDINGS_QUERY_PREFIX: "Instruct: Given a question about a Kubernetes/OpenTofu repository, retrieve the file section that answers it\nQuery: "
+      QDRANT_URL: http://qdrant.qdrant:6333
+      QDRANT_COLLECTION: abox-qwen256
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
