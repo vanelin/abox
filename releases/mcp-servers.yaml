@@ -75,3 +75,55 @@ spec:
       limits:
         cpu: 500m
         memory: 256Mi
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: qdrant-mcp-official
+  namespace: kagent
+spec:
+  transportType: stdio
+  stdioTransport: {}
+  deployment:
+    # Lab 4: the official qdrant/mcp-server-qdrant next to our Go qdrant-mcp
+    # above, so the two toolsets can be compared on the same data. Upstream
+    # publishes no image, only a PyPI package, so it is run with uvx and the
+    # version is pinned there. Its only embedding provider is fastembed, which
+    # runs an ONNX model inside this pod; all-MiniLM-L6-v2 (384 dims, ~90MB)
+    # fits the limit below, the f32 nomic ONNX did not (see qdrant-mcp's
+    # README). The model is downloaded from HuggingFace on first start, so the
+    # kind nodes need egress (make fix-egress) and the first readiness takes a
+    # minute.
+    #
+    # Its vectors are a different space from qdrant-mcp's 768-dim nomic ones,
+    # hence its own collection; the two never share one.
+    image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+    cmd: uvx
+    args:
+      - mcp-server-qdrant@0.8.1
+    env:
+      QDRANT_URL: http://qdrant.qdrant:6333
+      COLLECTION_NAME: abox-minilm
+      EMBEDDING_PROVIDER: fastembed
+      EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2
+      QDRANT_SEARCH_LIMIT: "5"
+      # The defaults talk about "memories" and "personal information about the
+      # user", which steers the agent away from using the tools for manifests.
+      TOOL_STORE_DESCRIPTION: >-
+        Index a Kubernetes manifest, a file section or a note of the abox
+        repository for later semantic search. Pass the full text as
+        `information` and put path, kind, name and namespace in `metadata` so a
+        hit can be traced back to its source.
+      TOOL_FIND_DESCRIPTION: >-
+        Semantic search over what qdrant-store has indexed: Kubernetes
+        manifests, OpenTofu, scripts and docs of the abox repository. Use it
+        for questions about the content of an object -- what it configures,
+        which file does X, where something is set. Returns the stored text
+        with its metadata, best match first.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
