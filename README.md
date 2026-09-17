@@ -169,6 +169,16 @@ A default 2-core/8GB Codespace is tight — the three kind nodes are containers
 sharing that one host. Both backends are sized to fit it; raise the
 requests/limits if you run somewhere with real headroom.
 
+A Codespace restart wipes Docker's data-root under `/tmp` and the kind cluster
+with it, while `bootstrap/terraform.tfstate` still describes one. `tofu apply`
+(and `make down`) then die on refresh with `connection refused`. `make run`
+handles this: if state names a cluster that `kind get clusters` does not have,
+`scripts/setup.sh` prunes the state and rebuilds from scratch. Manual fallback:
+
+```bash
+cd bootstrap && for r in $(tofu state list); do tofu state rm "$r"; done
+```
+
 ## Adding components
 
 1. Put CRD charts in `releases/crds/` as HelmReleases.

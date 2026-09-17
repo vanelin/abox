@@ -96,7 +96,7 @@ log "tofu init done"
 # looks absent, which would prune the state of a perfectly healthy one.
 if command -v kind >/dev/null 2>&1 \
    && tofu state list >/dev/null 2>&1 \
-   && tofu state list 2>/dev/null | grep -qx 'terraform_data.cluster' \
+   && tofu state list 2>/dev/null | grep -qxE 'terraform_data.cluster|kind_cluster.this' \
    && ! kind get clusters 2>/dev/null | grep -qxF "${CLUSTER_NAME}"; then
   log "state describes cluster '${CLUSTER_NAME}', kind has no such cluster -- pruning stale state"
   for addr in $(tofu state list 2>/dev/null); do
