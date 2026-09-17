@@ -46,3 +46,6 @@ CLAUDE.md
 .venv/
 __pycache__/
 .ruff_cache/
+
+# kind config rendered by bootstrap/cluster.tf
+.kind-config.yaml
