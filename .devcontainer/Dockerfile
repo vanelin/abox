@@ -6,6 +6,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     asciinema build-essential cmake jq libcurl4-openssl-dev shellcheck unzip \
     && rm -rf /var/lib/apt/lists/*
 
+# Keep Docker's data-root off the 32 GB root overlay. Codespaces mounts a
+# separate ~120 GB ext4 volume at /tmp; the three kind nodes plus every image
+# they pull do not fit on /. The universal image starts dockerd from the
+# docker-in-docker feature's docker-init.sh without --data-root, so this file
+# is honoured as-is. /tmp is wiped on a Codespace restart, which is also why
+# `make run` is needed after every start: the cluster goes with it.
+RUN mkdir -p /etc/docker \
+    && printf '{\n  "data-root": "/tmp/docker"\n}\n' > /etc/docker/daemon.json
+
 # Match the repository pin even when no dotfiles/version manager is installed.
 COPY .opentofu-version /tmp/abox-opentofu-version
 RUN set -eu; \
