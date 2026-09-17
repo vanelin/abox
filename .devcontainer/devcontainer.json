@@ -16,7 +16,10 @@
   "remoteEnv": {
     "TENV_AUTO_INSTALL": "true"
   },
-  "postCreateCommand": "git config --local remote.pushDefault origin && git config --local push.default simple",
+  // uv sync builds the gitignored .venv the lab scripts and the Ruff/Pylance
+  // extensions expect; the universal image ships uv in ~/.local/bin, which is
+  // not on PATH for the non-login shell postCreateCommand runs in.
+  "postCreateCommand": "git config --local remote.pushDefault origin && git config --local push.default simple && PATH=\"$HOME/.local/bin:$PATH\" uv sync",
   // Local model servers and kubectl port-forwards into the cluster.
   // The gateway's LoadBalancer IP lives on the kind docker network, so it is
   // reached via `kubectl port-forward -n agentgateway-system svc/... 8080:80`.
