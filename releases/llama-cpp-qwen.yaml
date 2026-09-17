@@ -41,16 +41,27 @@ spec:
             - last
             - --embd-normalize
             - "-1"
-            # 4 slots x 2048 tokens: the lab 3 chunks fit in 2048 and a 0.6B
-            # model at 8 slots would not fit the memory limit below.
+            # This llama.cpp build keeps a prompt cache in RAM, 8192 MiB by
+            # default (--cache-ram). Embedding traffic never reuses a prompt
+            # -- 123 of 131 slot picks during an ingest were LRU misses -- so
+            # the cache only grew, one KV state per chunk, until the cgroup
+            # killed the pod: at 2Gi after 40 chunks, at 3Gi after 120. The
+            # nomic image is an older build without the cache, which is why it
+            # never showed this.
+            - --cache-ram
+            - "0"
+            # 2 slots x 2048 tokens: the lab 3 chunks fit in 2048, and both
+            # the eval script and the agent embed one text at a time. KV cache
+            # scales with slots x ctx and a 0.6B/28-layer model pays for
+            # every slot in a way nomic's 137M/12 never did.
             - --ctx-size
-            - "8192"
+            - "4096"
             - --ubatch-size
             - "2048"
             - --model
             - /models/model.gguf
             - --parallel
-            - "4"
+            - "2"
           ports:
             - containerPort: 8090
               name: http
@@ -71,6 +82,9 @@ spec:
               path: /health
               port: 8090
             periodSeconds: 30
+          # Measured with --cache-ram 0 and 2 slots: 1351Mi peak over a full
+          # 144-chunk ingest, no restarts. The 640MB of mmap'd weights count
+          # once their pages are read, which is most of the idle ~960Mi.
           resources:
             requests:
               cpu: 500m
