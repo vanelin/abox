@@ -7,8 +7,9 @@
 # Earlier this was a hand-made gemini ModelConfig that did not survive the
 # cluster being rebuilt, leaving the agent stuck on ReconcileFailed.
 #
-# The graph (neo4j-mcp) stays deployed but is not wired into either agent:
-# the comparison is about vector retrieval only.
+# The graph (neo4j-mcp) is wired into all three agents identically -- same
+# prompt section, same three tools -- so it is a constant, not a variable:
+# the comparison is still about the vector toolset.
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: Agent
@@ -49,6 +50,27 @@ spec:
       can be traced back to its source. A cluster-scoped object uses
       "cluster" as its namespace.
 
+      ## Graph
+
+      Next to the vector store there is a graph (neo4j) reached through
+      get-schema, read-cypher and write-cypher. Vectors answer "what is
+      similar", the graph answers "what is connected".
+
+      During ingest, after storing an object, MERGE one node for it:
+      (:Resource {kind, name, namespace, apiVersion}) -- MERGE on kind, name
+      and namespace, never CREATE, so a re-ingest does not duplicate. Then
+      MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
+      with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
+      in spec.declarative.tools, SOURCED_FROM for spec.chartRef and
+      spec.sourceRef. Nothing else goes in the graph: no status, no
+      manifest text, that is what the vector store holds.
+
+      During retrieval, when the question is about relations -- what
+      depends on X, which agents use Y, where does Z come from -- call
+      read-cypher after qdrant-find and combine both. Call get-schema first
+      if you do not know the labels. Never write-cypher while answering.
+
       ## Retrieve
 
       Call qdrant-find with the user's question as the query, in the user's
@@ -73,6 +95,15 @@ spec:
         toolNames:
         - qdrant-store
         - qdrant-find
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: MCPServer
+        name: neo4j-mcp
+        toolNames:
+        - get-schema
+        - read-cypher
+        - write-cypher
     # Reads the cluster during ingest. The prompt forbids delegating during
     # retrieval -- without that rule the agent went off re-fetching manifests
     # to answer questions the store already held.
@@ -122,6 +153,27 @@ spec:
       can be traced back to its source. A cluster-scoped object uses
       "cluster" as its namespace.
 
+      ## Graph
+
+      Next to the vector store there is a graph (neo4j) reached through
+      get-schema, read-cypher and write-cypher. Vectors answer "what is
+      similar", the graph answers "what is connected".
+
+      During ingest, after storing an object, MERGE one node for it:
+      (:Resource {kind, name, namespace, apiVersion}) -- MERGE on kind, name
+      and namespace, never CREATE, so a re-ingest does not duplicate. Then
+      MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
+      with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
+      in spec.declarative.tools, SOURCED_FROM for spec.chartRef and
+      spec.sourceRef. Nothing else goes in the graph: no status, no
+      manifest text, that is what the vector store holds.
+
+      During retrieval, when the question is about relations -- what
+      depends on X, which agents use Y, where does Z come from -- call
+      read-cypher after vector_find and combine both. Call get-schema first
+      if you do not know the labels. Never write-cypher while answering.
+
       ## Retrieve
 
       Call vector_find with the user's question as the query, in the user's
@@ -146,6 +198,15 @@ spec:
         toolNames:
         - vector_store
         - vector_find
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: MCPServer
+        name: neo4j-mcp
+        toolNames:
+        - get-schema
+        - read-cypher
+        - write-cypher
     # Reads the cluster during ingest. The prompt forbids delegating during
     # retrieval -- without that rule the agent went off re-fetching manifests
     # to answer questions the store already held.
@@ -196,6 +257,27 @@ spec:
       can be traced back to its source. A cluster-scoped object uses
       "cluster" as its namespace.
 
+      ## Graph
+
+      Next to the vector store there is a graph (neo4j) reached through
+      get-schema, read-cypher and write-cypher. Vectors answer "what is
+      similar", the graph answers "what is connected".
+
+      During ingest, after storing an object, MERGE one node for it:
+      (:Resource {kind, name, namespace, apiVersion}) -- MERGE on kind, name
+      and namespace, never CREATE, so a re-ingest does not duplicate. Then
+      MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
+      with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
+      in spec.declarative.tools, SOURCED_FROM for spec.chartRef and
+      spec.sourceRef. Nothing else goes in the graph: no status, no
+      manifest text, that is what the vector store holds.
+
+      During retrieval, when the question is about relations -- what
+      depends on X, which agents use Y, where does Z come from -- call
+      read-cypher after vector_find and combine both. Call get-schema first
+      if you do not know the labels. Never write-cypher while answering.
+
       ## Retrieve
 
       Call vector_find with the user's question as the query, in the user's
@@ -220,6 +302,15 @@ spec:
         toolNames:
         - vector_store
         - vector_find
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: MCPServer
+        name: neo4j-mcp
+        toolNames:
+        - get-schema
+        - read-cypher
+        - write-cypher
     # Reads the cluster during ingest. The prompt forbids delegating during
     # retrieval -- without that rule the agent went off re-fetching manifests
     # to answer questions the store already held.

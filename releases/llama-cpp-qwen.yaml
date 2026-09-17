@@ -56,8 +56,13 @@ spec:
             # every slot in a way nomic's 137M/12 never did.
             - --ctx-size
             - "4096"
+            # 512, not a full 2048 slot: the compute buffer scales with
+            # ubatch, and the agent stores manifests in parallel -- two
+            # 2048-token micro-batches at once OOMKilled the pod at 2Gi where
+            # the sequential eval ingest had peaked at 1351Mi. A 2048-token
+            # manifest now embeds as four micro-batches, slower and bounded.
             - --ubatch-size
-            - "2048"
+            - "512"
             - --model
             - /models/model.gguf
             - --parallel
