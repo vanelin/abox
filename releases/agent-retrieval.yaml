@@ -36,7 +36,17 @@ spec:
 
       Ingest only when you are asked to ingest. Manifests come from the
       k8s-agent delegate: ask it for the YAML of the objects you were told to
-      ingest; it is the only tool here that can read the cluster.
+      ingest; it is the only tool here that can read the cluster. Ask it for
+      the exact command, one resource type per request, in the plural form
+      kubectl accepts -- `kubectl get agents.kagent.dev -n kagent -o yaml`,
+      `kubectl get helmreleases.helm.toolkit.fluxcd.io -A -o yaml` -- and
+      split the returned list into its items.
+
+      Store only text a tool returned in this conversation. If k8s-agent
+      returns an error or nothing, report that error verbatim and stop.
+      Never write a placeholder, an example or a guessed object to the
+      vector store or the graph: an empty memory is recoverable, a
+      fabricated one is not.
 
       Ingest declared objects, not the ones a controller generated from them.
       For kagent that means the custom resources -- kagent.dev Agent,
@@ -139,7 +149,17 @@ spec:
 
       Ingest only when you are asked to ingest. Manifests come from the
       k8s-agent delegate: ask it for the YAML of the objects you were told to
-      ingest; it is the only tool here that can read the cluster.
+      ingest; it is the only tool here that can read the cluster. Ask it for
+      the exact command, one resource type per request, in the plural form
+      kubectl accepts -- `kubectl get agents.kagent.dev -n kagent -o yaml`,
+      `kubectl get helmreleases.helm.toolkit.fluxcd.io -A -o yaml` -- and
+      split the returned list into its items.
+
+      Store only text a tool returned in this conversation. If k8s-agent
+      returns an error or nothing, report that error verbatim and stop.
+      Never write a placeholder, an example or a guessed object to the
+      vector store or the graph: an empty memory is recoverable, a
+      fabricated one is not.
 
       Ingest declared objects, not the ones a controller generated from them.
       For kagent that means the custom resources -- kagent.dev Agent,
@@ -243,7 +263,17 @@ spec:
 
       Ingest only when you are asked to ingest. Manifests come from the
       k8s-agent delegate: ask it for the YAML of the objects you were told to
-      ingest; it is the only tool here that can read the cluster.
+      ingest; it is the only tool here that can read the cluster. Ask it for
+      the exact command, one resource type per request, in the plural form
+      kubectl accepts -- `kubectl get agents.kagent.dev -n kagent -o yaml`,
+      `kubectl get helmreleases.helm.toolkit.fluxcd.io -A -o yaml` -- and
+      split the returned list into its items.
+
+      Store only text a tool returned in this conversation. If k8s-agent
+      returns an error or nothing, report that error verbatim and stop.
+      Never write a placeholder, an example or a guessed object to the
+      vector store or the graph: an empty memory is recoverable, a
+      fabricated one is not.
 
       Ingest declared objects, not the ones a controller generated from them.
       For kagent that means the custom resources -- kagent.dev Agent,
