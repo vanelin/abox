@@ -2,10 +2,14 @@
 # vector toolset, so Agentic Retrieval can be compared toolset against toolset
 # rather than prompt against prompt (docs/adr/0003-agentic-retrieval.md).
 #
-# Both use default-model-config, the ModelConfig the kagent chart creates and
-# every other agent here uses (openAI provider, key in Secret kagent-openai).
-# Earlier this was a hand-made gemini ModelConfig that did not survive the
-# cluster being rebuilt, leaving the agent stuck on ReconcileFailed.
+# All three use openai-gpt-5-4-mini, a ModelConfig created by hand in the
+# kagent UI (OpenAI provider, key in Secret kagent-openai) -- it is not in
+# this bundle, so a rebuilt cluster needs it recreated before these agents
+# reconcile. gpt-4.1-mini (default-model-config, still used by k8s-agent)
+# collapsed "one store call per object" into one call per resource type and
+# invented Tool nodes; the ingest needs tool-use discipline, not a cheaper
+# model. Earlier a hand-made gemini ModelConfig did not survive a cluster
+# rebuild and left the agent on ReconcileFailed -- same failure mode.
 #
 # The graph (neo4j-mcp) is wired into all three agents identically -- same
 # prompt section, same three tools -- so it is a constant, not a variable:
@@ -22,7 +26,7 @@ spec:
   declarative:
     # Official qdrant/mcp-server-qdrant: fastembed all-MiniLM-L6-v2, 384 dims,
     # collection abox-minilm. Tool names are the upstream ones.
-    modelConfig: default-model-config
+    modelConfig: openai-gpt-5-4-mini
     stream: true
     systemMessage: |
       You are a retrieval agent over one vector store in this cluster. Which
@@ -55,10 +59,12 @@ spec:
       authored intent. Never store resourceVersion, generation, uid,
       creationTimestamp or managedFields.
 
-      Call qdrant-store once per object. Pass the whole manifest as the text, and
-      put path (when known), kind, name and namespace in the metadata so a hit
-      can be traced back to its source. A cluster-scoped object uses
-      "cluster" as its namespace.
+      Call qdrant-store once per Kubernetes object: an item of a list is an
+      object, the list is not, so nine Agents are nine calls, never one.
+      Pass that one manifest as the text, and put path (when known), kind,
+      name and namespace in the metadata so a hit can be traced back to its
+      source; name is the object's metadata.name, and a call without it is
+      wrong. A cluster-scoped object uses "cluster" as its namespace.
 
       ## Graph
 
@@ -72,8 +78,10 @@ spec:
       MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
       with the target merged the same way: DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
-      in spec.declarative.tools, SOURCED_FROM for spec.chartRef and
-      spec.sourceRef. Nothing else goes in the graph: no status, no
+      in spec.declarative.tools -- the target is the referenced object under
+      its own kind and name, tools[].mcpServer.name is an MCPServer and
+      tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
+      for spec.chartRef and spec.sourceRef. Nothing else goes in the graph: no status, no
       manifest text, that is what the vector store holds.
 
       During retrieval, when the question is about relations -- what
@@ -135,7 +143,7 @@ spec:
   declarative:
     # Our Go qdrant-mcp: nomic-embed-text-v1.5 over llama.cpp, 768 dims,
     # collection abox-nomic. Same prompt, only the tool names differ.
-    modelConfig: default-model-config
+    modelConfig: openai-gpt-5-4-mini
     stream: true
     systemMessage: |
       You are a retrieval agent over one vector store in this cluster. Which
@@ -168,10 +176,12 @@ spec:
       authored intent. Never store resourceVersion, generation, uid,
       creationTimestamp or managedFields.
 
-      Call vector_store once per object. Pass the whole manifest as the text, and
-      put path (when known), kind, name and namespace in the metadata so a hit
-      can be traced back to its source. A cluster-scoped object uses
-      "cluster" as its namespace.
+      Call vector_store once per Kubernetes object: an item of a list is an
+      object, the list is not, so nine Agents are nine calls, never one.
+      Pass that one manifest as the text, and put path (when known), kind,
+      name and namespace in the metadata so a hit can be traced back to its
+      source; name is the object's metadata.name, and a call without it is
+      wrong. A cluster-scoped object uses "cluster" as its namespace.
 
       ## Graph
 
@@ -185,8 +195,10 @@ spec:
       MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
       with the target merged the same way: DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
-      in spec.declarative.tools, SOURCED_FROM for spec.chartRef and
-      spec.sourceRef. Nothing else goes in the graph: no status, no
+      in spec.declarative.tools -- the target is the referenced object under
+      its own kind and name, tools[].mcpServer.name is an MCPServer and
+      tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
+      for spec.chartRef and spec.sourceRef. Nothing else goes in the graph: no status, no
       manifest text, that is what the vector store holds.
 
       During retrieval, when the question is about relations -- what
@@ -249,7 +261,7 @@ spec:
     # Our Go qdrant-mcp on Qwen3-Embedding-0.6B over llama.cpp, MRL 256 dims,
     # collection abox-qwen256 (ADR-0001's winner). Same prompt and tool names
     # as retrieval-agent-nomic; only the MCPServer differs.
-    modelConfig: default-model-config
+    modelConfig: openai-gpt-5-4-mini
     stream: true
     systemMessage: |
       You are a retrieval agent over one vector store in this cluster. Which
@@ -282,10 +294,12 @@ spec:
       authored intent. Never store resourceVersion, generation, uid,
       creationTimestamp or managedFields.
 
-      Call vector_store once per object. Pass the whole manifest as the text, and
-      put path (when known), kind, name and namespace in the metadata so a hit
-      can be traced back to its source. A cluster-scoped object uses
-      "cluster" as its namespace.
+      Call vector_store once per Kubernetes object: an item of a list is an
+      object, the list is not, so nine Agents are nine calls, never one.
+      Pass that one manifest as the text, and put path (when known), kind,
+      name and namespace in the metadata so a hit can be traced back to its
+      source; name is the object's metadata.name, and a call without it is
+      wrong. A cluster-scoped object uses "cluster" as its namespace.
 
       ## Graph
 
@@ -299,8 +313,10 @@ spec:
       MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
       with the target merged the same way: DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
-      in spec.declarative.tools, SOURCED_FROM for spec.chartRef and
-      spec.sourceRef. Nothing else goes in the graph: no status, no
+      in spec.declarative.tools -- the target is the referenced object under
+      its own kind and name, tools[].mcpServer.name is an MCPServer and
+      tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
+      for spec.chartRef and spec.sourceRef. Nothing else goes in the graph: no status, no
       manifest text, that is what the vector store holds.
 
       During retrieval, when the question is about relations -- what
