@@ -4,6 +4,10 @@
 
 ### Added
 
+- Added the official Qdrant MCP server as a second toolset: MCPServer `qdrant-mcp-official` (mcp-server-qdrant 0.8.1 run with uvx, fastembed `all-MiniLM-L6-v2`, 384 dimensions, collection `abox-minilm`) next to the Go `qdrant-mcp` (nomic, 768 dimensions, `abox-nomic`). The two vector spaces never share a collection.
+- Added two retrieval agents with one shared system prompt and `default-model-config` — `retrieval-agent` on the official tools, `retrieval-agent-nomic` on ours — so a comparison measures the toolset, not the prompt. Both delegate to `k8s-agent` for ingest only; neo4j stays deployed but unwired.
+- Added the [lab 4 bundle](docs/labs/04/README.md): a scoring script that drives either toolset through kmcp's HTTP endpoint on the frozen lab 3 corpus and questions, and proposed [ADR-0003](docs/adr/0003-agentic-retrieval.md) for the toolset choice. Both tool-level runs (local) are recorded there; the agentic pass and the in-cluster run are pending.
+- Added the `mcp` Python dependency in [pyproject.toml](pyproject.toml) for the lab 4 client.
 - Added external llama-server evaluation via `eval.py --endpoint`; remote identity and memory are recorded as unknown and verified separately. Updated deployment plans with measured-resource caveats, Recreate rollouts and Flux-aware shutdown.
 
 - Proposed [ADR-0002](docs/adr/0002-embedding-deployment.md): serve the model in the cluster as one shared Deployment + Service (Qwen, `strategy: Recreate`, starting envelope memory 2Gi/3Gi and CPU 1/2 to be measured then reduced, paused the Flux way when idle), Nomic as the lighter fallback, sidecar documented for a single real consumer, llm-d deferred to an environment that meets its 64 CPU / 64 GB profile. Nothing deployed.
@@ -16,6 +20,7 @@
 
 ### Verified
 
+- Scored both Qdrant MCP toolsets locally on 2026-09-17 on the frozen lab 3 corpus (144 chunks, 10 questions): official / all-MiniLM-L6-v2 hit@1 2/10, hit@3 5/10; Go qdrant-mcp / nomic-embed-text-v1.5 hit@1 5/10, hit@3 7/10; Ukrainian 1/3 for both. See [ADR-0003](docs/adr/0003-agentic-retrieval.md).
 - Evaluated three models on 2026-09-13 using 144 chunks and ten questions (7 EN / 3 UA) in a 4 CPU / 16 GB Codespace; two threads, one slot, batches of eight, context 2048.
 - Verified llama.cpp tag `v0.4.0` (binary `0.4.0-dev`, commit `5266f24`) and all three model SHA256 values against [Makefile pins](Makefile); hashes are saved in the [run files](docs/labs/03/README.md).
 - Corrected one missing answer for q04; [v2 rescoring](docs/labs/03/rescore-v2.json) and subsequent full runs produced the same scores. Both label revisions are retained.
