@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -163,6 +164,30 @@ func queryPrefix() string {
 	return defaultQueryPrefix
 }
 
+// MRL: keep the first EMBEDDINGS_DIMS coordinates and L2-normalize, as
+// ADR-0001 measured (truncate -> L2). Unset or 0 keeps the full vector.
+func embeddingsDims() int {
+	n, _ := strconv.Atoi(os.Getenv("EMBEDDINGS_DIMS"))
+	return n
+}
+
+func mrl(vec []float64, dims int) []float64 {
+	if dims <= 0 || dims >= len(vec) {
+		return vec
+	}
+	vec = vec[:dims]
+	var sum float64
+	for _, x := range vec {
+		sum += x * x
+	}
+	if n := math.Sqrt(sum); n > 0 {
+		for i := range vec {
+			vec[i] /= n
+		}
+	}
+	return vec
+}
+
 func embed(ctx context.Context, text, prefix string) ([]float64, error) {
 	if r := []rune(text); len(r) > maxInputChars() {
 		text = string(r[:maxInputChars()])
@@ -186,7 +211,7 @@ func embed(ctx context.Context, text, prefix string) ([]float64, error) {
 	if len(r.Data) == 0 || len(r.Data[0].Embedding) == 0 {
 		return nil, fmt.Errorf("embeddings response carried no vector: %.200s", out)
 	}
-	return r.Data[0].Embedding, nil
+	return mrl(r.Data[0].Embedding, embeddingsDims()), nil
 }
 
 // Created on first write, sized from the vector the server actually returned
