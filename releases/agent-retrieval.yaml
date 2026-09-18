@@ -88,7 +88,9 @@ spec:
       Pass that one manifest as the text, and put path (when known), kind,
       name and namespace in the metadata so a hit can be traced back to its
       source; name is the object's metadata.name, and a call without it is
-      wrong. A cluster-scoped object uses "cluster" as its namespace.
+      wrong. Only a cluster-scoped kind -- a Namespace, a ClusterRole, a
+      CustomResourceDefinition -- uses "cluster" as its namespace; every
+      kind named in this prompt is namespaced.
 
       ## Graph
 
@@ -100,11 +102,18 @@ spec:
       Resource, properties kind, name, namespace and apiVersion -- MERGE on
       kind, name and namespace, never CREATE, so a re-ingest does not
       duplicate. Then MERGE the edges the manifest declares, each from one
-      Resource node to another, with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      Resource node to another, with the target merged the same way. The
+      target's namespace is the one its reference gives; a reference
+      without one -- modelConfig, tools[].mcpServer, a dependsOn entry --
+      points into the namespace of the object being ingested. Never
+      "cluster" for a target: MERGE matches on namespace, so a wrong one
+      creates a second node instead of finding the first. The edges are
+      DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
       in spec.declarative.tools -- the target is the referenced object under
-      its own kind and name, tools[].mcpServer.name is an MCPServer and
-      tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
+      its own kind and name: for tools[].mcpServer the kind is the one the
+      entry states, MCPServer or RemoteMCPServer, and tools[].agent is an
+      Agent; there is no Tool kind -- SOURCED_FROM
       for spec.chartRef and spec.sourceRef. Nothing else goes in the
       graph: no status, no manifest text, that is what the vector store
       holds. Ingest uses write-cypher only -- MERGE already handles a node
@@ -243,7 +252,9 @@ spec:
       Pass that one manifest as the text, and put path (when known), kind,
       name and namespace in the metadata so a hit can be traced back to its
       source; name is the object's metadata.name, and a call without it is
-      wrong. A cluster-scoped object uses "cluster" as its namespace.
+      wrong. Only a cluster-scoped kind -- a Namespace, a ClusterRole, a
+      CustomResourceDefinition -- uses "cluster" as its namespace; every
+      kind named in this prompt is namespaced.
 
       ## Graph
 
@@ -255,11 +266,18 @@ spec:
       Resource, properties kind, name, namespace and apiVersion -- MERGE on
       kind, name and namespace, never CREATE, so a re-ingest does not
       duplicate. Then MERGE the edges the manifest declares, each from one
-      Resource node to another, with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      Resource node to another, with the target merged the same way. The
+      target's namespace is the one its reference gives; a reference
+      without one -- modelConfig, tools[].mcpServer, a dependsOn entry --
+      points into the namespace of the object being ingested. Never
+      "cluster" for a target: MERGE matches on namespace, so a wrong one
+      creates a second node instead of finding the first. The edges are
+      DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
       in spec.declarative.tools -- the target is the referenced object under
-      its own kind and name, tools[].mcpServer.name is an MCPServer and
-      tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
+      its own kind and name: for tools[].mcpServer the kind is the one the
+      entry states, MCPServer or RemoteMCPServer, and tools[].agent is an
+      Agent; there is no Tool kind -- SOURCED_FROM
       for spec.chartRef and spec.sourceRef. Nothing else goes in the
       graph: no status, no manifest text, that is what the vector store
       holds. Ingest uses write-cypher only -- MERGE already handles a node
@@ -399,7 +417,9 @@ spec:
       Pass that one manifest as the text, and put path (when known), kind,
       name and namespace in the metadata so a hit can be traced back to its
       source; name is the object's metadata.name, and a call without it is
-      wrong. A cluster-scoped object uses "cluster" as its namespace.
+      wrong. Only a cluster-scoped kind -- a Namespace, a ClusterRole, a
+      CustomResourceDefinition -- uses "cluster" as its namespace; every
+      kind named in this prompt is namespaced.
 
       ## Graph
 
@@ -411,11 +431,18 @@ spec:
       Resource, properties kind, name, namespace and apiVersion -- MERGE on
       kind, name and namespace, never CREATE, so a re-ingest does not
       duplicate. Then MERGE the edges the manifest declares, each from one
-      Resource node to another, with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      Resource node to another, with the target merged the same way. The
+      target's namespace is the one its reference gives; a reference
+      without one -- modelConfig, tools[].mcpServer, a dependsOn entry --
+      points into the namespace of the object being ingested. Never
+      "cluster" for a target: MERGE matches on namespace, so a wrong one
+      creates a second node instead of finding the first. The edges are
+      DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
       in spec.declarative.tools -- the target is the referenced object under
-      its own kind and name, tools[].mcpServer.name is an MCPServer and
-      tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
+      its own kind and name: for tools[].mcpServer the kind is the one the
+      entry states, MCPServer or RemoteMCPServer, and tools[].agent is an
+      Agent; there is no Tool kind -- SOURCED_FROM
       for spec.chartRef and spec.sourceRef. Nothing else goes in the
       graph: no status, no manifest text, that is what the vector store
       holds. Ingest uses write-cypher only -- MERGE already handles a node

@@ -27,6 +27,7 @@
 ### Fixed
 
 - The kagent chart no longer renders Secret `kagent-openai`: `providers.openAI.apiKey: OPENAI_API_KEY` in [releases/kagent.yaml](releases/kagent.yaml) made every Helm upgrade overwrite the hand-made key with that placeholder, and agents then failed with 401.
+- Graph prompt: an edge target takes the namespace its reference gives, or the ingested object's own when the reference has none, and its kind from the tool entry (`MCPServer` or `RemoteMCPServer`). The only namespace rule used to be "cluster-scoped objects use `cluster`", so targets of `tools[].mcpServer` and `modelConfig` were merged as second nodes under namespace `cluster`.
 - `MCPServer.spec.timeout` for the two Go servers (120s, 300s for Qwen) instead of kmcp's 30s default, `EMBEDDING_MAX_INPUT_CHARS=3500` and a 300s embed timeout for Qwen: large manifests timed out or overflowed the 2048-token slot during an agent's ingest.
 
 ### Verified
