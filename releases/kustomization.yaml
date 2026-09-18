@@ -11,6 +11,7 @@ resources:
   - llmd.yaml
   - mcp-servers.yaml
   - metrics-server.yaml
+  - model-configs.yaml
   - neo4j.yaml
   - phoenix.yaml
   - qdrant.yaml

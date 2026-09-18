@@ -78,6 +78,14 @@ spec:
     # kagent-tools subchart is left at its default.
     istio-agent:
       enabled: false
+    # Lab 4: the chart's k8s-agent is replaced by our own Agent of the same
+    # name in releases/agent-retrieval.yaml. The chart hardcodes its system
+    # prompt (charts/k8s-agent/templates/agent.yaml), and that prompt's
+    # "Response Format" makes it summarise tool output into prose -- as a
+    # delegate for the retrieval agents' ingest it never returned a manifest.
+    # Only modelConfigRef is a value, so the prompt cannot be tuned in place.
+    k8s-agent:
+      enabled: false
     cilium-policy-agent:
       enabled: false
     cilium-manager-agent:

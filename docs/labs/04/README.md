@@ -54,14 +54,43 @@ Ten questions decide nothing on their own; read the per-question top-3 next to t
 
 The script calls the tools directly. The agentic pass asks the same ten questions to each Agent and judges the answer, which is what the lab is actually about: the model chooses the query, may search again, and may answer from the wrong hit.
 
-Ingest first — ask the agent to ingest, it delegates to `k8s-agent` for the manifests — then ask each question in the kagent UI, in the question's own language, one conversation per question. `kagent invoke --agent retrieval-agent --task "<question>"` should do the same from a shell; that CLI form is unverified here.
+Three agents, one prompt, one ModelConfig (`openai-gpt-5-4-mini`, [releases/model-configs.yaml](../../../releases/model-configs.yaml)): `retrieval-agent` (official), `retrieval-agent-nomic`, `retrieval-agent-qwen`. All three also carry `neo4j-mcp` with an identical Graph section, so the graph is a constant, not a variable. Ingest is delegated to `k8s-agent` -- our own, in [releases/agent-retrieval.yaml](../../../releases/agent-retrieval.yaml), replacing the chart's: the chart's prompt summarises tool output into prose and never returned a manifest; ours relays raw output verbatim and has only read tools plus labels, annotations and a connectivity check.
 
-Record one judgement per question by hand in `.local/lab04/agentic-<toolset>.json`:
+[agentic.py](agentic.py) drives the agents over kagent's A2A endpoint -- the same conversation the UI has, without the clicking:
+
+```bash
+kubectl -n kagent port-forward svc/kagent-controller 8083:8083
+
+uv run docs/labs/04/agentic.py ingest official   # one message per object, 38 objects
+uv run docs/labs/04/agentic.py ask official      # one conversation per question
+```
+
+`ingest` sends one message per declared object of this release (Agents, ModelConfigs, MCPServers, HelmReleases, OCIRepositories, Kustomizations) and records each reply in `.local/lab04/agentic-ingest-<toolset>.json`. One message per object, not one "ingest all Agents": given the list, the model stopped after one or two objects and rationalised why -- the loop belongs outside the model. Before an ingest, empty that toolset's collection and the graph, and create the collection with the schema its server expects: the official server writes a named vector, `fast-all-minilm-l6-v2`, and fails with 400 on a collection created without it; the Go server writes the default unnamed vector.
+
+```bash
+curl -s -X DELETE localhost:6333/collections/abox-minilm
+curl -s -X PUT localhost:6333/collections/abox-minilm -H 'Content-Type: application/json' \
+  -d '{"vectors":{"fast-all-minilm-l6-v2":{"size":384,"distance":"Cosine"}}}'
+curl -s -X PUT localhost:6333/collections/abox-nomic -H 'Content-Type: application/json' -d '{"vectors":{"size":768,"distance":"Cosine"}}'
+curl -s -X PUT localhost:6333/collections/abox-qwen256 -H 'Content-Type: application/json' -d '{"vectors":{"size":256,"distance":"Cosine"}}'
+kubectl -n neo4j exec neo4j-0 -- cypher-shell -u neo4j -p abox-neo4j "MATCH (n) DETACH DELETE n"
+```
+
+Audit what landed rather than what the agent reported -- the report and the store disagreed more than once:
+
+```bash
+curl -s localhost:6333/collections/abox-minilm/points/scroll -H 'Content-Type: application/json' \
+  -d '{"limit":100,"with_payload":true,"with_vector":false}' | jq -r '.result.points[].payload | (.metadata // .) | "\(.kind)/\(.name)"' | sort | uniq -c
+kubectl -n neo4j exec neo4j-0 -- cypher-shell -u neo4j -p abox-neo4j "MATCH (a)-[r]->(b) RETURN type(r), a.name, b.kind+'/'+b.name"
+```
+
+`ask` writes `.local/lab04/agentic-<toolset>.json` with the answer per question and the judgement fields empty. Fill them by hand:
 
 ```json
 [
   {
     "id": "q02",
+    "answer": "...",
     "answered_from_ids": ["releases/kagent.yaml:16-90"],
     "correct": true,
     "tool_calls": 1,
@@ -70,7 +99,7 @@ Record one judgement per question by hand in `.local/lab04/agentic-<toolset>.jso
 ]
 ```
 
-`answered_from_ids` are the chunk ids the agent cited, mapped from the metadata it quotes; `correct` is the hit@1 equivalent — the answer is right and came from a labelled chunk; `tool_calls` counts store/find calls in that conversation. Judging is manual and subjective, so note why.
+`answered_from_ids` are the chunk ids the agent cited, mapped from the metadata it quotes; `correct` is the hit@1 equivalent -- the answer is right and came from a labelled chunk; `tool_calls` counts store/find calls in that conversation (read them in the kagent UI, the conversation is listed under the agent). Judging is manual and subjective, so note why. Three of the ten questions ask about Makefile, setup.sh and fix-egress.sh, which are not cluster objects and cannot be in an agent-ingested store; "nothing relevant stored" is the right answer there and is judged as such, not as a miss.
 
 ```bash
 uv run ruff check docs/labs/04

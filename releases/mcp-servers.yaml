@@ -68,6 +68,11 @@ spec:
       # EMBEDDINGS_BASE_URL is therefore a re-embed, not a copy.
       QDRANT_URL: http://qdrant.qdrant:6333
       QDRANT_COLLECTION: abox-nomic
+      # Chunk size in characters. The default 7000 is ~2100 tokens of
+      # indented YAML, over the 2048-token slot llama-cpp-embeddings serves
+      # (16384 ctx / 8 slots), and the agent's k8s-agent manifest was
+      # rejected at 2075 tokens. 5000 keeps a chunk near 1500.
+      EMBEDDING_MAX_INPUT_CHARS: "5000"
     resources:
       requests:
         cpu: 25m
@@ -153,6 +158,12 @@ spec:
       EMBEDDINGS_QUERY_PREFIX: "Instruct: Given a question about a Kubernetes/OpenTofu repository, retrieve the file section that answers it\nQuery: "
       QDRANT_URL: http://qdrant.qdrant:6333
       QDRANT_COLLECTION: abox-qwen256
+      # Same 2048-token slot (4096 ctx / 2 slots), same reason as above.
+      EMBEDDING_MAX_INPUT_CHARS: "5000"
+      # Qwen3-0.6B embeds at ~45 tokens/s on this CPU: a 1500-token chunk
+      # is ~35s, and two agents storing at once queue behind each other,
+      # so the client's 120s default timed out mid-ingest.
+      EMBEDDINGS_TIMEOUT_SECONDS: "300"
     resources:
       requests:
         cpu: 25m

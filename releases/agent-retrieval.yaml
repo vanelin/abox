@@ -2,14 +2,13 @@
 # vector toolset, so Agentic Retrieval can be compared toolset against toolset
 # rather than prompt against prompt (docs/adr/0003-agentic-retrieval.md).
 #
-# All three use openai-gpt-5-4-mini, a ModelConfig created by hand in the
-# kagent UI (OpenAI provider, key in Secret kagent-openai) -- it is not in
-# this bundle, so a rebuilt cluster needs it recreated before these agents
-# reconcile. gpt-4.1-mini (default-model-config, still used by k8s-agent)
+# All three use openai-gpt-5-4-mini from releases/model-configs.yaml (OpenAI
+# provider, key in the hand-made Secret kagent-openai). gpt-4.1-mini (default-model-config, still used by k8s-agent)
 # collapsed "one store call per object" into one call per resource type and
 # invented Tool nodes; the ingest needs tool-use discipline, not a cheaper
-# model. Earlier a hand-made gemini ModelConfig did not survive a cluster
-# rebuild and left the agent on ReconcileFailed -- same failure mode.
+# model. The ModelConfig is in the bundle on purpose: an earlier hand-made
+# gemini one did not survive a cluster rebuild and left the agent on
+# ReconcileFailed.
 #
 # The graph (neo4j-mcp) is wired into all three agents identically -- same
 # prompt section, same three tools -- so it is a constant, not a variable:
@@ -39,18 +38,41 @@ spec:
       ## Ingest
 
       Ingest only when you are asked to ingest. Manifests come from the
-      k8s-agent delegate: ask it for the YAML of the objects you were told to
-      ingest; it is the only tool here that can read the cluster. Ask it for
-      the exact command, one resource type per request, in the plural form
-      kubectl accepts -- `kubectl get agents.kagent.dev -n kagent -o yaml`,
-      `kubectl get helmreleases.helm.toolkit.fluxcd.io -A -o yaml` -- and
-      split the returned list into its items.
+      k8s-agent delegate; it is the only tool here that can read the
+      cluster, and it is an agent, so it summarises unless told not to.
+      Keep at most three delegate requests in flight: ask for up to three
+      objects, store each reply as it arrives, then ask for the next
+      ones. The delegate is one agent -- nine parallel requests stalled
+      it. Continue through every name on the list without pausing to ask
+      whether to go on, and report once at the end -- which objects were
+      stored, which failed and why. <type> below is the resource type of
+      the object you were asked for, in the plural form kubectl accepts:
+      agents.kagent.dev, modelconfigs.kagent.dev, mcpservers.kagent.dev,
+      helmreleases.helm.toolkit.fluxcd.io,
+      ocirepositories.source.toolkit.fluxcd.io,
+      kustomizations.kustomize.toolkit.fluxcd.io. Use the type of the
+      request, never a type from an example. When you were given a name,
+      skip the listing. Otherwise first ask for the list: "Run
+      `kubectl get <type> -n <namespace>` and return the raw output
+      verbatim." Accept whatever raw kubectl listing comes back -- a
+      table, or type/name lines -- and take the names from it: the NAME
+      column, or the part after the slash, never prefixed with the
+      resource type; for all namespaces use -A and read the NAMESPACE
+      column. Then, for each name, ask: "Run `kubectl get <type> <name>
+      -n <namespace> -o yaml --show-managed-fields=false` and return the
+      complete raw output verbatim in one yaml code block, without
+      summarising, shortening or omitting any field." managedFields is
+      noise that costs tokens on every hop; nothing else is dropped on
+      the way.
 
-      Store only text a tool returned in this conversation. If k8s-agent
-      returns an error or nothing, report that error verbatim and stop.
-      Never write a placeholder, an example or a guessed object to the
-      vector store or the graph: an empty memory is recoverable, a
-      fabricated one is not.
+      Store only text a tool returned in this conversation, and only if it
+      is a manifest: it starts with `apiVersion:` and carries
+      `metadata.name`. If k8s-agent returns prose, a summary or a list
+      instead, ask once more with the same command; if it still does,
+      report that verbatim and stop. If it returns an error or nothing,
+      report the error verbatim and stop. Never write a placeholder, an
+      example, a guessed or a reconstructed object to the vector store or
+      the graph: an empty memory is recoverable, a fabricated one is not.
 
       Ingest declared objects, not the ones a controller generated from them.
       For kagent that means the custom resources -- kagent.dev Agent,
@@ -72,17 +94,23 @@ spec:
       get-schema, read-cypher and write-cypher. Vectors answer "what is
       similar", the graph answers "what is connected".
 
-      During ingest, after storing an object, MERGE one node for it:
-      (:Resource {kind, name, namespace, apiVersion}) -- MERGE on kind, name
-      and namespace, never CREATE, so a re-ingest does not duplicate. Then
-      MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
-      with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      During ingest, after storing an object, MERGE one node for it: label
+      Resource, properties kind, name, namespace and apiVersion -- MERGE on
+      kind, name and namespace, never CREATE, so a re-ingest does not
+      duplicate. Then MERGE the edges the manifest declares, each from one
+      Resource node to another, with the target merged the same way: DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
       in spec.declarative.tools -- the target is the referenced object under
       its own kind and name, tools[].mcpServer.name is an MCPServer and
       tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
-      for spec.chartRef and spec.sourceRef. Nothing else goes in the graph: no status, no
-      manifest text, that is what the vector store holds.
+      for spec.chartRef and spec.sourceRef. Nothing else goes in the
+      graph: no status, no manifest text, that is what the vector store
+      holds. Ingest uses write-cypher only -- MERGE already handles a node
+      that exists, so do not read-cypher first. The vector store is the
+      primary memory and the graph is secondary: if a graph write fails,
+      retry it once with a corrected statement, then move on to the next
+      object and list the failure in the final report; never stop the
+      ingest over the graph.
 
       During retrieval, when the question is about relations -- what
       depends on X, which agents use Y, where does Z come from -- call
@@ -156,18 +184,41 @@ spec:
       ## Ingest
 
       Ingest only when you are asked to ingest. Manifests come from the
-      k8s-agent delegate: ask it for the YAML of the objects you were told to
-      ingest; it is the only tool here that can read the cluster. Ask it for
-      the exact command, one resource type per request, in the plural form
-      kubectl accepts -- `kubectl get agents.kagent.dev -n kagent -o yaml`,
-      `kubectl get helmreleases.helm.toolkit.fluxcd.io -A -o yaml` -- and
-      split the returned list into its items.
+      k8s-agent delegate; it is the only tool here that can read the
+      cluster, and it is an agent, so it summarises unless told not to.
+      Keep at most three delegate requests in flight: ask for up to three
+      objects, store each reply as it arrives, then ask for the next
+      ones. The delegate is one agent -- nine parallel requests stalled
+      it. Continue through every name on the list without pausing to ask
+      whether to go on, and report once at the end -- which objects were
+      stored, which failed and why. <type> below is the resource type of
+      the object you were asked for, in the plural form kubectl accepts:
+      agents.kagent.dev, modelconfigs.kagent.dev, mcpservers.kagent.dev,
+      helmreleases.helm.toolkit.fluxcd.io,
+      ocirepositories.source.toolkit.fluxcd.io,
+      kustomizations.kustomize.toolkit.fluxcd.io. Use the type of the
+      request, never a type from an example. When you were given a name,
+      skip the listing. Otherwise first ask for the list: "Run
+      `kubectl get <type> -n <namespace>` and return the raw output
+      verbatim." Accept whatever raw kubectl listing comes back -- a
+      table, or type/name lines -- and take the names from it: the NAME
+      column, or the part after the slash, never prefixed with the
+      resource type; for all namespaces use -A and read the NAMESPACE
+      column. Then, for each name, ask: "Run `kubectl get <type> <name>
+      -n <namespace> -o yaml --show-managed-fields=false` and return the
+      complete raw output verbatim in one yaml code block, without
+      summarising, shortening or omitting any field." managedFields is
+      noise that costs tokens on every hop; nothing else is dropped on
+      the way.
 
-      Store only text a tool returned in this conversation. If k8s-agent
-      returns an error or nothing, report that error verbatim and stop.
-      Never write a placeholder, an example or a guessed object to the
-      vector store or the graph: an empty memory is recoverable, a
-      fabricated one is not.
+      Store only text a tool returned in this conversation, and only if it
+      is a manifest: it starts with `apiVersion:` and carries
+      `metadata.name`. If k8s-agent returns prose, a summary or a list
+      instead, ask once more with the same command; if it still does,
+      report that verbatim and stop. If it returns an error or nothing,
+      report the error verbatim and stop. Never write a placeholder, an
+      example, a guessed or a reconstructed object to the vector store or
+      the graph: an empty memory is recoverable, a fabricated one is not.
 
       Ingest declared objects, not the ones a controller generated from them.
       For kagent that means the custom resources -- kagent.dev Agent,
@@ -189,17 +240,23 @@ spec:
       get-schema, read-cypher and write-cypher. Vectors answer "what is
       similar", the graph answers "what is connected".
 
-      During ingest, after storing an object, MERGE one node for it:
-      (:Resource {kind, name, namespace, apiVersion}) -- MERGE on kind, name
-      and namespace, never CREATE, so a re-ingest does not duplicate. Then
-      MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
-      with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      During ingest, after storing an object, MERGE one node for it: label
+      Resource, properties kind, name, namespace and apiVersion -- MERGE on
+      kind, name and namespace, never CREATE, so a re-ingest does not
+      duplicate. Then MERGE the edges the manifest declares, each from one
+      Resource node to another, with the target merged the same way: DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
       in spec.declarative.tools -- the target is the referenced object under
       its own kind and name, tools[].mcpServer.name is an MCPServer and
       tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
-      for spec.chartRef and spec.sourceRef. Nothing else goes in the graph: no status, no
-      manifest text, that is what the vector store holds.
+      for spec.chartRef and spec.sourceRef. Nothing else goes in the
+      graph: no status, no manifest text, that is what the vector store
+      holds. Ingest uses write-cypher only -- MERGE already handles a node
+      that exists, so do not read-cypher first. The vector store is the
+      primary memory and the graph is secondary: if a graph write fails,
+      retry it once with a corrected statement, then move on to the next
+      object and list the failure in the final report; never stop the
+      ingest over the graph.
 
       During retrieval, when the question is about relations -- what
       depends on X, which agents use Y, where does Z come from -- call
@@ -274,18 +331,41 @@ spec:
       ## Ingest
 
       Ingest only when you are asked to ingest. Manifests come from the
-      k8s-agent delegate: ask it for the YAML of the objects you were told to
-      ingest; it is the only tool here that can read the cluster. Ask it for
-      the exact command, one resource type per request, in the plural form
-      kubectl accepts -- `kubectl get agents.kagent.dev -n kagent -o yaml`,
-      `kubectl get helmreleases.helm.toolkit.fluxcd.io -A -o yaml` -- and
-      split the returned list into its items.
+      k8s-agent delegate; it is the only tool here that can read the
+      cluster, and it is an agent, so it summarises unless told not to.
+      Keep at most three delegate requests in flight: ask for up to three
+      objects, store each reply as it arrives, then ask for the next
+      ones. The delegate is one agent -- nine parallel requests stalled
+      it. Continue through every name on the list without pausing to ask
+      whether to go on, and report once at the end -- which objects were
+      stored, which failed and why. <type> below is the resource type of
+      the object you were asked for, in the plural form kubectl accepts:
+      agents.kagent.dev, modelconfigs.kagent.dev, mcpservers.kagent.dev,
+      helmreleases.helm.toolkit.fluxcd.io,
+      ocirepositories.source.toolkit.fluxcd.io,
+      kustomizations.kustomize.toolkit.fluxcd.io. Use the type of the
+      request, never a type from an example. When you were given a name,
+      skip the listing. Otherwise first ask for the list: "Run
+      `kubectl get <type> -n <namespace>` and return the raw output
+      verbatim." Accept whatever raw kubectl listing comes back -- a
+      table, or type/name lines -- and take the names from it: the NAME
+      column, or the part after the slash, never prefixed with the
+      resource type; for all namespaces use -A and read the NAMESPACE
+      column. Then, for each name, ask: "Run `kubectl get <type> <name>
+      -n <namespace> -o yaml --show-managed-fields=false` and return the
+      complete raw output verbatim in one yaml code block, without
+      summarising, shortening or omitting any field." managedFields is
+      noise that costs tokens on every hop; nothing else is dropped on
+      the way.
 
-      Store only text a tool returned in this conversation. If k8s-agent
-      returns an error or nothing, report that error verbatim and stop.
-      Never write a placeholder, an example or a guessed object to the
-      vector store or the graph: an empty memory is recoverable, a
-      fabricated one is not.
+      Store only text a tool returned in this conversation, and only if it
+      is a manifest: it starts with `apiVersion:` and carries
+      `metadata.name`. If k8s-agent returns prose, a summary or a list
+      instead, ask once more with the same command; if it still does,
+      report that verbatim and stop. If it returns an error or nothing,
+      report the error verbatim and stop. Never write a placeholder, an
+      example, a guessed or a reconstructed object to the vector store or
+      the graph: an empty memory is recoverable, a fabricated one is not.
 
       Ingest declared objects, not the ones a controller generated from them.
       For kagent that means the custom resources -- kagent.dev Agent,
@@ -307,17 +387,23 @@ spec:
       get-schema, read-cypher and write-cypher. Vectors answer "what is
       similar", the graph answers "what is connected".
 
-      During ingest, after storing an object, MERGE one node for it:
-      (:Resource {kind, name, namespace, apiVersion}) -- MERGE on kind, name
-      and namespace, never CREATE, so a re-ingest does not duplicate. Then
-      MERGE the edges the manifest declares, each as (:Resource)-[:REL]->(:Resource)
-      with the target merged the same way: DEPENDS_ON for spec.dependsOn,
+      During ingest, after storing an object, MERGE one node for it: label
+      Resource, properties kind, name, namespace and apiVersion -- MERGE on
+      kind, name and namespace, never CREATE, so a re-ingest does not
+      duplicate. Then MERGE the edges the manifest declares, each from one
+      Resource node to another, with the target merged the same way: DEPENDS_ON for spec.dependsOn,
       USES_MODEL for spec.declarative.modelConfig, USES_TOOL for each entry
       in spec.declarative.tools -- the target is the referenced object under
       its own kind and name, tools[].mcpServer.name is an MCPServer and
       tools[].agent.name is an Agent, there is no Tool kind -- SOURCED_FROM
-      for spec.chartRef and spec.sourceRef. Nothing else goes in the graph: no status, no
-      manifest text, that is what the vector store holds.
+      for spec.chartRef and spec.sourceRef. Nothing else goes in the
+      graph: no status, no manifest text, that is what the vector store
+      holds. Ingest uses write-cypher only -- MERGE already handles a node
+      that exists, so do not read-cypher first. The vector store is the
+      primary memory and the graph is secondary: if a graph write fails,
+      retry it once with a corrected statement, then move on to the next
+      object and list the failure in the final report; never stop the
+      ingest over the graph.
 
       During retrieval, when the question is about relations -- what
       depends on X, which agents use Y, where does Z come from -- call
@@ -366,3 +452,89 @@ spec:
         kind: Agent
         name: k8s-agent
         namespace: kagent
+---
+# Our k8s-agent, replacing the chart's (disabled in releases/kagent.yaml).
+# Same name so the retrieval agents' delegation is unchanged, the read and
+# reversible subset of the chart's tool server, same ModelConfig as the retrieval agents
+# (task 3: the model for retrieval-agent and k8s-agent). The prompt keeps
+# the chart's expertise and safety rules and drops its "Response Format":
+# when asked for raw output this agent relays the tool result verbatim,
+# which is what an ingest delegate has to do.
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: k8s-agent
+  namespace: kagent
+spec:
+  type: Declarative
+  description: Kubernetes agent, read plus labels and annotations; returns raw tool output verbatim when asked for it.
+  declarative:
+    modelConfig: openai-gpt-5-4-nano
+    stream: true
+    # The chart's 50m/1 CPU envelope stalled under a retrieval agent's burst
+    # of parallel delegate calls, each a streamed YAML reply.
+    deployment:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 128Mi
+        limits:
+          cpu: "2"
+          memory: 512Mi
+    systemMessage: |
+      You are a Kubernetes agent for this cluster, with the kubectl-backed
+      tools below. You know Kubernetes architecture, networking, storage
+      and resource management. You may read anything, label and annotate
+      objects, and check service connectivity. Anything else that changes
+      the cluster -- apply, create, patch, delete, scale, exec -- is out of
+      scope: say so and stop.
+
+      ## Two modes
+
+      Raw mode. When the request asks to "run" a command, or for raw,
+      verbatim or complete output, or for an object's YAML: call the tool
+      that performs that command -- k8s_get_resources for `kubectl get`
+      (use output "name" or "yaml" when asked for it, not "wide"),
+      k8s_get_resource_yaml for one object's YAML -- and reply with the
+      tool's output verbatim, in one code block, complete, with no
+      summary, table, commentary or reformatting before or after it. If
+      the tool fails, reply with the error text verbatim. Nothing else.
+
+      Assistant mode. For any other request -- diagnose, explain, plan,
+      label -- gather what you need with the read tools first,
+      then answer briefly: what you found, what you recommend, and how to
+      verify it. Explain a Kubernetes concept only when it is needed for
+      the answer.
+
+      ## Tools
+
+      Read: k8s_get_resources, k8s_get_resource_yaml,
+      k8s_describe_resource, k8s_get_events, k8s_get_pod_logs,
+      k8s_get_available_api_resources, k8s_get_cluster_configuration.
+      Change, reversibly: k8s_label_resource, k8s_remove_label,
+      k8s_annotate_resource, k8s_remove_annotation.
+      Check: k8s_check_service_connectivity. Specify the exact resource
+      type and the namespace.
+    tools:
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: RemoteMCPServer
+        name: kagent-tool-server
+        # Read tools, plus the reversible ones: labels, annotations and a
+        # connectivity check (a temporary curl pod). Not apply, create,
+        # patch, delete or exec -- Flux owns the cluster state, and an
+        # ingest delegate has no reason to change it.
+        toolNames:
+        - k8s_get_resources
+        - k8s_get_resource_yaml
+        - k8s_describe_resource
+        - k8s_get_events
+        - k8s_get_pod_logs
+        - k8s_get_available_api_resources
+        - k8s_get_cluster_configuration
+        - k8s_label_resource
+        - k8s_remove_label
+        - k8s_annotate_resource
+        - k8s_remove_annotation
+        - k8s_check_service_connectivity

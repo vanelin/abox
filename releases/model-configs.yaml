@@ -1,0 +1,35 @@
+# ModelConfigs for the lab 4 agents. The chart's default-model-config
+# (gpt-4.1-mini) stays for the chart's own agents; this one drives the three
+# retrieval agents and our k8s-agent (docs/adr/0003-agentic-retrieval.md).
+# The key is the same hand-made Secret the default uses -- kagent-openai --
+# so a rebuilt cluster needs only that one Secret created by hand.
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openai-gpt-5-4-mini
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: gpt-5.4-mini
+  apiKeySecret: kagent-openai
+  apiKeySecretKey: OPENAI_API_KEY
+  openAI:
+    apiFormat: chatCompletions
+---
+# For k8s-agent only: as the retrieval agents' ingest delegate it relays
+# kubectl output verbatim, and the relay is the slowest hop -- a 7KB
+# manifest regenerated token by token. nano is the cheapest model that does
+# it; the retrieval agents stay on mini, which showed the tool-use
+# discipline nano was not tested for.
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openai-gpt-5-4-nano
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: gpt-5.4-nano
+  apiKeySecret: kagent-openai
+  apiKeySecretKey: OPENAI_API_KEY
+  openAI:
+    apiFormat: chatCompletions
