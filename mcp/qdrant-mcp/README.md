@@ -43,6 +43,7 @@ returned.
 | `EMBEDDINGS_TIMEOUT_SECONDS` | `120` | |
 | `EMBEDDINGS_DOCUMENT_PREFIX` | `search_document: ` | set empty for a model without instruction prefixes |
 | `EMBEDDINGS_QUERY_PREFIX` | `search_query: ` | as above |
+| `EMBEDDINGS_DIMS` | | MRL: keep the first N coordinates, then L2-normalize, for store and find alike; unset keeps the full vector. The collection is sized from the first stored vector, so changing it means a new collection and a re-ingest |
 | `QDRANT_URL` | `http://qdrant.qdrant:6333` | REST API, not gRPC |
 | `QDRANT_COLLECTION` | `abox` | created on first write; the manifest sets `abox-nomic` |
 | `EMBEDDING_MAX_INPUT_CHARS` | `7000` | longer input is chunked, 200-char overlap |

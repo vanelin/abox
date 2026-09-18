@@ -118,6 +118,10 @@ bash "${SCRIPT_DIR}/fix-docker-acl.sh" verify "${CLUSTER_NAME}" \
 
 export KUBECONFIG=~/.kube/config
 
+# Before Flux gets to kagent: its agents mount this Secret, and without it
+# their pods sit in CreateContainerConfigError until someone creates it.
+bash "${SCRIPT_DIR}/secrets.sh"
+
 cd ..
 
 # Install cloud-provider-kind (LoadBalancer support)

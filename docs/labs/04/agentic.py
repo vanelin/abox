@@ -5,7 +5,7 @@ The agentic pass is the same conversation the kagent UI would have -- same
 Agent, prompt, model and tools -- sent over the A2A JSON-RPC API instead of
 typed by hand. Nothing is bypassed: every store, find and Cypher call is the
 agent's own decision. The script only replaces the clicking, so three agents
-x (37 objects + 10 questions) is repeatable.
+x (27 objects + the questions) is repeatable.
 
   kubectl -n kagent port-forward svc/kagent-controller 8083:8083
 
@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 import time
 import uuid
@@ -91,8 +92,6 @@ def send(base: str, agent: str, text: str, context_id: str | None, timeout: int)
 
 
 def list_names(plural: str, namespace: str) -> list[tuple[str, str]]:
-    import subprocess
-
     jp = "jsonpath={range .items[*]}{.metadata.namespace}/{.metadata.name}{'\\n'}{end}"
     cmd = ["kubectl", "get", plural, "-o", jp]
     cmd += ["-n", namespace] if namespace else ["-A"]

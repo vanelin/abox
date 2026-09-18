@@ -25,7 +25,7 @@
 make run
 ```
 
-That's it. Installs OpenTofu and k9s, provisions the cluster, bootstraps Flux, and reconciles all components. When it finishes:
+That's it. Installs OpenTofu and k9s, provisions the cluster, bootstraps Flux, and reconciles all components. If `OPENAI_API_KEY` is set in the environment (a Codespaces Secret, or an export in `~/.zshrc.local`), it also creates the `kagent-openai` Secret the agents read; `make secrets` repeats just that step. The key never touches a file. When it finishes:
 
 ```bash
 kubectl get gateway,httproute -A        # gateway is up
@@ -66,8 +66,9 @@ make push   # bumps patch version, tags, pushes â†’ CI publishes OCI artifact â†
 | `bootstrap/flux-instance.yaml` | `FluxInstance` applied by the bootstrap Job |
 | `releases/crds/` | CRD HelmReleases: gateway-api, agentgateway, kagent, inference-extension |
 | `releases/` | App HelmReleases + Gateway + HTTPRoutes |
-| `images/nomic-embed/` | Dockerfile baking nomic-embed-text-v1.5 into llama.cpp server |
+| `images/nomic-embed/`, `images/qwen-embed/` | Dockerfiles baking an embedding GGUF into llama.cpp server |
 | `scripts/setup.sh` | Full setup script (`make run`) |
+| `scripts/secrets.sh` | Creates hand-made Secrets from env (`make secrets`) |
 | `.github/workflows/flux-push.yaml` | CI: publish `releases/` as OCI artifact on `v*` tags |
 
 ## Embeddings: two backends

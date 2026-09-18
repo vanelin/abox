@@ -92,10 +92,14 @@ spec:
       enabled: false
     cilium-debug-agent:
       enabled: false
+    # No apiKey here on purpose. With one, the chart renders the Secret
+    # kagent-openai itself (templates/modelconfig-secret.yaml) and every Helm
+    # upgrade overwrites the hand-made key with that value -- the placeholder
+    # OPENAI_API_KEY used to sit here and did exactly that. Without it the
+    # chart only references the Secret (apiKeySecretRef defaults to
+    # kagent-openai), which is created by hand and never enters git.
     providers:
       default: openAI
-      openAI:
-        apiKey: OPENAI_API_KEY
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant

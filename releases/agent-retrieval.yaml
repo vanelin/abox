@@ -1,14 +1,16 @@
-# Lab 4: two retrieval agents with the same prompt and model and a different
-# vector toolset, so Agentic Retrieval can be compared toolset against toolset
-# rather than prompt against prompt (docs/adr/0003-agentic-retrieval.md).
+# Lab 4: three retrieval agents with the same prompt and model and a different
+# vector toolset -- official/MiniLM, Go/nomic, Go/Qwen3 -- so Agentic Retrieval
+# is compared toolset against toolset rather than prompt against prompt
+# (docs/adr/0003-agentic-retrieval.md). The three prompts must stay identical
+# apart from the store/find tool names. Last in the file is our k8s-agent,
+# their ingest delegate.
 #
-# All three use openai-gpt-5-4-mini from releases/model-configs.yaml (OpenAI
-# provider, key in the hand-made Secret kagent-openai). gpt-4.1-mini (default-model-config, still used by k8s-agent)
-# collapsed "one store call per object" into one call per resource type and
-# invented Tool nodes; the ingest needs tool-use discipline, not a cheaper
-# model. The ModelConfig is in the bundle on purpose: an earlier hand-made
-# gemini one did not survive a cluster rebuild and left the agent on
-# ReconcileFailed.
+# All three use openai-gpt-5-4-mini from releases/model-configs.yaml (key in
+# the hand-made Secret kagent-openai). The chart's gpt-4.1-mini collapsed
+# "one store call per object" into one call per resource type and invented
+# Tool nodes: the ingest needs tool-use discipline, not a cheaper model. The
+# ModelConfig is in the bundle on purpose -- a hand-made one does not survive
+# a cluster rebuild and leaves the agents on ReconcileFailed.
 #
 # The graph (neo4j-mcp) is wired into all three agents identically -- same
 # prompt section, same three tools -- so it is a constant, not a variable:
@@ -119,11 +121,20 @@ spec:
 
       ## Retrieve
 
-      Call qdrant-find with the user's question as the query, in the user's
-      language, once. Read every returned text before answering; the best
-      match is first but not always the right one. If the top results answer
-      different questions, call qdrant-find again with a reworded query, at most
-      twice more.
+      Always search twice before answering, in the same turn. First call
+      qdrant-find with the user's question as the query, in the user's
+      language. Then call qdrant-find again with a keyword query in English:
+      the kind of object likely to hold the answer, the name the question
+      mentions, and the key term it asks about -- for "Why does kagent
+      need a postRenderer?" that is "HelmRelease kagent postRenderers".
+      The two queries find different things: a whole manifest is one
+      vector and an embedding model reads only its beginning, so a
+      question about a field deep inside matches poorly while kind and
+      name match the top. Read every returned text from both calls; the
+      best match is first but not always the right one. If neither holds
+      the key term, one more reworded call is allowed. Do not offer to
+      search again and do not reason from a text that lacks the term --
+      answer from a text that has it, or say nothing relevant is stored.
 
       Retrieval reads what is already stored. Do not fetch manifests, do not
       delegate to another agent, and do not write. If the store has nothing
@@ -265,11 +276,20 @@ spec:
 
       ## Retrieve
 
-      Call vector_find with the user's question as the query, in the user's
-      language, once. Read every returned text before answering; the best
-      match is first but not always the right one. If the top results answer
-      different questions, call vector_find again with a reworded query, at most
-      twice more.
+      Always search twice before answering, in the same turn. First call
+      vector_find with the user's question as the query, in the user's
+      language. Then call vector_find again with a keyword query in English:
+      the kind of object likely to hold the answer, the name the question
+      mentions, and the key term it asks about -- for "Why does kagent
+      need a postRenderer?" that is "HelmRelease kagent postRenderers".
+      The two queries find different things: a whole manifest is one
+      vector and an embedding model reads only its beginning, so a
+      question about a field deep inside matches poorly while kind and
+      name match the top. Read every returned text from both calls; the
+      best match is first but not always the right one. If neither holds
+      the key term, one more reworded call is allowed. Do not offer to
+      search again and do not reason from a text that lacks the term --
+      answer from a text that has it, or say nothing relevant is stored.
 
       Retrieval reads what is already stored. Do not fetch manifests, do not
       delegate to another agent, and do not write. If the store has nothing
@@ -412,11 +432,20 @@ spec:
 
       ## Retrieve
 
-      Call vector_find with the user's question as the query, in the user's
-      language, once. Read every returned text before answering; the best
-      match is first but not always the right one. If the top results answer
-      different questions, call vector_find again with a reworded query, at most
-      twice more.
+      Always search twice before answering, in the same turn. First call
+      vector_find with the user's question as the query, in the user's
+      language. Then call vector_find again with a keyword query in English:
+      the kind of object likely to hold the answer, the name the question
+      mentions, and the key term it asks about -- for "Why does kagent
+      need a postRenderer?" that is "HelmRelease kagent postRenderers".
+      The two queries find different things: a whole manifest is one
+      vector and an embedding model reads only its beginning, so a
+      question about a field deep inside matches poorly while kind and
+      name match the top. Read every returned text from both calls; the
+      best match is first but not always the right one. If neither holds
+      the key term, one more reworded call is allowed. Do not offer to
+      search again and do not reason from a text that lacks the term --
+      answer from a text that has it, or say nothing relevant is stored.
 
       Retrieval reads what is already stored. Do not fetch manifests, do not
       delegate to another agent, and do not write. If the store has nothing
@@ -493,12 +522,27 @@ spec:
 
       Raw mode. When the request asks to "run" a command, or for raw,
       verbatim or complete output, or for an object's YAML: call the tool
-      that performs that command -- k8s_get_resources for `kubectl get`
-      (use output "name" or "yaml" when asked for it, not "wide"),
-      k8s_get_resource_yaml for one object's YAML -- and reply with the
-      tool's output verbatim, in one code block, complete, with no
-      summary, table, commentary or reformatting before or after it. If
-      the tool fails, reply with the error text verbatim. Nothing else.
+      that performs that command and reply with the tool's output
+      verbatim, in one code block, complete, with no summary, table,
+      commentary or reformatting before or after it. If the tool fails,
+      reply with the error text verbatim. Nothing else. Every raw-mode
+      request is a fresh tool call, even when an earlier turn of the
+      conversation looks like it already holds the answer: the cluster
+      changes, and a manifest recalled from an earlier turn is not the
+      object that was asked for -- this agent once answered a request for
+      the releases Kustomization with releases-crds that way.
+
+      Which tool: in `kubectl get <type> <name> -n <namespace> -o yaml`
+      the word right after the resource type is the object's name, so
+      `kubectl get kustomizations.kustomize.toolkit.fluxcd.io releases -n
+      flux-system -o yaml` asks for the object named releases. Such a
+      command is always k8s_get_resource_yaml with that resource_type,
+      that resource_name and the namespace -- ignore flags the tool has
+      no argument for, such as --show-managed-fields -- and the reply is
+      that one object and no other. A command without a name is a
+      listing: k8s_get_resources with the default table output, never
+      with output yaml -- a whole type as YAML is tens of kilobytes to
+      relay and the caller then has to guess which item it asked for.
 
       Assistant mode. For any other request -- diagnose, explain, plan,
       label -- gather what you need with the read tools first,

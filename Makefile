@@ -8,11 +8,12 @@ help:
 	@echo "  apply      - Apply OpenTofu configuration"
 	@echo "  fix-egress - Repair nested-Docker egress (Codespaces) and verify nodes"
 	@echo "  fix-docker-acl - Clear the /tmp default ACL that breaks non-root images"
+	@echo "  secrets    - Create the hand-made cluster Secrets from env (OPENAI_API_KEY)"
 	@echo "  llama      - Build llama-server from a pinned llama.cpp tag into .local/"
 	@echo "  models     - Download the ADR-0001 embedding GGUFs into .local/models (checksummed)"
 	@echo "  clean-llama - Remove .local/llama.cpp and .local/models"
 
-.PHONY: help run tools fix-egress fix-docker-acl tofu apply down push llama models clean-llama
+.PHONY: help run tools fix-egress fix-docker-acl secrets tofu apply down push llama models clean-llama
 
 run:
 	@bash scripts/setup.sh
@@ -32,6 +33,9 @@ fix-egress:
 fix-docker-acl:
 	@bash scripts/fix-docker-acl.sh
 	@bash scripts/fix-docker-acl.sh verify abox
+
+secrets:
+	@bash scripts/secrets.sh
 
 tofu:
 	@cd bootstrap && tofu init
