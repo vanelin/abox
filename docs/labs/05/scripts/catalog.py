@@ -26,8 +26,8 @@ Entries and where they come from:
   Topic     topics.json, written by hand -- the one part an
             API cannot give                                  <- references
 
-  uv run docs/labs/05/catalog.py vanelin
-  uv run docs/labs/05/catalog.py vanelin --topics docs/labs/05/topics.json
+  uv run docs/labs/05/scripts/catalog.py vanelin
+  uv run docs/labs/05/scripts/catalog.py vanelin --topics docs/labs/05/data/topics.json
 
 Writes .local/lab05/<user>.json and lists the repositories whose description
 is still empty; fill those in topics.json under "descriptions".
@@ -44,7 +44,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[4]
 OUT = ROOT / ".local" / "lab05"
 MAX_SECTIONS = 6
 SECTION_CHARS = 800

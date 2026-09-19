@@ -1,0 +1,330 @@
+{
+  "corpus": "docs/labs/05/data/vanelin.catalog.json",
+  "corpus_sha256": "b91045a12d7e317b8141ecdaf62ba64d102bbc00c24785aeda706b165c1aad56",
+  "qn_prefix": "vanelin//vanelin.catalog.json::",
+  "note": "gold holds entry names; the qualified name is qn_prefix + name. lookup gold is hand-labelled; graph and facet gold is computed from the catalog (repos linking to `seed`, repos matching `args`). All answers refer to this frozen corpus, not current GitHub state. Multi-repository gold requires all listed repositories; order matters only when args specifies order. negative has empty gold: a correct answer says the corpus provides no matching evidence. Per-question notes explain the labels and are for evaluation only, never part of the agent's question.",
+  "questions": [
+    {
+      "id": "l01",
+      "type": "lookup",
+      "language": "en",
+      "question": "Where did I write a Kubernetes controller in Go?",
+      "gold": [
+        "k8s-controller"
+      ]
+    },
+    {
+      "id": "l02",
+      "type": "lookup",
+      "language": "en",
+      "question": "Which of my projects is a Telegram bot?",
+      "note": "kbot implements the bot. automation-token-update manages a bot token, and MikrotikPublicRepository sends Telegram alerts; neither is labelled as the bot application.",
+      "gold": [
+        "kbot"
+      ]
+    },
+    {
+      "id": "l03",
+      "type": "lookup",
+      "language": "en",
+      "question": "Where do I set up cluster monitoring with Prometheus, Loki and Grafana?",
+      "gold": [
+        "flux-monitoring"
+      ]
+    },
+    {
+      "id": "l04",
+      "type": "lookup",
+      "language": "en",
+      "question": "Which repository creates a GKE cluster and bootstraps Flux on it?",
+      "gold": [
+        "tf-gcp-gke-cluster-flux"
+      ]
+    },
+    {
+      "id": "l05",
+      "type": "lookup",
+      "language": "en",
+      "question": "Where did I let GitHub Actions authenticate to Google Cloud without long-lived keys?",
+      "gold": [
+        "automation-token-update"
+      ]
+    },
+    {
+      "id": "l06",
+      "type": "lookup",
+      "language": "en",
+      "question": "Which repository shows how to run Kafka without ZooKeeper?",
+      "gold": [
+        "kafka"
+      ]
+    },
+    {
+      "id": "l07",
+      "type": "lookup",
+      "language": "en",
+      "question": "Where are my shell and editor settings for setting up a new machine?",
+      "gold": [
+        "dotfiles"
+      ]
+    },
+    {
+      "id": "l08",
+      "type": "lookup",
+      "language": "en",
+      "question": "Which repositories manage a Talos Linux cluster?",
+      "note": "Both omni and everstake-demo describe Talos with Sidero Omni. This labels examples and configuration, not proof of a running deployment.",
+      "gold": [
+        "omni",
+        "everstake-demo"
+      ]
+    },
+    {
+      "id": "l09",
+      "type": "lookup",
+      "language": "en",
+      "question": "Where did I let an AI assistant talk to a network router?",
+      "gold": [
+        "mikrotik-mcp"
+      ]
+    },
+    {
+      "id": "l10",
+      "type": "lookup",
+      "language": "en",
+      "question": "Which repository is a cheaper replacement for AWS NAT gateways?",
+      "gold": [
+        "alternat"
+      ]
+    },
+    {
+      "id": "l11",
+      "type": "lookup",
+      "language": "uk",
+      "question": "Де я писав плагін для kubectl, що показує використання CPU та памʼяті?",
+      "gold": [
+        "kubectl-kubeplugin"
+      ]
+    },
+    {
+      "id": "l12",
+      "type": "lookup",
+      "language": "uk",
+      "question": "У якому репозиторії я порівнював minikube, kind і k3d?",
+      "gold": [
+        "module4-PoC"
+      ]
+    },
+    {
+      "id": "l13",
+      "type": "lookup",
+      "language": "uk",
+      "question": "У яких репозиторіях мого профілю є приклади застосунків на Django, включно з форками?",
+      "note": "django-docker contains the zday Django example; ooniversity_django_courses_04 contains Django coursework and is a fork. The corpus does not establish that django-docker was coursework or that the owner authored the fork.",
+      "gold": [
+        "django-docker",
+        "ooniversity_django_courses_04"
+      ]
+    },
+    {
+      "id": "l14",
+      "type": "lookup",
+      "language": "uk",
+      "question": "Який репозиторій розгортає локальний кластер з усім потрібним для AI-агентів?",
+      "note": "abox explicitly describes a local Kubernetes AI stack. dotfiles configures a workstation and AI clients; it does not provision this cluster.",
+      "gold": [
+        "abox"
+      ]
+    },
+    {
+      "id": "l15",
+      "type": "lookup",
+      "language": "uk",
+      "question": "Шукаю самого Telegram-бота на Go, а не оновлення його токена чи скрипти, що надсилають сповіщення. Яке це репо?",
+      "gold": [
+        "kbot"
+      ]
+    },
+    {
+      "id": "l16",
+      "type": "lookup",
+      "language": "uk",
+      "question": "Де вже є Prometheus, Loki й Grafana, але інтеграція OpenTelemetry прямо позначена як непрацююча?",
+      "gold": [
+        "flux-monitoring"
+      ]
+    },
+    {
+      "id": "l17",
+      "type": "lookup",
+      "language": "en",
+      "question": "Which repository has Python code to trigger GitHub Actions from a Cloud Function, but still documents that integration as in development and requiring manual setup?",
+      "gold": [
+        "automation-token-update"
+      ]
+    },
+    {
+      "id": "g01",
+      "type": "graph",
+      "language": "en",
+      "question": "Which repositories use Terraform?",
+      "seed": "Terraform",
+      "gold": [
+        "abox",
+        "alternat",
+        "automation-token-update",
+        "tf-gcp-gke-cluster-flux",
+        "tf-google-gke-cluster"
+      ]
+    },
+    {
+      "id": "g02",
+      "type": "graph",
+      "language": "en",
+      "question": "Which repositories list Helm in their detected Tools list in this frozen corpus?",
+      "seed": "Helm",
+      "gold": [
+        "everstake-demo",
+        "k8s-controller",
+        "kbot",
+        "omni"
+      ],
+      "note": "Tests detected Tool membership, not whether a repository ships its own chart; consuming Helm and shipping a chart are different claims."
+    },
+    {
+      "id": "g03",
+      "type": "graph",
+      "language": "en",
+      "question": "Which repositories list Argo CD in their detected Tools list in this frozen corpus?",
+      "seed": "Argo CD",
+      "gold": [
+        "everstake-demo",
+        "module4-PoC",
+        "omni"
+      ],
+      "note": "Tests detected Tool membership. kbot README mentions ArgoCD, but its detected Tools list lacks Argo CD; this question deliberately does not ask for every README mention."
+    },
+    {
+      "id": "g04",
+      "type": "graph",
+      "language": "en",
+      "question": "Which repositories belong to the GitOps topic?",
+      "seed": "GitOps",
+      "gold": [
+        "abox",
+        "everstake-demo",
+        "flux-monitoring",
+        "kbot",
+        "module4-PoC",
+        "omni",
+        "tf-gcp-gke-cluster-flux"
+      ]
+    },
+    {
+      "id": "g05",
+      "type": "graph",
+      "language": "en",
+      "question": "Which repositories use Jenkins?",
+      "seed": "Jenkins",
+      "gold": [
+        "configuration-as-code-jenkins-k8s-jobdsl",
+        "configuration-as-code-jenkins-k8s-pipeline",
+        "kbot"
+      ]
+    },
+    {
+      "id": "g06",
+      "type": "graph",
+      "language": "uk",
+      "question": "Які репозиторії написані на Go?",
+      "seed": "Go",
+      "gold": [
+        "k8s-controller",
+        "kbot"
+      ]
+    },
+    {
+      "id": "f01",
+      "type": "facet",
+      "language": "en",
+      "question": "What are my two most starred original repositories?",
+      "args": {
+        "attr": "fork=false",
+        "order": "stars:desc",
+        "limit": 2
+      },
+      "gold": [
+        "automation-token-update",
+        "kbot"
+      ]
+    },
+    {
+      "id": "f02",
+      "type": "facet",
+      "language": "en",
+      "question": "Which repositories did I push to in 2026?",
+      "args": {
+        "attr": "year=2026",
+        "limit": 20
+      },
+      "gold": [
+        "abox",
+        "dotfiles",
+        "mikrotik-mcp"
+      ]
+    },
+    {
+      "id": "f03",
+      "type": "facet",
+      "language": "uk",
+      "question": "Які з моїх репозиторіїв є форками?",
+      "args": {
+        "attr": "fork=true",
+        "limit": 30
+      },
+      "gold": [
+        "MikrotikPublicRepository",
+        "abox",
+        "alternat",
+        "configuration-as-code-jenkins-k8s-jobdsl",
+        "configuration-as-code-jenkins-k8s-pipeline",
+        "kubernetes-the-hard-way",
+        "learn-cantrill-io-labs",
+        "mikrotik-mcp",
+        "nginxconfig.io",
+        "ooniversity_django_courses_04",
+        "tf-google-gke-cluster"
+      ]
+    },
+    {
+      "id": "f04",
+      "type": "facet",
+      "language": "uk",
+      "question": "Які репозиторії мають рівно дві зірки в цьому корпусі, а не щонайменше дві?",
+      "args": {
+        "attr": "stars=2",
+        "limit": 30
+      },
+      "gold": [
+        "k8s-controller",
+        "kafka",
+        "tf-gcp-gke-cluster-flux"
+      ]
+    },
+    {
+      "id": "n01",
+      "type": "negative",
+      "language": "en",
+      "question": "Do I have any repositories written in Rust?",
+      "gold": []
+    },
+    {
+      "id": "n02",
+      "type": "negative",
+      "language": "uk",
+      "question": "Назви мої архівовані репозиторії з цього корпусу. Чи означає нуль зірок або давній останній push, що репозиторій архівований?",
+      "note": "All 27 Repo entries have archived=false. Answer that no archived repositories are recorded and that stars/year do not determine archived status; do not label old or zero-star repositories as archived.",
+      "gold": []
+    }
+  ]
+}

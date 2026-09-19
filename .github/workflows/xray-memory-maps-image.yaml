@@ -1,4 +1,4 @@
-# Builds the xray-memory maps image: every docs/labs/05/<label>.catalog.json
+# Builds the xray-memory maps image: every docs/labs/05/data/<label>.catalog.json
 # becomes /maps/<label>.graph.gob.gz, embedded by the same nomic GGUF the
 # in-cluster sidecar serves, so the fingerprint (model, dims 256, max input
 # chars) matches by construction. No cluster is involved.
@@ -11,8 +11,8 @@ on:
   push:
     branches: [lab/05-agentic-memory]
     paths:
-      - 'docs/labs/05/*.catalog.json'
-      - 'docs/labs/05/*.summary.txt'
+      - 'docs/labs/05/data/*.catalog.json'
+      - 'docs/labs/05/data/*.summary.txt'
       - 'images/xray-memory-maps/**'
       - '.github/workflows/xray-memory-maps-image.yaml'
   workflow_dispatch:
@@ -58,7 +58,7 @@ jobs:
       - name: Build the maps
         run: |
           mkdir -p images/xray-memory-maps/maps
-          for catalog in docs/labs/05/*.catalog.json; do
+          for catalog in docs/labs/05/data/*.catalog.json; do
             label="$(basename "$catalog" .catalog.json)"
             docker run --rm --network host --user "$(id -u)" -v "$PWD":/w "$XRAY_IMAGE" \
               servicemap -in "/w/$catalog" -label "$label" \
@@ -66,7 +66,7 @@ jobs:
               -embedding-endpoint http://localhost:8090 \
               -embedding-model nomic-embed-text -embedding-dims 256 \
               -snapshot-recipient "$SNAPSHOT_RECIPIENT" \
-              -summary "$(cat "docs/labs/05/$label.summary.txt")" 2>&1 \
+              -summary "$(cat "docs/labs/05/data/$label.summary.txt")" 2>&1 \
               | sed 's/\x1b\[[0-9;]*m//g' | tee "build-$label.log"
             # The log is coloured, and a colour code sits between a key and its
             # value -- hence the sed above. A link whose target names no entry
@@ -83,7 +83,7 @@ jobs:
       - name: Tag
         id: tag
         run: |
-          echo "tag=$(cat docs/labs/05/*.catalog.json docs/labs/05/*.summary.txt | sha256sum | cut -c1-12)" >> "$GITHUB_OUTPUT"
+          echo "tag=$(cat docs/labs/05/data/*.catalog.json docs/labs/05/data/*.summary.txt | sha256sum | cut -c1-12)" >> "$GITHUB_OUTPUT"
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3

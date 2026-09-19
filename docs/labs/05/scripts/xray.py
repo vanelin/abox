@@ -7,13 +7,13 @@ that handshake and nothing else -- no prompt, no model, no parsing.
 
   kubectl -n xray-memory port-forward svc/xray-memory 8085:8085
 
-  uv run docs/labs/05/xray.py                        # list the tools and their parameters
-  uv run docs/labs/05/xray.py search_graph query="kubernetes controller in go" kind=Repo
-  uv run docs/labs/05/xray.py search_graph query=repositories attr=fork=false order=stars:desc limit=10
-  uv run docs/labs/05/xray.py get_graph_node qn="vanelin//vanelin.catalog.json::kbot"
-  uv run docs/labs/05/xray.py get_graph_impact seeds='["vanelin//vanelin.catalog.json::Terraform"]'
-  uv run docs/labs/05/xray.py remember text="..." attrs="about=kbot,topic=lab5" ttl=never
-  uv run docs/labs/05/xray.py recall query=kbot
+  uv run docs/labs/05/scripts/xray.py                        # list the tools and their parameters
+  uv run docs/labs/05/scripts/xray.py search_graph query="kubernetes controller in go" kind=Repo
+  uv run docs/labs/05/scripts/xray.py search_graph query=repositories attr=fork=false order=stars:desc limit=10
+  uv run docs/labs/05/scripts/xray.py get_graph_node qn="vanelin//vanelin.catalog.json::kbot"
+  uv run docs/labs/05/scripts/xray.py get_graph_impact seeds='["vanelin//vanelin.catalog.json::Terraform"]'
+  uv run docs/labs/05/scripts/xray.py remember text="..." attrs="about=kbot,topic=lab5" ttl=never
+  uv run docs/labs/05/scripts/xray.py recall query=kbot
 
 A value that parses as JSON (a number, true, a [list]) is sent as that type;
 anything else is sent as a string. Only the first `=` splits, so

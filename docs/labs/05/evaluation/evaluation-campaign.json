@@ -1,0 +1,81 @@
+{
+  "questions": "docs/labs/05/data/questions.json",
+  "questions_sha256": "d533351dabf90de1f4d0e67421b4d1ffc80291e2e90ca2cde48ca8c7e1ca5df9",
+  "repeat": 1,
+  "judgements": "docs/labs/05/evaluation/agentic-judgements.json",
+  "reports": {
+    "xray": [
+      {
+        "path": ".local/lab05/agentic-xray.json",
+        "sha256": "569ed8df481c7d84c23420200554fd282ecb9c79bc9fecd52bc54f6f422c5b9f",
+        "exclude_ids": [
+          "g02",
+          "g03"
+        ]
+      },
+      {
+        "path": ".local/lab05/agentic-xray-retry1.json",
+        "sha256": "e0f96695592e42a0cc5888378889a4ee5f70477e9fffdd88e8cef5056cfb1362",
+        "exclude_ids": [
+          "g02",
+          "g03"
+        ]
+      },
+      {
+        "path": ".local/lab05/agentic-xray-reviewed-questions.json",
+        "sha256": "ea8b4ed7a092feff53193c35b03ffaf0064a3ff3b3cd1b996ca77f56c435de0c"
+      }
+    ],
+    "nomic": [
+      {
+        "path": ".local/lab05/agentic-nomic.json",
+        "sha256": "90069a38fa131a5f0c34e2b3951375a0b2ec86a7ba99c0f53d594f7cfc7a2adf",
+        "exclude_ids": [
+          "g02",
+          "g03"
+        ]
+      },
+      {
+        "path": ".local/lab05/agentic-nomic-retry1.json",
+        "sha256": "39f4fd50fe8b470e125e3132dd9c79614b5b5339bf869d4a75f611370b0a4bec",
+        "exclude_ids": [
+          "g02",
+          "g03"
+        ]
+      },
+      {
+        "path": ".local/lab05/agentic-nomic-reviewed-questions.json",
+        "sha256": "cd69187927d798daac797dff7042014bf56fc7f4304d16183bcec1136bec7df5"
+      }
+    ],
+    "official": [
+      {
+        "path": ".local/lab05/agentic-official.json",
+        "sha256": "90de5ca0f19786fa7ca2253726287cc25ea019a0fdf83f1e4365bac2a703d79d",
+        "exclude_ids": [
+          "g02",
+          "g03"
+        ]
+      },
+      {
+        "path": ".local/lab05/agentic-official-retry1.json",
+        "sha256": "a931477bec2c8e2825ee73bf1b95859f115cd4fcdf2f5bc058642a80b65c37d1",
+        "exclude_ids": [
+          "g02",
+          "g03"
+        ]
+      },
+      {
+        "path": ".local/lab05/agentic-official-reviewed-questions.json",
+        "sha256": "f05582919de14ce042546ca512f6e047b20a9397a5698ef427225d72f04c99fc"
+      }
+    ]
+  },
+  "notes": [
+    "Only g02 and g03 were reworded and rerun for all agents. Old versions remain in raw reports and cost totals but not accuracy.",
+    "Reports use the same frozen corpus. Unchanged questions retain their original first successful response.",
+    "Historical reports did not snapshot deployed prompts/model configuration. Current configuration was inspected, but equality throughout historical runs cannot be established retroactively.",
+    "Shared memory was not reset. All recorded recall calls returned zero notes; no memory/store writes occurred in the campaign traces.",
+    "Layout-only migration: corpus path in questions.json moved under data/, so its file SHA256 changed. Question text, gold, corpus bytes, raw reports and judgement hashes are unchanged."
+  ]
+}

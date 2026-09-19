@@ -1,0 +1,992 @@
+{
+  "reviewer": "Codex assistant, qualitative review on 2026-09-19; not a human adjudication or independent benchmark",
+  "rubric": "Correct means the requested answer is complete for the frozen corpus, satisfies the stated constraint/order, and has no contradictory material claim. Explicitly rejected alternatives, quoted dependencies and clearly labelled upstream/context are not positive answers. Negative answers must reject the premise; low similarity alone is not proof of absence. claimed_repos records positive answer assertions (or a partial answer), not every name mention. This review is about the substantive answer, not a line-by-line certification of every ancillary statement.",
+  "rows": {
+    "09ffcc5ba5c3973ab6de6f6f9ac1dd64353a6fdd5fda08a33290d404f2555f40": {
+      "agent": "xray",
+      "id": "l01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "k8s-controller"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "3cfaf69c85c6a1430806fe21f1268570801b3c86ac5dce66fd888628ec9e41b2": {
+      "agent": "xray",
+      "id": "l02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "kbot"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "ddd95917ce0707f49a8c8559cbb1caea670810f422b3c415343f5fc719dbdbf5": {
+      "agent": "xray",
+      "id": "l03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "flux-monitoring"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "f5742d7749e76782d841832997b20dc175be6d627eba82d1e637d90e080c1940": {
+      "agent": "xray",
+      "id": "l04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "tf-gcp-gke-cluster-flux"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "4bcd5b5a9159c2a3c8338ff37c3fadccb30b913d671f1e338155f7b4866b4717": {
+      "agent": "xray",
+      "id": "l05",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update"
+      ],
+      "reason": "Names automation-token-update as the answer. The GKE repository is explicitly related context, not a second WIF implementation."
+    },
+    "0f4cec9d004ed1cac1b04e6ba8b9f85f8ac2c01a6827096927cb87b9a8ad8dce": {
+      "agent": "xray",
+      "id": "l06",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "kafka"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "6da0a00b0482927d2dbf3cb1aaac053b870672561e7d27e9b2a8a3579f2f7b65": {
+      "agent": "xray",
+      "id": "l07",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "dotfiles"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "f1cf9b474fcff9b61a3895a00d36910f0e12f4e9b27c6751f78d1d5101bf70c5": {
+      "agent": "xray",
+      "id": "l08",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "omni",
+        "everstake-demo"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "b26f19249cda2ac0fed56e127093430e3216f3163df0ddd3953e3909a83b28bb": {
+      "agent": "xray",
+      "id": "l09",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "mikrotik-mcp"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "503c969a445dbaddca49a3d026ad57eb282260898e03308ee33ec6b60e5de675": {
+      "agent": "xray",
+      "id": "l10",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "alternat"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "e6b61c035ffb95f97d13bba5a84542c95096be535a400fc389d4ee744045799f": {
+      "agent": "xray",
+      "id": "l11",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "kubectl-kubeplugin"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "71f3ee2e327607caea36f17f97d425f19dd8370ada951516a748cb1c3052e4bc": {
+      "agent": "xray",
+      "id": "l12",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "module4-PoC"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "ff9ba59291eae7d29fd5a6a56be7c88a182c5986ed16bb0e73b7dbffdb9b8604": {
+      "agent": "xray",
+      "id": "l13",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": false,
+      "claimed_repos": [
+        "ooniversity_django_courses_04",
+        "django-docker"
+      ],
+      "reason": "Correct final two Django repositories and explicit rejection of alternat, but opens with the contradictory claim that there are at least three Django repositories."
+    },
+    "8c90f20c9fa873c72c0094311c8b08553e1881fdf1be5a095e4bad88cbccbea8": {
+      "agent": "xray",
+      "id": "l14",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "abox"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "ae43d662a43a897e9608c9ef0ea8945a08665f571031adc7a3b7ebffe15b64a3": {
+      "agent": "xray",
+      "id": "l15",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "kbot"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "ad5cf484dd43b92c5c6355773c9b9da90a8d798b5788ad0c6debf073355bc319": {
+      "agent": "xray",
+      "id": "l16",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "flux-monitoring"
+      ],
+      "reason": "Names flux-monitoring and its not-working OTel integration; explicitly says everstake-demo does not satisfy that condition."
+    },
+    "c07a8e4319b505b2d2b80cd8e7bdf87d61f228c0358a9c4af0f6fbbd8a2b5714": {
+      "agent": "xray",
+      "id": "l17",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update"
+      ],
+      "reason": "Identifies automation-token-update and explicitly preserves the in-development/manual-setup caveat. Mention of the accompanying GKE repository is quoted context."
+    },
+    "ba5b704c3bd367227fef26a858453853489ca5834d0cbbd0af34673b2818dc26": {
+      "agent": "xray",
+      "id": "g01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "abox",
+        "alternat",
+        "automation-token-update",
+        "tf-gcp-gke-cluster-flux",
+        "tf-google-gke-cluster"
+      ],
+      "reason": "Names all five correct repositories but claims there are more Terraform repositories because total search candidates=27. Similarity-result count is not the number using Terraform."
+    },
+    "3224edf720de9bece5f9c567f590bd62ac83c663e67b9146bd03a3c529c08825": {
+      "agent": "xray",
+      "id": "g04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "abox",
+        "everstake-demo",
+        "flux-monitoring",
+        "kbot",
+        "module4-PoC",
+        "omni",
+        "tf-gcp-gke-cluster-flux"
+      ],
+      "reason": "Complete membership list matching the frozen graph; supporting tool responses identify these repositories."
+    },
+    "3c1a47f6edf7af5dc8d88f36336f5711550cd677863950dc465f6dddb8dfcb06": {
+      "agent": "xray",
+      "id": "g05",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "configuration-as-code-jenkins-k8s-jobdsl",
+        "configuration-as-code-jenkins-k8s-pipeline",
+        "kbot"
+      ],
+      "reason": "Complete membership list matching the frozen graph; supporting tool responses identify these repositories."
+    },
+    "eda7525d7965697597f8d6a42a0802af182ab00b028c1fd4a65304bba40034c4": {
+      "agent": "xray",
+      "id": "g06",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "k8s-controller",
+        "kbot"
+      ],
+      "reason": "Complete membership list matching the frozen graph; supporting tool responses identify these repositories."
+    },
+    "ed3afd453b14017ee1ad28109ef09cf47c23a7abc9804e2c5a283bd9c46475bf": {
+      "agent": "xray",
+      "id": "f01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update",
+        "kbot"
+      ],
+      "reason": "Complete list matching the frozen attributes, including ordering where requested."
+    },
+    "fd00b8056e6fec0fd9b6ecc827df6f0a1a2c008d1aad23bdfd474bc48cf03540": {
+      "agent": "xray",
+      "id": "f02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "abox",
+        "mikrotik-mcp"
+      ],
+      "reason": "Filters created=2026 instead of last-pushed year=2026; misses dotfiles. This is an agent argument error."
+    },
+    "9600bc75ede0958f4e43580c2d83f7d84689ef48716a6baaa9425ac8aeeccc5d": {
+      "agent": "xray",
+      "id": "f03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "MikrotikPublicRepository",
+        "abox",
+        "alternat",
+        "configuration-as-code-jenkins-k8s-jobdsl",
+        "configuration-as-code-jenkins-k8s-pipeline",
+        "kubernetes-the-hard-way",
+        "learn-cantrill-io-labs",
+        "mikrotik-mcp",
+        "nginxconfig.io",
+        "ooniversity_django_courses_04",
+        "tf-google-gke-cluster"
+      ],
+      "reason": "Complete list matching the frozen attributes, including ordering where requested."
+    },
+    "ad1afd239ef22059cf2f54abfb8bdc0c65786689ccc4394259655268bc6cfdfa": {
+      "agent": "xray",
+      "id": "f04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [
+        "k8s-controller",
+        "kafka",
+        "tf-gcp-gke-cluster-flux"
+      ],
+      "reason": "Complete list matching the frozen attributes, including ordering where requested."
+    },
+    "e394b859f0f8d5a5f8b0f8b4321a2d554870131d5d9c62b7e8ee1c485b75fdee": {
+      "agent": "xray",
+      "id": "n01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [],
+      "reason": "Rejects Rust membership, consistent with the corpus. Retrieval of non-Rust examples alone does not exhaustively prove absence."
+    },
+    "490ecbe65ab9ba1063cbe4ac71def913c38ae4809d60246eff7bd6faf61afaf4": {
+      "agent": "xray",
+      "id": "n02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray.json",
+      "correct": true,
+      "claimed_repos": [],
+      "reason": "Rejects archived membership and explains that zero stars/old push do not imply archived; consistent with frozen archived=false attributes."
+    },
+    "1d9eb3a22d1fa5b5cb7de60bbfbda4604bb67a87d789820073b3ab1e9b18255f": {
+      "agent": "xray",
+      "id": "g02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-reviewed-questions.json",
+      "correct": false,
+      "claimed_repos": [],
+      "reason": "Lists unverified candidates and offers to check later. Does not answer which repositories have Helm; no node reads or graph traversal."
+    },
+    "a6da7b1846db24df7ff4a82cd10ed21ba4293dd02e40d7609a74d58cc11d3e37": {
+      "agent": "xray",
+      "id": "g03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-xray-reviewed-questions.json",
+      "correct": true,
+      "claimed_repos": [
+        "everstake-demo",
+        "module4-PoC",
+        "omni"
+      ],
+      "reason": "Complete membership list matching the frozen graph; supporting tool responses identify these repositories."
+    },
+    "54d32735430fa4c28a0f7d2af4e1a65cef23c99b41792182f3d2f3f8353a3f3d": {
+      "agent": "nomic",
+      "id": "l01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "k8s-controller"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "48b48f10916a469269296c8fa5f916645fb129d49ececb94d0b6b6b3afbee18b": {
+      "agent": "nomic",
+      "id": "l02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "kbot"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "27ae4224ae12ae8ac312521f8a5bbcf6b6594aff65dc782a34ac6726c3f133b9": {
+      "agent": "nomic",
+      "id": "l03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "flux-monitoring"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "0a7d797b5b2a4c5e9d8f71e5c2020e33791d2f68ea16d0f21db6e5df32f07f71": {
+      "agent": "nomic",
+      "id": "l04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "tf-gcp-gke-cluster-flux"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "e457fa4c03be1bfb808df1a28b973043fba48879895cc83ca664ee28f6530ac5": {
+      "agent": "nomic",
+      "id": "l05",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "37f10cf066589d93385c5e182f74c34985226e7d3474c09a6bcbc63e65951a24": {
+      "agent": "nomic",
+      "id": "l06",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "kafka"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "c34aa4d098230e7b8f94fcd020a2831381ce4162b0a1d89324ee0a45fa01cb5c": {
+      "agent": "nomic",
+      "id": "l07",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "dotfiles"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "4fdef5d50a3449a7f0d7a2fd569ad96113eefc45b76d08f1c1c11a50ae489ee8": {
+      "agent": "nomic",
+      "id": "l08",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "omni",
+        "everstake-demo"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "8ab2d7b5340b0319b7a461fbd2f537247c1f0311e80d20b3af0e037c9e6f410c": {
+      "agent": "nomic",
+      "id": "l09",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "mikrotik-mcp"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "7f51f6f3c4ef690feec475a2b8ea7026b674849a68c515db2a3590101585db77": {
+      "agent": "nomic",
+      "id": "l10",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "alternat"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "af7b54390e34907f6472a96abc0088ff63a88423ab15673e910efcc966375cae": {
+      "agent": "nomic",
+      "id": "l11",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "kubectl-kubeplugin"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "cb4090daec0644c8f90edc6f7036f935c602f92af29ca99b18e4464e8846f632": {
+      "agent": "nomic",
+      "id": "l12",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "module4-PoC"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "5b759364bb1d515ec262c27c92474dabc4bdc95ea563656ce651bacb3a1c973d": {
+      "agent": "nomic",
+      "id": "l13",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "django-docker",
+        "ooniversity_django_courses_04"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "f1e75fbe14211575783fefb7be72f34cca0b5a0757b70eecad6f5fded685c224": {
+      "agent": "nomic",
+      "id": "l14",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "abox"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "16ede0b5a961ff74c20adefaa5a3396d79c35a10619b2c4fb3a9045ba4649898": {
+      "agent": "nomic",
+      "id": "l15",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "kbot"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "7334e373ed1cd4d201fa30950e2ec94ea0606735ff2ab6258be6e88be42a14d2": {
+      "agent": "nomic",
+      "id": "l16",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "flux-monitoring"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "bc77718f0ad4ba917e2f8cad021ef921821f537dcf55ea37f0255aaf83d6f46a": {
+      "agent": "nomic",
+      "id": "l17",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update"
+      ],
+      "reason": "Identifies automation-token-update and explicitly preserves the in-development/manual-setup caveat. Mention of the accompanying GKE repository is quoted context."
+    },
+    "8686eecbe84c4f381a9022a7c4c3dd76686995639c44e89bf8df46f1a1583c76": {
+      "agent": "nomic",
+      "id": "g01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "automation-token-update",
+        "tf-gcp-gke-cluster-flux",
+        "alternat",
+        "tf-google-gke-cluster"
+      ],
+      "reason": "Supported subset, missing abox."
+    },
+    "8bfd4db59acd0a8c15e6249125a8a49d9162579fc44f92eb100e1a5593230576": {
+      "agent": "nomic",
+      "id": "g04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "kbot",
+        "automation-token-update",
+        "module4-PoC"
+      ],
+      "reason": "Only kbot and module4-PoC belong to the curated topic; accompanying another repository does not establish GitOps-topic membership. tf-gcp-gke-cluster-flux is mentioned as context, not listed as a member."
+    },
+    "100b0f859a7de3384ec4656b7e34db054eb5460f04d96b295ef71be88630f1ab": {
+      "agent": "nomic",
+      "id": "g05",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "configuration-as-code-jenkins-k8s-pipeline",
+        "configuration-as-code-jenkins-k8s-jobdsl"
+      ],
+      "reason": "Misses kbot, whose Tools list includes Jenkins."
+    },
+    "fa56557d4e9af46d02eece404f3d509535ad6a67ba3af8baf77ee926e488fd44": {
+      "agent": "nomic",
+      "id": "g06",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "k8s-controller",
+        "kbot"
+      ],
+      "reason": "Complete membership list matching the frozen graph; supporting tool responses identify these repositories."
+    },
+    "a431f5999c63b1b3fad8adb62ad7227c31c8e7b4fabb1d8dee0ab22224492c27": {
+      "agent": "nomic",
+      "id": "f01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": false,
+      "claimed_repos": [],
+      "reason": "Abstains; cannot provide the two highest-starred non-forks."
+    },
+    "ea0b5f914a9e81f5eec95af77483c68bb4d7530e0996a82493008cea62692f95": {
+      "agent": "nomic",
+      "id": "f02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": false,
+      "claimed_repos": [
+        "dotfiles"
+      ],
+      "reason": "Only dotfiles; misses abox and mikrotik-mcp."
+    },
+    "bbf7e7cd6d0e81580bf7414949407c17eb9916ec8d3f1cc22f70b0b87e286b2b": {
+      "agent": "nomic",
+      "id": "f03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": false,
+      "claimed_repos": [
+        "MikrotikPublicRepository"
+      ],
+      "reason": "Only one of eleven forks."
+    },
+    "db1ff95e932f677b7e2e3c0adc4fccb820278758a482f09638b52f032211be4d": {
+      "agent": "nomic",
+      "id": "f04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "kafka"
+      ],
+      "reason": "One of three repositories with exactly two stars."
+    },
+    "c1629b64491bfcad64f23edfcad2e14e30fbe41ab0e12de0c49101c1621b03a4": {
+      "agent": "nomic",
+      "id": "n01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic.json",
+      "correct": true,
+      "claimed_repos": [],
+      "reason": "Rejects Rust membership, consistent with the corpus. Retrieval of non-Rust examples alone does not exhaustively prove absence."
+    },
+    "4cb9b6d2b33121038bd3e28b4ac064f3842e2a169049eea5c742853950dfc90f": {
+      "agent": "nomic",
+      "id": "n02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-retry1.json",
+      "correct": true,
+      "claimed_repos": [],
+      "reason": "Rejects archived membership and explains that zero stars/old push do not imply archived; consistent with frozen archived=false attributes."
+    },
+    "0f3f100e284373fbee9d97c2da59affb2ea3f1958250f0b171d7fce522e486a3": {
+      "agent": "nomic",
+      "id": "g02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-reviewed-questions.json",
+      "correct": false,
+      "claimed_repos": [
+        "omni",
+        "everstake-demo",
+        "kbot"
+      ],
+      "reason": "Three supported Helm memberships; misses k8s-controller."
+    },
+    "1815e9757e745f750a80cd7883ecc383af219076840af76616e220c2ccc0bf01": {
+      "agent": "nomic",
+      "id": "g03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-nomic-reviewed-questions.json",
+      "correct": true,
+      "claimed_repos": [
+        "everstake-demo",
+        "module4-PoC",
+        "omni"
+      ],
+      "reason": "Complete membership list matching the frozen graph; supporting tool responses identify these repositories."
+    },
+    "f72d9cac5d556f13e7e832901bf86e60d3878a80f036c01e6ca21798e2b53014": {
+      "agent": "official",
+      "id": "l01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "k8s-controller"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "d08538d3461149e650fc1a7e0e0bbe938bd47bfe9acf2c52ec0e9ab0c2bf3ba9": {
+      "agent": "official",
+      "id": "l02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "kbot"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "7c0b8e97c03a98e03b625adf4b42ee7fef023fbc7d0395c7b98deab5956f9f31": {
+      "agent": "official",
+      "id": "l03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "flux-monitoring"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "7f2ac54f4d18d877669050a3350b470393db2b37d1bd15cd90d69fb570f71fea": {
+      "agent": "official",
+      "id": "l04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "tf-gcp-gke-cluster-flux"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "690d3ac1576a33008a7652cf73a045ed21242b477df1c2c008341f909fa65840": {
+      "agent": "official",
+      "id": "l05",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "a52b6414dfebda145163a1e77abf63d7de88e70ff9e9a54f536b585b9450f445": {
+      "agent": "official",
+      "id": "l06",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "kafka"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "f52b2f331320f70d2ed3c8233c2468bbc978e3bf1ea119582624c4d5f1a123bc": {
+      "agent": "official",
+      "id": "l07",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "dotfiles"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "ac4ca884f5bcc926043379534317d7225d2bd103112f1e605b7be1eb1e148880": {
+      "agent": "official",
+      "id": "l08",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": false,
+      "claimed_repos": [
+        "omni"
+      ],
+      "reason": "Gives only omni; second hit is another section of omni. Missing everstake-demo."
+    },
+    "7b349f1885e99ce41eb537137153bac70829210f1eff1321d4c84dc7d3588fb7": {
+      "agent": "official",
+      "id": "l09",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "mikrotik-mcp"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "afb2da860cf088057120717db28c2358341d947c663b31b76803d649d8f830ca": {
+      "agent": "official",
+      "id": "l10",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "alternat"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "485516b6d493fff5ab5c4cf1129ae73cfae16b9caccdac385a3a78358f55572a": {
+      "agent": "official",
+      "id": "l11",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "kubectl-kubeplugin"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "d0a4aefc3734720c7c77582168e39aafc87cb52057b6559b181f3f2151fb9383": {
+      "agent": "official",
+      "id": "l12",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "module4-PoC"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "49801e2dc3fcc2a6fc0952d441abf3f7346cc18c80b5d4fb465b26b81ecd4b7c": {
+      "agent": "official",
+      "id": "l13",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "ooniversity_django_courses_04",
+        "django-docker"
+      ],
+      "reason": "Both profile repositories are identified. The third bullet is explicitly labelled an Upstream original, not another owned repository."
+    },
+    "6ed4cbe6405edaefbbc031af434b393c50901bf7fdfd7fb7625817f53f9d5bb6": {
+      "agent": "official",
+      "id": "l14",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "abox"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "8e969bfe2e97912beb84be13145005670e6ec53dc1abe1665972d13be259d64b": {
+      "agent": "official",
+      "id": "l15",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [
+        "kbot"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "2f45dd66a5d2fb52c27341a903aeb45371e0cf82624209e4dd7fd40c1346ef80": {
+      "agent": "official",
+      "id": "l16",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "flux-monitoring"
+      ],
+      "reason": "Complete repository answer; requested property is supported by the frozen repository/README text and retrieved evidence."
+    },
+    "635610a5ba7caca54e76cefaf912115ed0d27612d2fcc098688119debc9910cc": {
+      "agent": "official",
+      "id": "l17",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": true,
+      "claimed_repos": [
+        "automation-token-update"
+      ],
+      "reason": "Identifies automation-token-update and explicitly preserves the in-development/manual-setup caveat. Mention of the accompanying GKE repository is quoted context."
+    },
+    "3877473f4826532e049ecb71efc403c93946ceee716bc5e3c23e8a22b3cdcf00": {
+      "agent": "official",
+      "id": "g01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "automation-token-update",
+        "tf-gcp-gke-cluster-flux",
+        "alternat",
+        "tf-google-gke-cluster"
+      ],
+      "reason": "Missing abox."
+    },
+    "ad14d1c9fc89bc84b988ba64ac6c5a273880856540ef716c5844134b0aff81df": {
+      "agent": "official",
+      "id": "g04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": false,
+      "claimed_repos": [],
+      "reason": "Finds only the Topic description, with no membership list."
+    },
+    "ae9ee51ee63e88b86887e701fb763002aeb57df55a000592878f0f542204b174": {
+      "agent": "official",
+      "id": "g05",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "configuration-as-code-jenkins-k8s-pipeline",
+        "configuration-as-code-jenkins-k8s-jobdsl"
+      ],
+      "reason": "Missing kbot."
+    },
+    "d3db53394792fa2d8acfe11626930b025efbd1e18397262b78a680eedb3032b9": {
+      "agent": "official",
+      "id": "g06",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "k8s-controller"
+      ],
+      "reason": "Explicitly declines to count kbot as Go. Mentioning kbot is not a positive answer."
+    },
+    "fa6cf9ab1011a14af3f36ac4bd0e71744fec4c8240280e998dc8053f5716477a": {
+      "agent": "official",
+      "id": "f01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": false,
+      "claimed_repos": [
+        "kafka"
+      ],
+      "reason": "Cannot provide the requested top two; kafka is only an observed candidate, not one of the two highest-starred non-forks."
+    },
+    "b2f0a8165b9ccf2363dbbaae4f60416e795d4722a9cd9da4d2ef5717c8845332": {
+      "agent": "official",
+      "id": "f02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-retry1.json",
+      "correct": false,
+      "claimed_repos": [],
+      "reason": "Reports no 2026 pushes; all three gold repositories absent. Older examples are not positive answers."
+    },
+    "e095534d04ef358e8c34a397685bb4d0fce364f0ee0f354b28d47857618d814c": {
+      "agent": "official",
+      "id": "f03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": false,
+      "claimed_repos": [
+        "MikrotikPublicRepository",
+        "kubernetes-the-hard-way",
+        "tf-google-gke-cluster",
+        "mikrotik-mcp",
+        "abox"
+      ],
+      "reason": "Names five supported forks out of eleven."
+    },
+    "b830427d901200b6c121b8c11a5d3f87c1281f1e772591aa791ac65994dfe61e": {
+      "agent": "official",
+      "id": "f04",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": false,
+      "claimed_repos": [
+        "kafka"
+      ],
+      "reason": "Missing k8s-controller and tf-gcp-gke-cluster-flux."
+    },
+    "f671bf7d2ad7258ffc8b2a21709fd500494964a328c0229b70f78a959653f1bc": {
+      "agent": "official",
+      "id": "n01",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [],
+      "reason": "Rejects Rust membership, consistent with the corpus. Retrieval of non-Rust examples alone does not exhaustively prove absence."
+    },
+    "c224222d712331b344d3ec29dfb3c642e8b2ed54f66363fb44395f04a920b227": {
+      "agent": "official",
+      "id": "n02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official.json",
+      "correct": true,
+      "claimed_repos": [],
+      "reason": "Rejects archived membership and explains that zero stars/old push do not imply archived; consistent with frozen archived=false attributes."
+    },
+    "751ece6573f07a20de0f161b1b21644572ef3ac157d07d652622c167d98bcac3": {
+      "agent": "official",
+      "id": "g02",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-reviewed-questions.json",
+      "correct": false,
+      "claimed_repos": [],
+      "reason": "Retrieves only generic Helm Tool text and cannot name repositories."
+    },
+    "9d5a5b85f736fab6d8b2b761d00840f6d2000d20f212d499917854c894f465fb": {
+      "agent": "official",
+      "id": "g03",
+      "repeat": 1,
+      "source": ".local/lab05/agentic-official-reviewed-questions.json",
+      "correct": false,
+      "claimed_repos": [],
+      "reason": "Retrieves only generic Argo CD Tool text and cannot name repositories."
+    }
+  }
+}

@@ -3,7 +3,7 @@
 # The memory has two layers and the prompt exists to keep them apart:
 #
 #   semantic   the maps -- derived, rebuilt from a catalog, read-only to the
-#              agent (here `vanelin`, docs/labs/05/vanelin.catalog.json)
+#              agent (here `vanelin`, docs/labs/05/data/vanelin.catalog.json)
 #   episodic   the `session` notes map -- what a person said, written with
 #              `remember`, expiring after 7 days unless told otherwise
 #

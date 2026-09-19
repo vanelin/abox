@@ -84,7 +84,7 @@ spec:
         images:
           # Lab 5: our own maps image, built by
           # .github/workflows/xray-memory-maps-image.yaml from
-          # docs/labs/05/*.catalog.json and encrypted to this cluster's
+          # docs/labs/05/data/*.catalog.json and encrypted to this cluster's
           # identity. The tag is the hash of the catalogs, so a changed corpus
           # is a new tag here. Upstream's xray-memory-maps:2026-09-16 is not
           # seeded: both of its maps are encrypted to the instructor's key, the
