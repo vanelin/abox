@@ -15,4 +15,5 @@ resources:
   - neo4j.yaml
   - phoenix.yaml
   - qdrant.yaml
+  - secrets/xray-memory-snapshot-key.yaml
   - xray-memory.yaml
