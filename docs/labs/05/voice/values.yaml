@@ -1,0 +1,32 @@
+# Lab 5, optional 5**: the upstream voice agent, built locally from main plus
+# voice-agent-artifacts.patch and loaded into kind (no registry involved).
+image:
+  repository: voice-agent
+  tag: lab5
+  pullPolicy: Never
+
+# The Dockerfile sets USER by name (nonroot); with runAsNonRoot the kubelet
+# needs a numeric uid to verify it. 65532 is distroless's nonroot.
+podSecurityContext:
+  runAsUser: 65532
+  runAsGroup: 65532
+
+credentials:
+  apiKey:
+    enabled: true
+    secretName: voice-agent-gemini
+    secretKey: GEMINI_API_KEY      # reaches the container as GOOGLE_API_KEY
+
+agent:
+  backend: aistudio
+  debug: true
+  # The chart's default is 8084, the live `serve` port; the chart-deployed
+  # snapshot server listens on 8085.
+  memory: http://xray-memory.xray-memory:8085/mcp
+  a2a:
+    - name: xray
+      card: http://kagent-controller.kagent.svc:8083/api/a2a/kagent/retrieval-agent-xray/.well-known/agent-card.json
+      description: Ask the memory agent about vanelin's GitHub repositories, the tools, languages and topics they use, and notes from earlier conversations.
+    - name: k8s
+      card: http://kagent-controller.kagent.svc:8083/api/a2a/kagent/k8s-agent/.well-known/agent-card.json
+      description: Ask the Kubernetes agent to read the state of this cluster, pods, deployments, services, events and logs.

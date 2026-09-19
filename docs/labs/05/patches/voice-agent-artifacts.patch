@@ -1,0 +1,22 @@
+diff --git a/internal/tools/a2a.go b/internal/tools/a2a.go
+index 8d04e24..6b4736b 100644
+--- a/internal/tools/a2a.go
++++ b/internal/tools/a2a.go
+@@ -105,6 +105,17 @@ func askAgent(ctx context.Context, cardURL, message string) (string, error) {
+ 				return text, nil
+ 			}
+ 		}
++		// kagent answers with a completed task whose text is in the artifacts
++		// and leaves the status message empty.
++		var answer []string
++		for _, artifact := range v.Artifacts {
++			if text := textOfParts(artifact.Parts); text != "" {
++				answer = append(answer, text)
++			}
++		}
++		if len(answer) > 0 {
++			return strings.Join(answer, "\n"), nil
++		}
+ 		return fmt.Sprintf("task %s finished in state %s", v.ID, v.Status.State), nil
+ 	default:
+ 		// Unknown result shape: hand the model the JSON rather than nothing.
