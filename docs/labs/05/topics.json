@@ -1,0 +1,61 @@
+{
+  "descriptions": {
+    "django-docker": "Django project zday run with Docker Compose: a Dockerfile for the app, nginx as reverse proxy, PostgreSQL data directory and an init script. The README walks through a Python virtualenv and the compose setup.",
+    "ooniversity_django_courses_04": "Django coursework from an ooniversity Python course: a learning-centre site with apps for courses, coaches and students, models, forms, admin, migrations and tests.",
+    "openai-k8s-manifest": "Portfolio of Kubernetes manifests generated with OpenAI from short prompts: pod, liveness and readiness probes, volume mounts, resources, secret env, multi-container pod, Job and CronJob.",
+    "automation-token-update": "Terraform configuration for GCP Workload Identity Federation, GitHub Actions, Secret Manager and Pub/Sub, accompanying tf-gcp-gke-cluster-flux. Includes Python Cloud Function code for triggering GitHub Actions; the README marks this integration as in development and requiring manual configuration.",
+    "flux-monitoring": "Kubernetes monitoring examples delivered by Flux: kube-prometheus-stack, Loki, Fluent-bit and Grafana dashboards for the cluster and Flux control plane. Includes cert-manager and OpenTelemetry manifests, but the README marks the OpenTelemetry integration as not working yet.",
+    "everstake-demo": "Talos Linux and Sidero Omni architecture demo describing three control-plane nodes on AWS EC2, bare-metal workers and a KubeSpan WireGuard mesh. Includes Argo CD ApplicationSets and manifests for Cilium, kube-prometheus-stack, OpenEBS Mayastor and Vault.",
+    "omni": "Example of managing a Talos Linux Kubernetes cluster with Sidero Labs Omni, with Argo CD and ApplicationSets for application management and cluster bootstrap.",
+    "kubectl-kubeplugin": "Bash kubectl plugin that formats CPU and memory usage from kubectl top for pods or nodes, taking namespace and resource type as arguments. Installable with curl or through a custom Krew index.",
+    "module3_containerization": "Course module on containerization, one branch per task: from chroot to a container, cgroups and resource control, building a container image from scratch, running your own Kubernetes cluster, and a Makefile plus Dockerfile coding session.",
+    "module4-PoC": "Concept, proof of concept and MVP for a local Kubernetes development environment for the fictional startup AsciiArtify: comparison of minikube, kind and k3d, and a GitOps demo with Argo CD.",
+    "kafka": "Apache Kafka on Kubernetes examples using kind, Bitnami charts with KRaft or ZooKeeper, and the Strimzi operator. Includes MirrorMaker 2 manifests and a documented consumer-first migration from a ZooKeeper-based cluster to a KRaft cluster.",
+    "webserver": "Minimal web server in a shell script built on netcat, packaged with a Dockerfile and docker-compose.",
+    "vanelin": "GitHub profile of Ivan Voloboyev from Ukraine, who describes himself as a DevOps, SysOps and Platform Engineer with a network engineering background. Interests include cloud platforms, process automation and continuous learning.",
+    "tf-gcp-gke-cluster-flux": "Terraform configuration for a GKE cluster on Google Cloud and Flux bootstrap from a GitHub repository. Includes deploy keys, Google Secret Manager and KMS integration, and Infracost cost estimates.",
+    "MikrotikPublicRepository": "Fork of a collection of MikroTik RouterOS scripts: checking for RouterOS updates, configuration backups sent by e-mail, bandwidth-exceeded notifications, creating PPP users, and e-mail and Telegram alerts."
+  },
+  "topics": {
+    "GitOps": {
+      "description": "Declarative delivery to Kubernetes where the cluster state is reconciled from git or an OCI artifact by Flux or Argo CD.",
+      "repos": ["abox", "tf-gcp-gke-cluster-flux", "flux-monitoring", "everstake-demo", "omni", "module4-PoC", "kbot"]
+    },
+    "Kubernetes": {
+      "description": "Running, operating and extending Kubernetes: clusters, controllers, manifests, plugins and workloads.",
+      "repos": ["abox", "k8s-controller", "kubernetes-the-hard-way", "kubectl-kubeplugin", "openai-k8s-manifest", "kafka", "omni", "everstake-demo", "module3_containerization", "module4-PoC", "tf-gcp-gke-cluster-flux", "tf-google-gke-cluster", "kbot", "flux-monitoring"]
+    },
+    "Infrastructure as Code": {
+      "description": "Cloud infrastructure described as code with Terraform or OpenTofu on Google Cloud and AWS.",
+      "repos": ["abox", "tf-gcp-gke-cluster-flux", "tf-google-gke-cluster", "automation-token-update", "alternat"]
+    },
+    "CI/CD": {
+      "description": "Build, test and release pipelines with GitHub Actions and Jenkins, including container image and Helm chart releases.",
+      "repos": ["kbot", "k8s-controller", "configuration-as-code-jenkins-k8s-jobdsl", "configuration-as-code-jenkins-k8s-pipeline", "automation-token-update", "abox"]
+    },
+    "AI agents and MCP": {
+      "description": "AI agents, Model Context Protocol servers, agent memory, embeddings and LLM-assisted tooling.",
+      "repos": ["abox", "mikrotik-mcp", "openai-k8s-manifest", "dotfiles"]
+    },
+    "Networking": {
+      "description": "Routers, NAT, VPN meshes and network automation: MikroTik RouterOS, AWS NAT instances, WireGuard.",
+      "repos": ["mikrotik-mcp", "MikrotikPublicRepository", "alternat", "everstake-demo", "nginxconfig.io"]
+    },
+    "Observability": {
+      "description": "Metrics, logs, traces and dashboards: Prometheus, Grafana, Loki, OpenTelemetry, Phoenix.",
+      "repos": ["flux-monitoring", "abox", "everstake-demo"]
+    },
+    "Go development": {
+      "description": "Applications and Kubernetes controllers written in Go, packaged with container images and Helm charts.",
+      "repos": ["k8s-controller", "kbot"]
+    },
+    "Python and Django": {
+      "description": "Python web applications with Django, and Python used for cloud functions and automation.",
+      "repos": ["django-docker", "ooniversity_django_courses_04", "automation-token-update"]
+    },
+    "Courses and learning": {
+      "description": "Coursework, labs and study repositories from DevOps, Kubernetes, AWS and Python courses.",
+      "repos": ["abox", "kbot", "module3_containerization", "module4-PoC", "kubernetes-the-hard-way", "learn-cantrill-io-labs", "ooniversity_django_courses_04", "openai-k8s-manifest"]
+    }
+  }
+}

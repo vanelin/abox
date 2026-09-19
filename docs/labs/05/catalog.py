@@ -8,7 +8,11 @@ every entry into a graph node:
   text         the node's content. It is ALL that gets embedded and searched,
                so the name and kind are spelled out in it here
   attrs        string key/values, filterable (attr=year=2023) and sortable
-  links        [{rel, to}] -- typed edges to other entries, by name
+  links        [{rel, to}] -- typed edges to other entries, by name. Only
+               calls, imports, inherits, implements and references are walked
+               by get_graph_impact; any other rel is visible on the node but
+               never traversed, so "what depends on Terraform" needs one of
+               the five. The target's kind says what the reference means.
   parts        child entries, joined to the parent by a `contains` edge
 
 Entries and where they come from:
@@ -16,11 +20,11 @@ Entries and where they come from:
   Repo      the user's public repositories; text = GitHub's description plus
             the README's first prose paragraph
     Section   parts of a Repo: the README's sections
-  Language  every language GitHub detects in a repository   <- written_in
-  Tool      file-tree evidence, see TOOLS                    <- uses
-  Upstream  the parent of a fork                             <- forked_from
+  Language  every language GitHub detects in a repository   <- references
+  Tool      file-tree evidence, see TOOLS                    <- references
+  Upstream  the parent of a fork                             <- inherits
   Topic     topics.json, written by hand -- the one part an
-            API cannot give                                  <- about
+            API cannot give                                  <- references
 
   uv run docs/labs/05/catalog.py vanelin
   uv run docs/labs/05/catalog.py vanelin --topics docs/labs/05/topics.json
@@ -78,10 +82,13 @@ def gh(path: str) -> Any:
 
 def prose(block: str) -> str:
     """One markdown block as plain text: no images, badges, link targets or HTML."""
-    text = " ".join(line.strip() for line in block.splitlines())
+    # Table rows are layout, not prose: they embed as noise.
+    text = " ".join(line.strip() for line in block.splitlines() if not line.lstrip().startswith("|"))
     text = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", text)  # images and badges, before the links that wrap them
     text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
-    return re.sub(r"<[^>]+>", "", text).strip()
+    text = re.sub(r"<[^>]+>", "", text)
+    # The map ships in a public image; a README's contact addresses are not corpus.
+    return re.sub(r"[\w.+-]+@[\w-]+(\.[\w-]+)+", "", text).strip()
 
 
 def first_paragraph(markdown: str) -> str:
@@ -149,9 +156,10 @@ def main() -> None:
 
         readme = gh(f"repos/{repo['full_name']}/readme")
         markdown = base64.b64decode(readme["content"]).decode("utf-8", "replace") if readme else ""
-        about = descriptions.get(name) or " ".join(
-            p.rstrip(".") + "." for p in dict.fromkeys([repo["description"] or "", first_paragraph(markdown)]) if p
-        )
+        summary, paragraph = (repo["description"] or "").rstrip("."), first_paragraph(markdown)
+        if paragraph.startswith(summary):  # a README that opens with the description says it once
+            summary = ""
+        about = descriptions.get(name) or " ".join(p.rstrip(".") + "." for p in (summary, paragraph) if p)
         if not about:
             bare.append(name)
 
@@ -162,7 +170,7 @@ def main() -> None:
         item = entry(name, "Repo", "")
         item["text"] = (
             f"Repository {name}. {about} "
-            + (f"Fork of {parent}. " if parent else f"Original work by {args.user}. ")
+            + (f"Fork of {parent}. " if parent else f"Non-fork repository owned by {args.user}. ")
             + (f"Languages: {', '.join(languages)}. " if languages else "")
             + (f"Tools: {', '.join(tools)}. " if tools else "")
             + f"Created {repo['created_at'][:4]}, last pushed {repo['pushed_at'][:4]}, "
@@ -179,20 +187,25 @@ def main() -> None:
 
         for language in languages:
             entry(language, "Language", f"Programming language {language}.")
-            item["links"].append({"rel": "written_in", "to": language})
+            item["links"].append({"rel": "references", "to": language})
         for tool in tools:
             entry(tool, "Tool", f"DevOps tool {tool}, detected from the repository's files.")
-            item["links"].append({"rel": "uses", "to": tool})
+            item["links"].append({"rel": "references", "to": tool})
         if parent:
             entry(parent, "Upstream", f"Upstream repository {parent}, the original that {name} was forked from.")
-            item["links"].append({"rel": "forked_from", "to": parent})
+            item["links"].append({"rel": "inherits", "to": parent})
+
+    repo_names = {name for name, item in entries.items() if item["kind"] == "Repo"}
+    unknown = descriptions.keys() - repo_names
+    if unknown:
+        sys.exit(f"topics.json: descriptions name unknown repositories: {', '.join(sorted(unknown))}")
 
     for topic, body in manual.get("topics", {}).items():
         entry(topic, "Topic", f"Topic {topic}. {body['description']}")
         for name in body["repos"]:
-            if name not in entries:
+            if name not in repo_names:
                 sys.exit(f"topics.json: topic {topic!r} names unknown repository {name!r}")
-            entries[name]["links"].append({"rel": "about", "to": topic})
+            entries[name]["links"].append({"rel": "references", "to": topic})
 
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"{args.user}.json"

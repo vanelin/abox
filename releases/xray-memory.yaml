@@ -3,7 +3,7 @@
 #
 #   server image  ghcr.io/den-vasyliev/abox/xray-memory:v1.23.66-61e4eaa
 #   chart         oci://ghcr.io/den-vasyliev/abox/charts/xray-memory:0.6.0
-#   maps image    ghcr.io/den-vasyliev/abox/xray-memory-maps:2026-09-16
+#   maps image    ghcr.io/vanelin/abox/xray-memory-maps:<catalog hash>  (lab 5, our own)
 #
 # The chart runs the server in SNAPSHOT mode (`serve-snapshots`): one graph and
 # index per map, loaded lazily from a pre-built <label>.graph.gob.gz. Live mode
@@ -82,7 +82,14 @@ spec:
       seed:
         enabled: true
         images:
-          - reference: ghcr.io/den-vasyliev/abox/xray-memory-maps:2026-09-16
+          # Lab 5: our own maps image, built by
+          # .github/workflows/xray-memory-maps-image.yaml from
+          # docs/labs/05/*.catalog.json and encrypted to this cluster's
+          # identity. The tag is the hash of the catalogs, so a changed corpus
+          # is a new tag here. Upstream's xray-memory-maps:2026-09-16 is not
+          # seeded: both of its maps are encrypted to the instructor's key, the
+          # server skips them, and with nothing else in the volume it exits.
+          - reference: ghcr.io/vanelin/abox/xray-memory-maps:130942fd25f7
             pullPolicy: IfNotPresent
             path: /maps
 
@@ -92,13 +99,11 @@ spec:
       # age-encrypted instead: same file names, same image layout, and only the
       # server needs the identity to open them.
       #
-      # The identity is cluster state, not a release artifact -- it is not in
-      # this repo and never will be. Create it in the cluster before the pod
-      # first schedules, or the Secret volume leaves it in ContainerCreating:
-      #
-      #   kubectl create namespace xray-memory
-      #   kubectl -n xray-memory create secret generic xray-memory-snapshot-key \
-      #     --from-file=identity=$HOME/.config/xray-memory/snapshot.key
+      # The identity is in this repo only SOPS-encrypted, as
+      # releases/secrets/xray-memory-snapshot-key.yaml; Flux decrypts it with
+      # flux-system/sops-age (scripts/secrets.sh) in the same apply that creates
+      # this release. Until the Secret exists the kubelet retries the volume
+      # mount and the pod waits in ContainerCreating.
       #
       # secretKey (identity) and mountPath are chart defaults; the server reads
       # the file from $XRAY_SNAPSHOT_KEY. A directory may mix encrypted and
@@ -108,14 +113,22 @@ spec:
       #
       # The key reads, the recipient writes. Now that the server flushes, a map
       # that arrived encrypted is re-encrypted on every flush and is never
-      # downgraded -- but the `session` notes map is created here, so it is
-      # written PLAINTEXT onto the claim. To encrypt those too, set
-      # XRAY_SNAPSHOT_RECIPIENT (extraEnv) to the identity's age1... public key,
-      # which `age-keygen -y snapshot.key` prints from the file the Secret was
-      # made from.
+      # downgraded -- but the `session` notes map is created here, so without
+      # a recipient it would be written PLAINTEXT onto the claim. extraEnv below
+      # sets XRAY_SNAPSHOT_RECIPIENT for that.
       encryption:
         enabled: true
         secretName: xray-memory-snapshot-key
+
+    # Lab 5: the recipient half, so the `session` notes map is written
+    # encrypted as well -- notes are what a user told an agent, the one part of
+    # this volume that is not derived from public data. It is the public key of
+    # the identity in releases/secrets/xray-memory-snapshot-key.yaml
+    # (`age-keygen -y`), and the same one the maps image is built to
+    # (.github/workflows/xray-memory-maps-image.yaml).
+    extraEnv:
+      - name: XRAY_SNAPSHOT_RECIPIENT
+        value: age1uw9aa98ksd7hc29yt7tqycnvqy6yf3q4k4nzexhl9hhtqknd8glqugq46f
 
     # Query embedding comes from an in-pod llama.cpp sidecar, not from a shared
     # endpoint. model/dims/maxInputChars are the snapshot FINGERPRINT -- every

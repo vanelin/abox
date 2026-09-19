@@ -7,7 +7,6 @@ resources:
   - agent-retrieval.yaml
   - kagent.yaml
   - llama-cpp-embeddings.yaml
-  - llama-cpp-qwen.yaml
   - llmd.yaml
   - mcp-servers.yaml
   - metrics-server.yaml
@@ -17,3 +16,24 @@ resources:
   - qdrant.yaml
   - secrets/xray-memory-snapshot-key.yaml
   - xray-memory.yaml
+
+# Lab 5 runs without the Qwen embedder: it idles at 0.5 GiB and peaks at
+# 1.35 GiB, and xray-memory brings its own nomic sidecar. The release file and
+# the two objects that depend on it stay in the repo as ADR-0003's evidence;
+# they are only left out of the bundle. To bring Qwen back, re-add
+# llama-cpp-qwen.yaml above and drop these patches.
+patches:
+  - patch: |
+      $patch: delete
+      apiVersion: kagent.dev/v1alpha1
+      kind: MCPServer
+      metadata:
+        name: qdrant-mcp-qwen
+        namespace: kagent
+  - patch: |
+      $patch: delete
+      apiVersion: kagent.dev/v1alpha2
+      kind: Agent
+      metadata:
+        name: retrieval-agent-qwen
+        namespace: kagent

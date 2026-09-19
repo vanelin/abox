@@ -6,52 +6,80 @@
       "text": "Repository abox. Harness Engineering. `make run` gives you a local Kubernetes cluster with everything an AI project needs: an AI-aware API gateway, an agent runtime, observability, distributed tracing, and an eval harness — ready to use. Fork of den-vasyliev/abox. Languages: Shell, HCL, Makefile, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Make, Kustomize, Devcontainer, Flux. Created 2026, last pushed 2026, 1 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "HCL"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Makefile"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Terraform"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "GitHub Actions"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Make"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Kustomize"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Devcontainer"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Flux"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "den-vasyliev/abox"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Infrastructure as Code"
+        },
+        {
+          "rel": "references",
+          "to": "CI/CD"
+        },
+        {
+          "rel": "references",
+          "to": "AI agents and MCP"
+        },
+        {
+          "rel": "references",
+          "to": "Observability"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
         }
       ],
       "attrs": {
@@ -64,11 +92,6 @@
       "parts": [
         {
           "kind": "Section",
-          "name": "What's included",
-          "text": "abox README, What's included: | Component | Role | |---|---| | **agentgateway v2.2.1** | AI-aware API gateway (Gateway API–native, MCP-aware) | | **kagent 0.10.1** | Kubernetes-native AI agent framework | | **Qdrant 1.19.1** | Vector database for retrieval | | **Arize Phoenix 12.0.10** | LLM observability — tracing, evals, prompt playground | | **Flux CD 2.x** | GitOps/GitLessOps operator — keeps the cluster in sync with OCI artifacts | | **KinD** | Local Kubernetes (1 control-plane + 2 workers) - can be any k8s | | **cloud-provider-kind** | LoadBalancer support so gateway gets a real IP for local development |"
-        },
-        {
-          "kind": "Section",
           "name": "Quickstart",
           "text": "abox README, Quickstart: That's it. Installs OpenTofu and k9s, provisions the cluster, bootstraps Flux, and reconciles all components. When it finishes: Point your AI app at the gateway IP on port 80."
         },
@@ -76,11 +99,6 @@
           "kind": "Section",
           "name": "How it works",
           "text": "abox README, How it works: Everything after the cluster is **gitless GitOps via OCI**: no Git polling, no deploy keys. CI publishes `releases/` as an OCI artifact on every version tag. The cluster reconciles from that artifact automatically."
-        },
-        {
-          "kind": "Section",
-          "name": "Directory layout",
-          "text": "abox README, Directory layout: | Path | Purpose | |---|---| | `bootstrap/` | OpenTofu: KinD + Flux bootstrap (operator, instance, RSIP, ResourceSet) | | `bootstrap/flux-instance.yaml` | `FluxInstance` applied by the bootstrap Job | | `releases/crds/` | CRD HelmReleases: gateway-api, agentgateway, kagent | | `releases/` | App HelmReleases + Gateway + HTTPRoutes | | `scripts/setup.sh` | Full setup script (`make run`) | | `.github/workflows/flux-push.yaml` | CI: publish `releases/` as OCI artifact on `v*` tags |"
         },
         {
           "kind": "Section",
@@ -167,40 +185,48 @@
       "text": "Repository alternat. High availability implementation of AWS NAT instances. NAT Gateways are dead. Long live NAT instances!. Fork of chime/terraform-aws-alternat. Languages: HCL, Python, Shell, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Python packaging. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "HCL"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Python"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Terraform"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "GitHub Actions"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Python packaging"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "chime/terraform-aws-alternat"
+        },
+        {
+          "rel": "references",
+          "to": "Infrastructure as Code"
+        },
+        {
+          "rel": "references",
+          "to": "Networking"
         }
       ],
       "attrs": {
@@ -264,23 +290,35 @@
     {
       "kind": "Repo",
       "name": "automation-token-update",
-      "text": "Repository automation-token-update. We’ll create the following resources by terraform:. Original work by vanelin. Languages: HCL, Python. Tools: Terraform, Python packaging. Created 2023, last pushed 2023, 6 stars.",
+      "text": "Repository automation-token-update. Terraform configuration for GCP Workload Identity Federation, GitHub Actions, Secret Manager and Pub/Sub, accompanying tf-gcp-gke-cluster-flux. Includes Python Cloud Function code for triggering GitHub Actions; the README marks this integration as in development and requiring manual configuration. Non-fork repository owned by vanelin. Languages: HCL, Python. Tools: Terraform, Python packaging. Created 2023, last pushed 2023, 6 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "HCL"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Python"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Terraform"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Python packaging"
+        },
+        {
+          "rel": "references",
+          "to": "Infrastructure as Code"
+        },
+        {
+          "rel": "references",
+          "to": "CI/CD"
+        },
+        {
+          "rel": "references",
+          "to": "Python and Django"
         }
       ],
       "attrs": {
@@ -304,16 +342,20 @@
       "text": "Repository configuration-as-code-jenkins-k8s-jobdsl. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-jobdsl. Languages: Groovy. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Groovy"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Jenkins"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "figaw/configuration-as-code-jenkins-k8s-jobdsl"
+        },
+        {
+          "rel": "references",
+          "to": "CI/CD"
         }
       ],
       "attrs": {
@@ -349,16 +391,20 @@
       "text": "Repository configuration-as-code-jenkins-k8s-pipeline. Monorepo, Project Example. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-pipeline. Languages: Shell. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Jenkins"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "figaw/configuration-as-code-jenkins-k8s-pipeline"
+        },
+        {
+          "rel": "references",
+          "to": "CI/CD"
         }
       ],
       "attrs": {
@@ -385,27 +431,31 @@
     {
       "kind": "Repo",
       "name": "django-docker",
-      "text": "Repository django-docker.  Original work by vanelin. Languages: Python, Dockerfile, Shell. Tools: Docker, Python packaging. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository django-docker. Django project zday run with Docker Compose: a Dockerfile for the app, nginx as reverse proxy, PostgreSQL data directory and an init script. The README walks through a Python virtualenv and the compose setup. Non-fork repository owned by vanelin. Languages: Python, Dockerfile, Shell. Tools: Docker, Python packaging. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Python"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Python packaging"
+        },
+        {
+          "rel": "references",
+          "to": "Python and Django"
         }
       ],
       "attrs": {
@@ -420,15 +470,19 @@
     {
       "kind": "Repo",
       "name": "dotfiles",
-      "text": "Repository dotfiles. Personal shell, editor and AI-agent configuration for macOS, Linux and GitHub Codespaces. Original work by vanelin. Languages: Shell, Vim Script. Created 2023, last pushed 2026, 0 stars.",
+      "text": "Repository dotfiles. Personal shell, editor and AI-agent configuration for macOS, Linux and GitHub Codespaces. Non-fork repository owned by vanelin. Languages: Shell, Vim Script. Created 2023, last pushed 2026, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Vim Script"
+        },
+        {
+          "rel": "references",
+          "to": "AI agents and MCP"
         }
       ],
       "attrs": {
@@ -470,19 +524,35 @@
     {
       "kind": "Repo",
       "name": "everstake-demo",
-      "text": "Repository everstake-demo. demo. Original work by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
+      "text": "Repository everstake-demo. Talos Linux and Sidero Omni architecture demo describing three control-plane nodes on AWS EC2, bare-metal workers and a KubeSpan WireGuard mesh. Includes Argo CD ApplicationSets and manifests for Cilium, kube-prometheus-stack, OpenEBS Mayastor and Vault. Non-fork repository owned by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
       "links": [
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Helm"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Kustomize"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Argo CD"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Networking"
+        },
+        {
+          "rel": "references",
+          "to": "Observability"
         }
       ],
       "attrs": {
@@ -509,15 +579,27 @@
     {
       "kind": "Repo",
       "name": "flux-monitoring",
-      "text": "Repository flux-monitoring. Control plane dashboard http://localhost:3000/d/flux-control-plane:. Original work by vanelin. Tools: Kustomize, Flux. Created 2023, last pushed 2023, 1 stars.",
+      "text": "Repository flux-monitoring. Kubernetes monitoring examples delivered by Flux: kube-prometheus-stack, Loki, Fluent-bit and Grafana dashboards for the cluster and Flux control plane. Includes cert-manager and OpenTelemetry manifests, but the README marks the OpenTelemetry integration as not working yet. Non-fork repository owned by vanelin. Tools: Kustomize, Flux. Created 2023, last pushed 2023, 1 stars.",
       "links": [
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Kustomize"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Flux"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Observability"
         }
       ],
       "attrs": {
@@ -548,47 +630,59 @@
     {
       "kind": "Repo",
       "name": "k8s-controller",
-      "text": "Repository k8s-controller. Golang Kubernetes Controller. A Go-based Kubernetes controller with structured logging, environment configuration using Viper, FastHTTP server, Deployment informer capabilities, and controller-runtime framework with leader election support. Original work by vanelin. Languages: Go, Shell, Makefile, Dockerfile, Smarty. Tools: Docker, Helm, GitHub Actions, Make, Go modules. Created 2025, last pushed 2025, 2 stars.",
+      "text": "Repository k8s-controller. Golang Kubernetes Controller. A Go-based Kubernetes controller with structured logging, environment configuration using Viper, FastHTTP server, Deployment informer capabilities, and controller-runtime framework with leader election support. Non-fork repository owned by vanelin. Languages: Go, Shell, Makefile, Dockerfile, Smarty. Tools: Docker, Helm, GitHub Actions, Make, Go modules. Created 2025, last pushed 2025, 2 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Go"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Makefile"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Smarty"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Helm"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "GitHub Actions"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Make"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Go modules"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "CI/CD"
+        },
+        {
+          "rel": "references",
+          "to": "Go development"
         }
       ],
       "attrs": {
@@ -617,7 +711,7 @@
         {
           "kind": "Section",
           "name": "Configuration",
-          "text": "k8s-controller README, Configuration: ### Configuration Variables | Variable | Description | Default | CLI Flag | |----------|-------------|---------|----------| | `PORT` | Server port | `8080` | `--port` | | `METRIC_PORT` | Controller-runtime metrics server port | `8081` | `--metric-port` | | `KUBECONFIG` | Path to Kubernetes configuration file | `~/.kube/config` | `--kubeconfig` | | `IN_CLUSTER` | Use in-cluster Kubernetes config | `false` | `--in-cluster` | | `NAMESPACE` | Kubernetes namespace(s) for operations (comma-separated, e.g., \"kube-system,monitoring\") | `default` | `--namespace` | | `LOGGING_LEVEL` | Logging level (trace, debug, info, warn, error) | `info` | `--log-level` | | `ENABLE_LEADER_ELECTION` | Enable leader election for high availability | `true` | `--enable-leader-election` | | `LEADER_ELECTION_NAMESPACE`"
+          "text": "k8s-controller README, Configuration: ### Configuration Variables  ### Configuration Priority All commands follow the same configuration priority: 1. **CLI flags** (`--port`, `--metric-port`, `--log-level`, `--kubeconfig`, `--in-cluster`, `--namespace`, `--enable-leader-election`, `--leader-election-namespace`) - highest priority 2. **Environment variables** (`PORT`, `METRIC_PORT`, `LOGGING_LEVEL`, `KUBECONFIG`, `IN_CLUSTER`, `NAMESPACE`, `ENABLE_LEADER_ELECTION`, `LEADER_ELECTION_NAMESPACE`) 3. **`.env` file** values (`pkg/common/envs/.env`) 4. **Default values** (PORT=8080, METRIC_PORT=8081, LOGGING_LEVEL=info, KUBECONFIG=~/.kube/config, IN_CLUSTER=false, NAMESPACE=default, ENABLE_LEADER_ELECTION=true, LEADER_ELECTION_NAMESPACE=default)"
         },
         {
           "kind": "Section",
@@ -652,8 +746,13 @@
     {
       "kind": "Repo",
       "name": "kafka",
-      "text": "Repository kafka. Install Kafka on Kubernetes (K8s) in KRaft mode (Zookeperless). Once installed, you'll need to locate the Metrics Server deployment to patch it. This can typically be found in the kube-system namespace. Use the following command to patch it:. Original work by vanelin. Created 2024, last pushed 2025, 2 stars.",
-      "links": [],
+      "text": "Repository kafka. Apache Kafka on Kubernetes examples using kind, Bitnami charts with KRaft or ZooKeeper, and the Strimzi operator. Includes MirrorMaker 2 manifests and a documented consumer-first migration from a ZooKeeper-based cluster to a KRaft cluster. Non-fork repository owned by vanelin. Created 2024, last pushed 2025, 2 stars.",
+      "links": [
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        }
+      ],
       "attrs": {
         "year": "2025",
         "created": "2024",
@@ -677,55 +776,75 @@
     {
       "kind": "Repo",
       "name": "kbot",
-      "text": "Repository kbot. DevOps application from scratch. DevOps application from scratch. Simple CLI to send on-demand messages on behalf of a Telegram bot. Original work by vanelin. Languages: Go, Groovy, Makefile, Shell, Smarty, Dockerfile. Tools: Docker, Helm, GitHub Actions, Jenkins, Make, Go modules. Created 2023, last pushed 2023, 4 stars.",
+      "text": "Repository kbot. DevOps application from scratch. Simple CLI to send on-demand messages on behalf of a Telegram bot. Non-fork repository owned by vanelin. Languages: Go, Groovy, Makefile, Shell, Smarty, Dockerfile. Tools: Docker, Helm, GitHub Actions, Jenkins, Make, Go modules. Created 2023, last pushed 2023, 4 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Go"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Groovy"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Makefile"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Smarty"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Helm"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "GitHub Actions"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Jenkins"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Make"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Go modules"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "CI/CD"
+        },
+        {
+          "rel": "references",
+          "to": "Go development"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
         }
       ],
       "attrs": {
@@ -754,12 +873,12 @@
         {
           "kind": "Section",
           "name": "Support Grid:",
-          "text": "kbot README, Support Grid:: |                   | `darwin` |  `linux` | `windows` |                   | | ----------------: | :------: |  :-----: | :-------: | :---------------- | | **`amd64`**       |  ✅      | ✅       | ✅         | **`amd64`**      | | **`arm`**         |          | ✅       | ✅         | **`arm`**        | | **`arm64`**       | ✅       | ✅       | ✅         | **`arm64`**      | |  |  **`macos`** | **`linux`** | **`windows`** |  | # Kbot Chart A Helm chart for Kbot, a declarative, GitOps continuous delivery tool for Kubernetes. Source code can be found here: https://github.com/vanelin/kbot/helm"
+          "text": "kbot README, Support Grid:: # Kbot Chart A Helm chart for Kbot, a declarative, GitOps continuous delivery tool for Kubernetes. Source code can be found here: https://github.com/vanelin/kbot/helm"
         },
         {
           "kind": "Section",
           "name": "General parameters",
-          "text": "kbot README, General parameters: | Key | Type | Default | |-----|------|---------| | image.repository | string | `\"gcr.io/minikube-385711\"` | | image.tag | string | `\"v1.0.5-a11547b\"` | | image.os  | string | `\"linux\"` | | image.arch  | string | `\"arm64\"` | | secret.name  | string | `\"kbot\"` | | secret.env  | string | `\"TELE_TOKEN\"` | | secret.key  | string | `\"your_token\"` | | securityContext.privileged | bool | `true` | # GitOps: CI/CD automation workflow using GitHub Actions, ArgoCD, and Helm charts deployed on K8s"
+          "text": "kbot README, General parameters: # GitOps: CI/CD automation workflow using GitHub Actions, ArgoCD, and Helm charts deployed on K8s"
         },
         {
           "kind": "Section",
@@ -771,11 +890,15 @@
     {
       "kind": "Repo",
       "name": "kubectl-kubeplugin",
-      "text": "Repository kubectl-kubeplugin. kubectl krew index add vanelin https://github.com/vanelin/kubectl-kubeplugin kubectl krew install vanelin/kubeplugin. Original work by vanelin. Languages: Shell. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository kubectl-kubeplugin. Bash kubectl plugin that formats CPU and memory usage from kubectl top for pods or nodes, taking namespace and resource type as arguments. Installable with curl or through a custom Krew index. Non-fork repository owned by vanelin. Languages: Shell. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
         }
       ],
       "attrs": {
@@ -793,8 +916,16 @@
       "text": "Repository kubernetes-the-hard-way. Bootstrap Kubernetes the hard way on Google Cloud Platform. No scripts. This tutorial walks you through setting up Kubernetes the hard way. This guide is not for people looking for a fully automated command to bring up a Kubernetes cluster. If that's you then check out Google Kubernetes Engine, or the Getting Started Guides. Fork of kelseyhightower/kubernetes-the-hard-way. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "kelseyhightower/kubernetes-the-hard-way"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
         }
       ],
       "attrs": {
@@ -839,32 +970,36 @@
       "text": "Repository learn-cantrill-io-labs. Standard and Advanced Demos for learn.cantrill.io courses. Welcome .. this repo stores a collection of freely available demos and mini projects for AWS (and in the future other cloud platforms) These demos are available in three ways:-. Fork of acantril/learn-cantrill-io-labs. Languages: Python, PowerShell, Shell, JavaScript, HTML, PHP. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Python"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "PowerShell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "JavaScript"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "HTML"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "PHP"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "acantril/learn-cantrill-io-labs"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
         }
       ],
       "attrs": {
@@ -923,32 +1058,40 @@
       "text": "Repository mikrotik-mcp. MCP server for Mikrotik. MikroTik MCP provides a bridge between AI assistants and MikroTik RouterOS devices. It allows AI assistants to interact with MikroTik routers through natural language requests, executing commands like managing VLANs, configuring firewall rules, handling DNS settings, and more. Fork of jeff-nasseri/mikrotik-mcp. Languages: Python, Shell, Dockerfile. Tools: Docker, GitHub Actions, Python packaging. Created 2026, last pushed 2026, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Python"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "GitHub Actions"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Python packaging"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "jeff-nasseri/mikrotik-mcp"
+        },
+        {
+          "rel": "references",
+          "to": "AI agents and MCP"
+        },
+        {
+          "rel": "references",
+          "to": "Networking"
         }
       ],
       "attrs": {
@@ -990,15 +1133,19 @@
     {
       "kind": "Repo",
       "name": "MikrotikPublicRepository",
-      "text": "Repository MikrotikPublicRepository. My public repository. Fork of YunSergey/PublicRepository. Languages: Python. Created 2020, last pushed 2020, 0 stars.",
+      "text": "Repository MikrotikPublicRepository. Fork of a collection of MikroTik RouterOS scripts: checking for RouterOS updates, configuration backups sent by e-mail, bandwidth-exceeded notifications, creating PPP users, and e-mail and Telegram alerts. Fork of YunSergey/PublicRepository. Languages: Python. Created 2020, last pushed 2020, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Python"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "YunSergey/PublicRepository"
+        },
+        {
+          "rel": "references",
+          "to": "Networking"
         }
       ],
       "attrs": {
@@ -1025,8 +1172,17 @@
     {
       "kind": "Repo",
       "name": "module3_containerization",
-      "text": "Repository module3_containerization. Для кожного завдання окремий branch: - task_3 (Container image з нуля) - task_4 (Твій Kubernetes кластер) - task_5 (Makefile+Dockerfile). Original work by vanelin. Created 2023, last pushed 2023, 0 stars.",
-      "links": [],
+      "text": "Repository module3_containerization. Course module on containerization, one branch per task: from chroot to a container, cgroups and resource control, building a container image from scratch, running your own Kubernetes cluster, and a Makefile plus Dockerfile coding session. Non-fork repository owned by vanelin. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
+        }
+      ],
       "attrs": {
         "year": "2023",
         "created": "2023",
@@ -1039,11 +1195,23 @@
     {
       "kind": "Repo",
       "name": "module4-PoC",
-      "text": "Repository module4-PoC. Project concept for a local development system, considering options based on Kubernetes - minikube, kind, and k3d. AsciiArtify створений двома молодими програмістами, які мають досвід у розробці програмного забезпечення та бажання запустити свій власний продукт, але не мають досвіду у DevOps. Original work by vanelin. Tools: Argo CD. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository module4-PoC. Concept, proof of concept and MVP for a local Kubernetes development environment for the fictional startup AsciiArtify: comparison of minikube, kind and k3d, and a GitOps demo with Argo CD. Non-fork repository owned by vanelin. Tools: Argo CD. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Argo CD"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
         }
       ],
       "attrs": {
@@ -1061,24 +1229,28 @@
       "text": "Repository nginxconfig.io. ⚙️ NGINX config generator on steroids 💉. ⚙️ NGINX configuration generator on steroids 💉  The only tool you'll ever need to configure your NGINX server.  do.co/nginxconfig »   Report a bug · Request a feature. Fork of digitalocean/nginxconfig.io. Languages: JavaScript, Vue, SCSS. Tools: GitHub Actions. Created 2021, last pushed 2021, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "JavaScript"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Vue"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "SCSS"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "GitHub Actions"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "digitalocean/nginxconfig.io"
+        },
+        {
+          "rel": "references",
+          "to": "Networking"
         }
       ],
       "attrs": {
@@ -1097,7 +1269,7 @@
         {
           "kind": "Section",
           "name": "👨‍💻 Author",
-          "text": "nginxconfig.io README, 👨‍💻 Author: ### Rewrite & maintenance **Matt (IPv4) Cowley &lt;me@mattcowley.co.uk&gt; (https://mattcowley.co.uk)** * GitHub: @MattIPv4 ### Original version **Bálint Szekeres &lt;balint@szekeres.me&gt; (https://balint.szekeres.me)** * GitHub: @0xB4LINT * LinkedIn: @0xB4LINT"
+          "text": "nginxconfig.io README, 👨‍💻 Author: ### Rewrite & maintenance **Matt (IPv4) Cowley &lt;&gt; (https://mattcowley.co.uk)** * GitHub: @MattIPv4 ### Original version **Bálint Szekeres &lt;&gt; (https://balint.szekeres.me)** * GitHub: @0xB4LINT * LinkedIn: @0xB4LINT"
         },
         {
           "kind": "Section",
@@ -1142,19 +1314,27 @@
     {
       "kind": "Repo",
       "name": "omni",
-      "text": "Repository omni. Talos Linux cluster with Omni. This example shows how to manage a Talos Kubernetes cluster with Sidero Labs' Omni. It deploys a Talos Kubernetes cluster using Omni, with the following tooling:. Original work by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
+      "text": "Repository omni. Example of managing a Talos Linux Kubernetes cluster with Sidero Labs Omni, with Argo CD and ApplicationSets for application management and cluster bootstrap. Non-fork repository owned by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
       "links": [
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Helm"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Kustomize"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Argo CD"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
         }
       ],
       "attrs": {
@@ -1200,15 +1380,23 @@
     {
       "kind": "Repo",
       "name": "ooniversity_django_courses_04",
-      "text": "Repository ooniversity_django_courses_04.  Fork of BrinNatasha/ooniversity_django_courses_04. Tools: Python packaging. Created 2016, last pushed 2016, 0 stars.",
+      "text": "Repository ooniversity_django_courses_04. Django coursework from an ooniversity Python course: a learning-centre site with apps for courses, coaches and students, models, forms, admin, migrations and tests. Fork of BrinNatasha/ooniversity_django_courses_04. Tools: Python packaging. Created 2016, last pushed 2016, 0 stars.",
       "links": [
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Python packaging"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "BrinNatasha/ooniversity_django_courses_04"
+        },
+        {
+          "rel": "references",
+          "to": "Python and Django"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
         }
       ],
       "attrs": {
@@ -1229,8 +1417,21 @@
     {
       "kind": "Repo",
       "name": "openai-k8s-manifest",
-      "text": "Repository openai-k8s-manifest.  Original work by vanelin. Created 2023, last pushed 2023, 0 stars.",
-      "links": [],
+      "text": "Repository openai-k8s-manifest. Portfolio of Kubernetes manifests generated with OpenAI from short prompts: pod, liveness and readiness probes, volume mounts, resources, secret env, multi-container pod, Job and CronJob. Non-fork repository owned by vanelin. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "AI agents and MCP"
+        },
+        {
+          "rel": "references",
+          "to": "Courses and learning"
+        }
+      ],
       "attrs": {
         "year": "2023",
         "created": "2023",
@@ -1238,26 +1439,32 @@
         "language": "none",
         "stars": "0"
       },
-      "parts": [
-        {
-          "kind": "Section",
-          "name": "Manifest Portfolio + OpenAI",
-          "text": "openai-k8s-manifest README, Manifest Portfolio + OpenAI: | NAME            | PROMPT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | DESCRIPTION                                                                                                                                                                                                                                                               "
-        }
-      ]
+      "parts": []
     },
     {
       "kind": "Repo",
       "name": "tf-gcp-gke-cluster-flux",
-      "text": "Repository tf-gcp-gke-cluster-flux. Best practices GitOps and DevSecOps. For personal access token (classic), I think the minimum I need for bootstrap to github is: |         | \t\t   \t\t   |\t\t \t\t\t\t\t\t\t                          | | ------: | :----------------- |:------------------------------------ | | ✅      | `repo`             | Full control of private repositories | | ✅      | `admin:public_key` | Full control of user public keys     | |  \t\t    |  \t\t   \t\t         |\t   . Original work by vanelin. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 2 stars.",
+      "text": "Repository tf-gcp-gke-cluster-flux. Terraform configuration for a GKE cluster on Google Cloud and Flux bootstrap from a GitHub repository. Includes deploy keys, Google Secret Manager and KMS integration, and Infracost cost estimates. Non-fork repository owned by vanelin. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 2 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "HCL"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Terraform"
+        },
+        {
+          "rel": "references",
+          "to": "GitOps"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Infrastructure as Code"
         }
       ],
       "attrs": {
@@ -1275,16 +1482,24 @@
       "text": "Repository tf-google-gke-cluster. Terraform module to create GKE cluster with custom node pool. This module deploys a Kubernetes cluster on Google Cloud Platform (GCP) using the Google Kubernetes Engine (GKE) service. The GKE cluster is provisioned with a single node pool, and it comes with a generated Kubernetes configuration file (`kubeconfig`) that is stored locally. Fork of den-vasyliev/tf-google-gke-cluster. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "HCL"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Terraform"
         },
         {
-          "rel": "forked_from",
+          "rel": "inherits",
           "to": "den-vasyliev/tf-google-gke-cluster"
+        },
+        {
+          "rel": "references",
+          "to": "Kubernetes"
+        },
+        {
+          "rel": "references",
+          "to": "Infrastructure as Code"
         }
       ],
       "attrs": {
@@ -1295,11 +1510,6 @@
         "stars": "0"
       },
       "parts": [
-        {
-          "kind": "Section",
-          "name": "Inputs",
-          "text": "tf-google-gke-cluster README, Inputs: |       Name       |            Description           |  Type  |     Default     | Required | |:----------------:|:--------------------------------:|:------:|:---------------:|:--------:| | GOOGLE_PROJECT   | GCP project name                 | string | no              |    no    | | GOOGLE_REGION    | GCP region name                  | string | \"us-central1-c\" |    no    | | GKE_MACHINE_TYPE | GKE node machine type            | string | \"e2-small\"      |    no    | | GKE_NUM_NODES    | Number of nodes in the node pool | number | 3               |    no    |"
-        },
         {
           "kind": "Section",
           "name": "Requirements",
@@ -1321,7 +1531,7 @@
     {
       "kind": "Repo",
       "name": "vanelin",
-      "text": "Repository vanelin. As a DevOps, SysOps, and Platform Engineer with a strong background in network engineering, I am a perpetual student who is passionate about cloud platforms, process automation, and technology in general. In my spare time, I enjoy pursuing self-development and exploring new technologies. With a keen eye for detail and a commitment to delivering high-quality results, I am dedicated to driving conti. Original work by vanelin. Created 2023, last pushed 2025, 0 stars.",
+      "text": "Repository vanelin. GitHub profile of Ivan Voloboyev from Ukraine, who describes himself as a DevOps, SysOps and Platform Engineer with a network engineering background. Interests include cloud platforms, process automation and continuous learning. Non-fork repository owned by vanelin. Created 2023, last pushed 2025, 0 stars.",
       "links": [],
       "attrs": {
         "year": "2025",
@@ -1335,18 +1545,18 @@
     {
       "kind": "Repo",
       "name": "webserver",
-      "text": "Repository webserver. Similar to installing netcat in Debian based Linux, an nc symlink will be created that points to ncat. For brevity, in the examples that follow, we’ll use nc instead of netcat or ncat when running the command. Original work by vanelin. Languages: Dockerfile, Shell. Tools: Docker. Created 2021, last pushed 2021, 0 stars.",
+      "text": "Repository webserver. Minimal web server in a shell script built on netcat, packaged with a Dockerfile and docker-compose. Non-fork repository owned by vanelin. Languages: Dockerfile, Shell. Tools: Docker. Created 2021, last pushed 2021, 0 stars.",
       "links": [
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Dockerfile"
         },
         {
-          "rel": "written_in",
+          "rel": "references",
           "to": "Shell"
         },
         {
-          "rel": "uses",
+          "rel": "references",
           "to": "Docker"
         }
       ],
@@ -1374,6 +1584,66 @@
           "text": "webserver README, Installing ncat in RHEL Based Linux: For RHEL based Linux (such as CentOS) users, we’ll install the ncat program instead of the netcat program. ncat is similar to netcat, except it offers more features than the latter. Despite the differences, examples in this article are compatible with both. Let’s install the ncat program: Similar to installing netcat in Debian based Linux, an nc symlink will be created that points to ncat. For brevity, in the examples that follow, we’ll use nc instead of netcat or ncat when running the command. ### NetCat (nc) as a webserver This command will run http static server, available at http://localhost:8000. ### Building and running the Docker container The web server is available at http://localhost:8000"
         }
       ]
+    },
+    {
+      "kind": "Topic",
+      "name": "GitOps",
+      "text": "Topic GitOps. Declarative delivery to Kubernetes where the cluster state is reconciled from git or an OCI artifact by Flux or Argo CD.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Kubernetes",
+      "text": "Topic Kubernetes. Running, operating and extending Kubernetes: clusters, controllers, manifests, plugins and workloads.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Infrastructure as Code",
+      "text": "Topic Infrastructure as Code. Cloud infrastructure described as code with Terraform or OpenTofu on Google Cloud and AWS.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "CI/CD",
+      "text": "Topic CI/CD. Build, test and release pipelines with GitHub Actions and Jenkins, including container image and Helm chart releases.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "AI agents and MCP",
+      "text": "Topic AI agents and MCP. AI agents, Model Context Protocol servers, agent memory, embeddings and LLM-assisted tooling.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Networking",
+      "text": "Topic Networking. Routers, NAT, VPN meshes and network automation: MikroTik RouterOS, AWS NAT instances, WireGuard.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Observability",
+      "text": "Topic Observability. Metrics, logs, traces and dashboards: Prometheus, Grafana, Loki, OpenTelemetry, Phoenix.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Go development",
+      "text": "Topic Go development. Applications and Kubernetes controllers written in Go, packaged with container images and Helm charts.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Python and Django",
+      "text": "Topic Python and Django. Python web applications with Django, and Python used for cloud functions and automation.",
+      "links": []
+    },
+    {
+      "kind": "Topic",
+      "name": "Courses and learning",
+      "text": "Topic Courses and learning. Coursework, labs and study repositories from DevOps, Kubernetes, AWS and Python courses.",
+      "links": []
     }
   ]
 }

@@ -1,0 +1,115 @@
+# Builds the xray-memory maps image: every docs/labs/05/<label>.catalog.json
+# becomes /maps/<label>.graph.gob.gz, embedded by the same nomic GGUF the
+# in-cluster sidecar serves, so the fingerprint (model, dims 256, max input
+# chars) matches by construction. No cluster is involved.
+#
+# Not tied to the v* tags flux-push.yaml uses: the image changes only when a
+# catalog, its summary or this recipe does.
+name: Build xray-memory-maps image
+
+on:
+  push:
+    branches: [lab/05-agentic-memory]
+    paths:
+      - 'docs/labs/05/*.catalog.json'
+      - 'docs/labs/05/*.summary.txt'
+      - 'images/xray-memory-maps/**'
+      - '.github/workflows/xray-memory-maps-image.yaml'
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}/xray-memory-maps
+  # The builder must be the server the maps are served by, and the embedder the
+  # one the chart runs as its sidecar -- both pinned in releases/xray-memory.yaml.
+  XRAY_IMAGE: ghcr.io/den-vasyliev/abox/xray-memory:v1.23.66-61e4eaa
+  EMBEDDER_IMAGE: ghcr.io/den-vasyliev/abox/nomic-embed:v1.18.1-4ccc0ff
+  # The PUBLIC half of the identity the server holds. The private half is
+  # releases/secrets/xray-memory-snapshot-key.yaml, SOPS-encrypted, and Flux
+  # puts it in the cluster -- so CI can write maps only the cluster can read.
+  # `age-keygen -y` on the identity prints this.
+  SNAPSHOT_RECIPIENT: age1uw9aa98ksd7hc29yt7tqycnvqy6yf3q4k4nzexhl9hhtqknd8glqugq46f
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # docker run, not a `services:` container: a service cannot be given
+      # arguments, and the image has no default command. Same arguments as the
+      # chart's sidecar.
+      - name: Start the embedder
+        run: |
+          docker run -d --name embedder -p 8090:8090 "$EMBEDDER_IMAGE" \
+            --host 0.0.0.0 --port 8090 --embeddings --model /models/model.gguf \
+            --ctx-size 16384 --ubatch-size 2048 --parallel 8
+          for _ in $(seq 60); do
+            curl -fs localhost:8090/health >/dev/null && exit 0
+            sleep 2
+          done
+          docker logs embedder
+          exit 1
+
+      - name: Build the maps
+        run: |
+          mkdir -p images/xray-memory-maps/maps
+          for catalog in docs/labs/05/*.catalog.json; do
+            label="$(basename "$catalog" .catalog.json)"
+            docker run --rm --network host --user "$(id -u)" -v "$PWD":/w "$XRAY_IMAGE" \
+              servicemap -in "/w/$catalog" -label "$label" \
+              -snapshot-dir /w/images/xray-memory-maps/maps \
+              -embedding-endpoint http://localhost:8090 \
+              -embedding-model nomic-embed-text -embedding-dims 256 \
+              -snapshot-recipient "$SNAPSHOT_RECIPIENT" \
+              -summary "$(cat "docs/labs/05/$label.summary.txt")" 2>&1 | tee "build-$label.log"
+            # A link whose target names no entry is dropped without an error.
+            grep -q 'skippedLinks=0' "build-$label.log" || { echo "::error::$label: links were skipped"; exit 1; }
+            grep -q 'summarySource=explicit' "build-$label.log" || { echo "::error::$label: no explicit summary"; exit 1; }
+            grep -q 'encrypted=true' "build-$label.log" || { echo "::error::$label: written in plaintext"; exit 1; }
+          done
+          ls -l images/xray-memory-maps/maps
+
+      # The tag is the content of the catalogs and summaries: the same corpus
+      # always gets the same tag, and releases/xray-memory.yaml can pin it
+      # before the image exists.
+      - name: Tag
+        id: tag
+        run: |
+          echo "tag=$(cat docs/labs/05/*.catalog.json docs/labs/05/*.summary.txt | sha256sum | cut -c1-12)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: images/xray-memory-maps
+          # Declared, never inferred: the kubelet refuses a platform-less image
+          # for an image volume. amd64 only, like the embedder.
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}
+            ${{ env.IMAGE }}:latest
+
+      - name: Summary
+        run: |
+          echo "### xray-memory-maps image pushed" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "digest: ${{ steps.build.outputs.digest }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
