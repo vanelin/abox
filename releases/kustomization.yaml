@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - agentgateway.yaml
   - agentregistry.yaml
+  - agent-memory.yaml
   - agent-retrieval.yaml
   - kagent.yaml
   - llama-cpp-embeddings.yaml

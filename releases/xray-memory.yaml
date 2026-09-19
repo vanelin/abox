@@ -89,7 +89,7 @@ spec:
           # is a new tag here. Upstream's xray-memory-maps:2026-09-16 is not
           # seeded: both of its maps are encrypted to the instructor's key, the
           # server skips them, and with nothing else in the volume it exits.
-          - reference: ghcr.io/vanelin/abox/xray-memory-maps:130942fd25f7
+          - reference: ghcr.io/vanelin/abox/xray-memory-maps:8eb20ad7b831
             pullPolicy: IfNotPresent
             path: /maps
 

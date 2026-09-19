@@ -174,12 +174,14 @@ def main() -> None:
             + (f"Languages: {', '.join(languages)}. " if languages else "")
             + (f"Tools: {', '.join(tools)}. " if tools else "")
             + f"Created {repo['created_at'][:4]}, last pushed {repo['pushed_at'][:4]}, "
-            + f"{repo['stargazers_count']} stars."
+            + f"{repo['stargazers_count']} stars. "
+            + ("Archived on GitHub, read-only." if repo["archived"] else "Not archived on GitHub.")
         )
         item["attrs"] = {
             "year": repo["pushed_at"][:4],
             "created": repo["created_at"][:4],
             "fork": str(repo["fork"]).lower(),
+            "archived": str(repo["archived"]).lower(),
             "language": repo["language"] or "none",
             "stars": str(repo["stargazers_count"]),
         }

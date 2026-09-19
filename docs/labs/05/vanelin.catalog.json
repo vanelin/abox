@@ -3,7 +3,7 @@
     {
       "kind": "Repo",
       "name": "abox",
-      "text": "Repository abox. Harness Engineering. `make run` gives you a local Kubernetes cluster with everything an AI project needs: an AI-aware API gateway, an agent runtime, observability, distributed tracing, and an eval harness — ready to use. Fork of den-vasyliev/abox. Languages: Shell, HCL, Makefile, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Make, Kustomize, Devcontainer, Flux. Created 2026, last pushed 2026, 1 stars.",
+      "text": "Repository abox. Harness Engineering. `make run` gives you a local Kubernetes cluster with everything an AI project needs: an AI-aware API gateway, an agent runtime, observability, distributed tracing, and an eval harness — ready to use. Fork of den-vasyliev/abox. Languages: Shell, HCL, Makefile, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Make, Kustomize, Devcontainer, Flux. Created 2026, last pushed 2026, 1 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -86,6 +86,7 @@
         "year": "2026",
         "created": "2026",
         "fork": "true",
+        "archived": "false",
         "language": "Shell",
         "stars": "1"
       },
@@ -182,7 +183,7 @@
     {
       "kind": "Repo",
       "name": "alternat",
-      "text": "Repository alternat. High availability implementation of AWS NAT instances. NAT Gateways are dead. Long live NAT instances!. Fork of chime/terraform-aws-alternat. Languages: HCL, Python, Shell, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Python packaging. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository alternat. High availability implementation of AWS NAT instances. NAT Gateways are dead. Long live NAT instances!. Fork of chime/terraform-aws-alternat. Languages: HCL, Python, Shell, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Python packaging. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -233,6 +234,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -290,7 +292,7 @@
     {
       "kind": "Repo",
       "name": "automation-token-update",
-      "text": "Repository automation-token-update. Terraform configuration for GCP Workload Identity Federation, GitHub Actions, Secret Manager and Pub/Sub, accompanying tf-gcp-gke-cluster-flux. Includes Python Cloud Function code for triggering GitHub Actions; the README marks this integration as in development and requiring manual configuration. Non-fork repository owned by vanelin. Languages: HCL, Python. Tools: Terraform, Python packaging. Created 2023, last pushed 2023, 6 stars.",
+      "text": "Repository automation-token-update. Terraform configuration for GCP Workload Identity Federation, GitHub Actions, Secret Manager and Pub/Sub, accompanying tf-gcp-gke-cluster-flux. Includes Python Cloud Function code for triggering GitHub Actions; the README marks this integration as in development and requiring manual configuration. Non-fork repository owned by vanelin. Languages: HCL, Python. Tools: Terraform, Python packaging. Created 2023, last pushed 2023, 6 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -325,6 +327,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "HCL",
         "stars": "6"
       },
@@ -339,7 +342,7 @@
     {
       "kind": "Repo",
       "name": "configuration-as-code-jenkins-k8s-jobdsl",
-      "text": "Repository configuration-as-code-jenkins-k8s-jobdsl. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-jobdsl. Languages: Groovy. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository configuration-as-code-jenkins-k8s-jobdsl. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-jobdsl. Languages: Groovy. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -362,6 +365,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "true",
+        "archived": "false",
         "language": "Groovy",
         "stars": "0"
       },
@@ -388,7 +392,7 @@
     {
       "kind": "Repo",
       "name": "configuration-as-code-jenkins-k8s-pipeline",
-      "text": "Repository configuration-as-code-jenkins-k8s-pipeline. Monorepo, Project Example. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-pipeline. Languages: Shell. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository configuration-as-code-jenkins-k8s-pipeline. Monorepo, Project Example. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-pipeline. Languages: Shell. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -411,6 +415,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "true",
+        "archived": "false",
         "language": "Shell",
         "stars": "0"
       },
@@ -431,7 +436,7 @@
     {
       "kind": "Repo",
       "name": "django-docker",
-      "text": "Repository django-docker. Django project zday run with Docker Compose: a Dockerfile for the app, nginx as reverse proxy, PostgreSQL data directory and an init script. The README walks through a Python virtualenv and the compose setup. Non-fork repository owned by vanelin. Languages: Python, Dockerfile, Shell. Tools: Docker, Python packaging. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository django-docker. Django project zday run with Docker Compose: a Dockerfile for the app, nginx as reverse proxy, PostgreSQL data directory and an init script. The README walks through a Python virtualenv and the compose setup. Non-fork repository owned by vanelin. Languages: Python, Dockerfile, Shell. Tools: Docker, Python packaging. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -462,6 +467,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "Python",
         "stars": "0"
       },
@@ -470,7 +476,7 @@
     {
       "kind": "Repo",
       "name": "dotfiles",
-      "text": "Repository dotfiles. Personal shell, editor and AI-agent configuration for macOS, Linux and GitHub Codespaces. Non-fork repository owned by vanelin. Languages: Shell, Vim Script. Created 2023, last pushed 2026, 0 stars.",
+      "text": "Repository dotfiles. Personal shell, editor and AI-agent configuration for macOS, Linux and GitHub Codespaces. Non-fork repository owned by vanelin. Languages: Shell, Vim Script. Created 2023, last pushed 2026, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -489,6 +495,7 @@
         "year": "2026",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "Shell",
         "stars": "0"
       },
@@ -524,7 +531,7 @@
     {
       "kind": "Repo",
       "name": "everstake-demo",
-      "text": "Repository everstake-demo. Talos Linux and Sidero Omni architecture demo describing three control-plane nodes on AWS EC2, bare-metal workers and a KubeSpan WireGuard mesh. Includes Argo CD ApplicationSets and manifests for Cilium, kube-prometheus-stack, OpenEBS Mayastor and Vault. Non-fork repository owned by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
+      "text": "Repository everstake-demo. Talos Linux and Sidero Omni architecture demo describing three control-plane nodes on AWS EC2, bare-metal workers and a KubeSpan WireGuard mesh. Includes Argo CD ApplicationSets and manifests for Cilium, kube-prometheus-stack, OpenEBS Mayastor and Vault. Non-fork repository owned by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -559,6 +566,7 @@
         "year": "2025",
         "created": "2025",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -579,7 +587,7 @@
     {
       "kind": "Repo",
       "name": "flux-monitoring",
-      "text": "Repository flux-monitoring. Kubernetes monitoring examples delivered by Flux: kube-prometheus-stack, Loki, Fluent-bit and Grafana dashboards for the cluster and Flux control plane. Includes cert-manager and OpenTelemetry manifests, but the README marks the OpenTelemetry integration as not working yet. Non-fork repository owned by vanelin. Tools: Kustomize, Flux. Created 2023, last pushed 2023, 1 stars.",
+      "text": "Repository flux-monitoring. Kubernetes monitoring examples delivered by Flux: kube-prometheus-stack, Loki, Fluent-bit and Grafana dashboards for the cluster and Flux control plane. Includes cert-manager and OpenTelemetry manifests, but the README marks the OpenTelemetry integration as not working yet. Non-fork repository owned by vanelin. Tools: Kustomize, Flux. Created 2023, last pushed 2023, 1 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -606,6 +614,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "1"
       },
@@ -630,7 +639,7 @@
     {
       "kind": "Repo",
       "name": "k8s-controller",
-      "text": "Repository k8s-controller. Golang Kubernetes Controller. A Go-based Kubernetes controller with structured logging, environment configuration using Viper, FastHTTP server, Deployment informer capabilities, and controller-runtime framework with leader election support. Non-fork repository owned by vanelin. Languages: Go, Shell, Makefile, Dockerfile, Smarty. Tools: Docker, Helm, GitHub Actions, Make, Go modules. Created 2025, last pushed 2025, 2 stars.",
+      "text": "Repository k8s-controller. Golang Kubernetes Controller. A Go-based Kubernetes controller with structured logging, environment configuration using Viper, FastHTTP server, Deployment informer capabilities, and controller-runtime framework with leader election support. Non-fork repository owned by vanelin. Languages: Go, Shell, Makefile, Dockerfile, Smarty. Tools: Docker, Helm, GitHub Actions, Make, Go modules. Created 2025, last pushed 2025, 2 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -689,6 +698,7 @@
         "year": "2025",
         "created": "2025",
         "fork": "false",
+        "archived": "false",
         "language": "Go",
         "stars": "2"
       },
@@ -746,7 +756,7 @@
     {
       "kind": "Repo",
       "name": "kafka",
-      "text": "Repository kafka. Apache Kafka on Kubernetes examples using kind, Bitnami charts with KRaft or ZooKeeper, and the Strimzi operator. Includes MirrorMaker 2 manifests and a documented consumer-first migration from a ZooKeeper-based cluster to a KRaft cluster. Non-fork repository owned by vanelin. Created 2024, last pushed 2025, 2 stars.",
+      "text": "Repository kafka. Apache Kafka on Kubernetes examples using kind, Bitnami charts with KRaft or ZooKeeper, and the Strimzi operator. Includes MirrorMaker 2 manifests and a documented consumer-first migration from a ZooKeeper-based cluster to a KRaft cluster. Non-fork repository owned by vanelin. Created 2024, last pushed 2025, 2 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -757,6 +767,7 @@
         "year": "2025",
         "created": "2024",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "2"
       },
@@ -776,7 +787,7 @@
     {
       "kind": "Repo",
       "name": "kbot",
-      "text": "Repository kbot. DevOps application from scratch. Simple CLI to send on-demand messages on behalf of a Telegram bot. Non-fork repository owned by vanelin. Languages: Go, Groovy, Makefile, Shell, Smarty, Dockerfile. Tools: Docker, Helm, GitHub Actions, Jenkins, Make, Go modules. Created 2023, last pushed 2023, 4 stars.",
+      "text": "Repository kbot. DevOps application from scratch. Simple CLI to send on-demand messages on behalf of a Telegram bot. Non-fork repository owned by vanelin. Languages: Go, Groovy, Makefile, Shell, Smarty, Dockerfile. Tools: Docker, Helm, GitHub Actions, Jenkins, Make, Go modules. Created 2023, last pushed 2023, 4 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -851,6 +862,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "Go",
         "stars": "4"
       },
@@ -890,7 +902,7 @@
     {
       "kind": "Repo",
       "name": "kubectl-kubeplugin",
-      "text": "Repository kubectl-kubeplugin. Bash kubectl plugin that formats CPU and memory usage from kubectl top for pods or nodes, taking namespace and resource type as arguments. Installable with curl or through a custom Krew index. Non-fork repository owned by vanelin. Languages: Shell. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository kubectl-kubeplugin. Bash kubectl plugin that formats CPU and memory usage from kubectl top for pods or nodes, taking namespace and resource type as arguments. Installable with curl or through a custom Krew index. Non-fork repository owned by vanelin. Languages: Shell. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -905,6 +917,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "Shell",
         "stars": "0"
       },
@@ -913,7 +926,7 @@
     {
       "kind": "Repo",
       "name": "kubernetes-the-hard-way",
-      "text": "Repository kubernetes-the-hard-way. Bootstrap Kubernetes the hard way on Google Cloud Platform. No scripts. This tutorial walks you through setting up Kubernetes the hard way. This guide is not for people looking for a fully automated command to bring up a Kubernetes cluster. If that's you then check out Google Kubernetes Engine, or the Getting Started Guides. Fork of kelseyhightower/kubernetes-the-hard-way. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository kubernetes-the-hard-way. Bootstrap Kubernetes the hard way on Google Cloud Platform. No scripts. This tutorial walks you through setting up Kubernetes the hard way. This guide is not for people looking for a fully automated command to bring up a Kubernetes cluster. If that's you then check out Google Kubernetes Engine, or the Getting Started Guides. Fork of kelseyhightower/kubernetes-the-hard-way. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "inherits",
@@ -932,6 +945,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -967,7 +981,7 @@
     {
       "kind": "Repo",
       "name": "learn-cantrill-io-labs",
-      "text": "Repository learn-cantrill-io-labs. Standard and Advanced Demos for learn.cantrill.io courses. Welcome .. this repo stores a collection of freely available demos and mini projects for AWS (and in the future other cloud platforms) These demos are available in three ways:-. Fork of acantril/learn-cantrill-io-labs. Languages: Python, PowerShell, Shell, JavaScript, HTML, PHP. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository learn-cantrill-io-labs. Standard and Advanced Demos for learn.cantrill.io courses. Welcome .. this repo stores a collection of freely available demos and mini projects for AWS (and in the future other cloud platforms) These demos are available in three ways:-. Fork of acantril/learn-cantrill-io-labs. Languages: Python, PowerShell, Shell, JavaScript, HTML, PHP. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1006,6 +1020,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1055,7 +1070,7 @@
     {
       "kind": "Repo",
       "name": "mikrotik-mcp",
-      "text": "Repository mikrotik-mcp. MCP server for Mikrotik. MikroTik MCP provides a bridge between AI assistants and MikroTik RouterOS devices. It allows AI assistants to interact with MikroTik routers through natural language requests, executing commands like managing VLANs, configuring firewall rules, handling DNS settings, and more. Fork of jeff-nasseri/mikrotik-mcp. Languages: Python, Shell, Dockerfile. Tools: Docker, GitHub Actions, Python packaging. Created 2026, last pushed 2026, 0 stars.",
+      "text": "Repository mikrotik-mcp. MCP server for Mikrotik. MikroTik MCP provides a bridge between AI assistants and MikroTik RouterOS devices. It allows AI assistants to interact with MikroTik routers through natural language requests, executing commands like managing VLANs, configuring firewall rules, handling DNS settings, and more. Fork of jeff-nasseri/mikrotik-mcp. Languages: Python, Shell, Dockerfile. Tools: Docker, GitHub Actions, Python packaging. Created 2026, last pushed 2026, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1098,6 +1113,7 @@
         "year": "2026",
         "created": "2026",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1133,7 +1149,7 @@
     {
       "kind": "Repo",
       "name": "MikrotikPublicRepository",
-      "text": "Repository MikrotikPublicRepository. Fork of a collection of MikroTik RouterOS scripts: checking for RouterOS updates, configuration backups sent by e-mail, bandwidth-exceeded notifications, creating PPP users, and e-mail and Telegram alerts. Fork of YunSergey/PublicRepository. Languages: Python. Created 2020, last pushed 2020, 0 stars.",
+      "text": "Repository MikrotikPublicRepository. Fork of a collection of MikroTik RouterOS scripts: checking for RouterOS updates, configuration backups sent by e-mail, bandwidth-exceeded notifications, creating PPP users, and e-mail and Telegram alerts. Fork of YunSergey/PublicRepository. Languages: Python. Created 2020, last pushed 2020, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1152,6 +1168,7 @@
         "year": "2020",
         "created": "2020",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1172,7 +1189,7 @@
     {
       "kind": "Repo",
       "name": "module3_containerization",
-      "text": "Repository module3_containerization. Course module on containerization, one branch per task: from chroot to a container, cgroups and resource control, building a container image from scratch, running your own Kubernetes cluster, and a Makefile plus Dockerfile coding session. Non-fork repository owned by vanelin. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository module3_containerization. Course module on containerization, one branch per task: from chroot to a container, cgroups and resource control, building a container image from scratch, running your own Kubernetes cluster, and a Makefile plus Dockerfile coding session. Non-fork repository owned by vanelin. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1187,6 +1204,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1195,7 +1213,7 @@
     {
       "kind": "Repo",
       "name": "module4-PoC",
-      "text": "Repository module4-PoC. Concept, proof of concept and MVP for a local Kubernetes development environment for the fictional startup AsciiArtify: comparison of minikube, kind and k3d, and a GitOps demo with Argo CD. Non-fork repository owned by vanelin. Tools: Argo CD. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository module4-PoC. Concept, proof of concept and MVP for a local Kubernetes development environment for the fictional startup AsciiArtify: comparison of minikube, kind and k3d, and a GitOps demo with Argo CD. Non-fork repository owned by vanelin. Tools: Argo CD. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1218,6 +1236,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1226,7 +1245,7 @@
     {
       "kind": "Repo",
       "name": "nginxconfig.io",
-      "text": "Repository nginxconfig.io. ⚙️ NGINX config generator on steroids 💉. ⚙️ NGINX configuration generator on steroids 💉  The only tool you'll ever need to configure your NGINX server.  do.co/nginxconfig »   Report a bug · Request a feature. Fork of digitalocean/nginxconfig.io. Languages: JavaScript, Vue, SCSS. Tools: GitHub Actions. Created 2021, last pushed 2021, 0 stars.",
+      "text": "Repository nginxconfig.io. ⚙️ NGINX config generator on steroids 💉. ⚙️ NGINX configuration generator on steroids 💉  The only tool you'll ever need to configure your NGINX server.  do.co/nginxconfig »   Report a bug · Request a feature. Fork of digitalocean/nginxconfig.io. Languages: JavaScript, Vue, SCSS. Tools: GitHub Actions. Created 2021, last pushed 2021, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1257,6 +1276,7 @@
         "year": "2021",
         "created": "2021",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1314,7 +1334,7 @@
     {
       "kind": "Repo",
       "name": "omni",
-      "text": "Repository omni. Example of managing a Talos Linux Kubernetes cluster with Sidero Labs Omni, with Argo CD and ApplicationSets for application management and cluster bootstrap. Non-fork repository owned by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
+      "text": "Repository omni. Example of managing a Talos Linux Kubernetes cluster with Sidero Labs Omni, with Argo CD and ApplicationSets for application management and cluster bootstrap. Non-fork repository owned by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1341,6 +1361,7 @@
         "year": "2025",
         "created": "2025",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1380,7 +1401,7 @@
     {
       "kind": "Repo",
       "name": "ooniversity_django_courses_04",
-      "text": "Repository ooniversity_django_courses_04. Django coursework from an ooniversity Python course: a learning-centre site with apps for courses, coaches and students, models, forms, admin, migrations and tests. Fork of BrinNatasha/ooniversity_django_courses_04. Tools: Python packaging. Created 2016, last pushed 2016, 0 stars.",
+      "text": "Repository ooniversity_django_courses_04. Django coursework from an ooniversity Python course: a learning-centre site with apps for courses, coaches and students, models, forms, admin, migrations and tests. Fork of BrinNatasha/ooniversity_django_courses_04. Tools: Python packaging. Created 2016, last pushed 2016, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1403,6 +1424,7 @@
         "year": "2016",
         "created": "2016",
         "fork": "true",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1417,7 +1439,7 @@
     {
       "kind": "Repo",
       "name": "openai-k8s-manifest",
-      "text": "Repository openai-k8s-manifest. Portfolio of Kubernetes manifests generated with OpenAI from short prompts: pod, liveness and readiness probes, volume mounts, resources, secret env, multi-container pod, Job and CronJob. Non-fork repository owned by vanelin. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository openai-k8s-manifest. Portfolio of Kubernetes manifests generated with OpenAI from short prompts: pod, liveness and readiness probes, volume mounts, resources, secret env, multi-container pod, Job and CronJob. Non-fork repository owned by vanelin. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1436,6 +1458,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1444,7 +1467,7 @@
     {
       "kind": "Repo",
       "name": "tf-gcp-gke-cluster-flux",
-      "text": "Repository tf-gcp-gke-cluster-flux. Terraform configuration for a GKE cluster on Google Cloud and Flux bootstrap from a GitHub repository. Includes deploy keys, Google Secret Manager and KMS integration, and Infracost cost estimates. Non-fork repository owned by vanelin. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 2 stars.",
+      "text": "Repository tf-gcp-gke-cluster-flux. Terraform configuration for a GKE cluster on Google Cloud and Flux bootstrap from a GitHub repository. Includes deploy keys, Google Secret Manager and KMS integration, and Infracost cost estimates. Non-fork repository owned by vanelin. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 2 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1471,6 +1494,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "HCL",
         "stars": "2"
       },
@@ -1479,7 +1503,7 @@
     {
       "kind": "Repo",
       "name": "tf-google-gke-cluster",
-      "text": "Repository tf-google-gke-cluster. Terraform module to create GKE cluster with custom node pool. This module deploys a Kubernetes cluster on Google Cloud Platform (GCP) using the Google Kubernetes Engine (GKE) service. The GKE cluster is provisioned with a single node pool, and it comes with a generated Kubernetes configuration file (`kubeconfig`) that is stored locally. Fork of den-vasyliev/tf-google-gke-cluster. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 0 stars.",
+      "text": "Repository tf-google-gke-cluster. Terraform module to create GKE cluster with custom node pool. This module deploys a Kubernetes cluster on Google Cloud Platform (GCP) using the Google Kubernetes Engine (GKE) service. The GKE cluster is provisioned with a single node pool, and it comes with a generated Kubernetes configuration file (`kubeconfig`) that is stored locally. Fork of den-vasyliev/tf-google-gke-cluster. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1506,6 +1530,7 @@
         "year": "2023",
         "created": "2023",
         "fork": "true",
+        "archived": "false",
         "language": "HCL",
         "stars": "0"
       },
@@ -1531,12 +1556,13 @@
     {
       "kind": "Repo",
       "name": "vanelin",
-      "text": "Repository vanelin. GitHub profile of Ivan Voloboyev from Ukraine, who describes himself as a DevOps, SysOps and Platform Engineer with a network engineering background. Interests include cloud platforms, process automation and continuous learning. Non-fork repository owned by vanelin. Created 2023, last pushed 2025, 0 stars.",
+      "text": "Repository vanelin. GitHub profile of Ivan Voloboyev from Ukraine, who describes himself as a DevOps, SysOps and Platform Engineer with a network engineering background. Interests include cloud platforms, process automation and continuous learning. Non-fork repository owned by vanelin. Created 2023, last pushed 2025, 0 stars. Not archived on GitHub.",
       "links": [],
       "attrs": {
         "year": "2025",
         "created": "2023",
         "fork": "false",
+        "archived": "false",
         "language": "none",
         "stars": "0"
       },
@@ -1545,7 +1571,7 @@
     {
       "kind": "Repo",
       "name": "webserver",
-      "text": "Repository webserver. Minimal web server in a shell script built on netcat, packaged with a Dockerfile and docker-compose. Non-fork repository owned by vanelin. Languages: Dockerfile, Shell. Tools: Docker. Created 2021, last pushed 2021, 0 stars.",
+      "text": "Repository webserver. Minimal web server in a shell script built on netcat, packaged with a Dockerfile and docker-compose. Non-fork repository owned by vanelin. Languages: Dockerfile, Shell. Tools: Docker. Created 2021, last pushed 2021, 0 stars. Not archived on GitHub.",
       "links": [
         {
           "rel": "references",
@@ -1564,6 +1590,7 @@
         "year": "2021",
         "created": "2021",
         "fork": "false",
+        "archived": "false",
         "language": "Dockerfile",
         "stars": "0"
       },
