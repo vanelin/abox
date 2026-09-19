@@ -4,6 +4,8 @@
 
 ### Added
 
+- Proposed [ADR-0004](docs/adr/0004-agentic-memory.md): xray-memory for structured queries and user notes; Qdrant retained for text retrieval. Added a [135-node profile corpus](docs/labs/05/README.md), an encrypted maps image built in [CI](.github/workflows/xray-memory-maps-image.yaml), and [retrieval-agent-xray](releases/agent-memory.yaml).
+- Added SOPS for the snapshot identity. `make secrets` loads the SOPS key from the environment or its local key file and provider keys from the environment; Gemini is optional. Added ModelConfig `gemini-3-5-flash-lite`; excluded Qwen components from the active bundle.
 - Accepted [ADR-0003](docs/adr/0003-agentic-retrieval.md): the Go `qdrant-mcp` on Qwen3-Embedding-0.6B at 256 dimensions for the retrieval agent, measured in the cluster on three toolsets (tool level) and three agents (two questions each, memory audited against the cluster).
 - Added a third toolset reproducing ADR-0001's winner: `llama-cpp-qwen` (Qwen3-Embedding-0.6B Q8_0 baked into [images/qwen-embed](images/qwen-embed), `--pooling last`, `--cache-ram 0`, 2 slots, 2Gi measured), MCPServer `qdrant-mcp-qwen` and agent `retrieval-agent-qwen`. `qdrant-mcp` 0.5.0 gains `EMBEDDINGS_DIMS`: truncate then L2-normalize in `embed()`, so store and find share one space.
 - Wired `neo4j-mcp` into all three retrieval agents with one shared Graph section (MERGE a node per object and only declared edges), and replaced the chart's `k8s-agent` with our own: raw mode that relays tool output verbatim, read tools plus labels, annotations and a connectivity check, on `gpt-5.4-nano`. The retrieval agents run on `gpt-5.4-mini`; both ModelConfigs are in [releases/model-configs.yaml](releases/model-configs.yaml).
@@ -32,6 +34,7 @@
 
 ### Verified
 
+- [Lab 5 evaluation](docs/labs/05/evaluation-review.md): 87 assistant-reviewed answers across three configurations; xray 25/29, Qdrant+nomic 21/29, Official+MiniLM 18/29. Includes retries after 25 rate-limit failures and reruns of two clarified questions. Tool lookup Hit@1: xray 0.824, Qdrant+nomic 0.882; xray graph 6/6 and facets 4/4 with supplied arguments. Note lifecycle and poisoning resistance were not measured in this campaign.
 - Scored three toolsets in the cluster on 2026-09-17 on the frozen lab 3 corpus (144 chunks, 10 questions): official / MiniLM hit@1 2/10, hit@3 5/10, uk 1/3; nomic 5/10, 7/10, 1/3; Qwen 256 7/10, 9/10, 2/3 -- nomic and Qwen equal their ADR-0001 rows exactly. On 2026-09-18 each agent ingested the same 27 cluster objects (27/27 after one retry pass, no invented objects; `SOURCED_FROM` 15/15 and `DEPENDS_ON` 4/4 identical to the cluster) and answered q02 (en) and q06 (uk) correctly with two find calls each. See [ADR-0003](docs/adr/0003-agentic-retrieval.md).
 - Scored both Qdrant MCP toolsets locally on 2026-09-17 on the frozen lab 3 corpus (144 chunks, 10 questions): official / all-MiniLM-L6-v2 hit@1 2/10, hit@3 5/10; Go qdrant-mcp / nomic-embed-text-v1.5 hit@1 5/10, hit@3 7/10; Ukrainian 1/3 for both. See [ADR-0003](docs/adr/0003-agentic-retrieval.md).
 - Evaluated three models on 2026-09-13 using 144 chunks and ten questions (7 EN / 3 UA) in a 4 CPU / 16 GB Codespace; two threads, one slot, batches of eight, context 2048.
