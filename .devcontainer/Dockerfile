@@ -43,4 +43,18 @@ RUN set -eu; \
     install -m 0755 flux /usr/local/bin/flux; \
     rm -rf /tmp/abox-flux
 
+# Encrypts the Secrets under releases/secrets/ to the age recipient in
+# .sops.yaml; Flux decrypts them in the cluster.
+ARG SOPS_VERSION=3.13.3
+RUN set -eu; \
+    arch="$(dpkg --print-architecture)"; \
+    binary="sops-v${SOPS_VERSION}.linux.${arch}"; \
+    base="https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}"; \
+    mkdir /tmp/abox-sops; cd /tmp/abox-sops; \
+    curl -fsSLO "${base}/${binary}"; \
+    curl -fsSLO "${base}/sops-v${SOPS_VERSION}.checksums.txt"; \
+    grep " ${binary}\$" "sops-v${SOPS_VERSION}.checksums.txt" | sha256sum -c -; \
+    install -m 0755 "$binary" /usr/local/bin/sops; \
+    rm -rf /tmp/abox-sops
+
 USER codespace

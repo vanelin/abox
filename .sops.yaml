@@ -1,0 +1,9 @@
+# Secrets under releases/secrets/ are committed encrypted to this age
+# recipient. Only data/stringData is encrypted, so a diff still shows which
+# Secret and which keys changed. The private half never enters git: it is the
+# Codespaces Secret SOPS_AGE_KEY (or ~/.config/sops/age/keys.txt), and
+# `make secrets` hands it to Flux as flux-system/sops-age.
+creation_rules:
+  - path_regex: releases/secrets/.*\.yaml$
+    encrypted_regex: ^(data|stringData)$
+    age: age14yx8fu34xgpvs50z8tehjvlx04c6cslssujszd6zwf8ln2cscdyq4hsc5t

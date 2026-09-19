@@ -1,0 +1,1379 @@
+{
+  "entries": [
+    {
+      "kind": "Repo",
+      "name": "abox",
+      "text": "Repository abox. Harness Engineering. `make run` gives you a local Kubernetes cluster with everything an AI project needs: an AI-aware API gateway, an agent runtime, observability, distributed tracing, and an eval harness — ready to use. Fork of den-vasyliev/abox. Languages: Shell, HCL, Makefile, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Make, Kustomize, Devcontainer, Flux. Created 2026, last pushed 2026, 1 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "HCL"
+        },
+        {
+          "rel": "written_in",
+          "to": "Makefile"
+        },
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        },
+        {
+          "rel": "uses",
+          "to": "Terraform"
+        },
+        {
+          "rel": "uses",
+          "to": "GitHub Actions"
+        },
+        {
+          "rel": "uses",
+          "to": "Make"
+        },
+        {
+          "rel": "uses",
+          "to": "Kustomize"
+        },
+        {
+          "rel": "uses",
+          "to": "Devcontainer"
+        },
+        {
+          "rel": "uses",
+          "to": "Flux"
+        },
+        {
+          "rel": "forked_from",
+          "to": "den-vasyliev/abox"
+        }
+      ],
+      "attrs": {
+        "year": "2026",
+        "created": "2026",
+        "fork": "true",
+        "language": "Shell",
+        "stars": "1"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "What's included",
+          "text": "abox README, What's included: | Component | Role | |---|---| | **agentgateway v2.2.1** | AI-aware API gateway (Gateway API–native, MCP-aware) | | **kagent 0.10.1** | Kubernetes-native AI agent framework | | **Qdrant 1.19.1** | Vector database for retrieval | | **Arize Phoenix 12.0.10** | LLM observability — tracing, evals, prompt playground | | **Flux CD 2.x** | GitOps/GitLessOps operator — keeps the cluster in sync with OCI artifacts | | **KinD** | Local Kubernetes (1 control-plane + 2 workers) - can be any k8s | | **cloud-provider-kind** | LoadBalancer support so gateway gets a real IP for local development |"
+        },
+        {
+          "kind": "Section",
+          "name": "Quickstart",
+          "text": "abox README, Quickstart: That's it. Installs OpenTofu and k9s, provisions the cluster, bootstraps Flux, and reconciles all components. When it finishes: Point your AI app at the gateway IP on port 80."
+        },
+        {
+          "kind": "Section",
+          "name": "How it works",
+          "text": "abox README, How it works: Everything after the cluster is **gitless GitOps via OCI**: no Git polling, no deploy keys. CI publishes `releases/` as an OCI artifact on every version tag. The cluster reconciles from that artifact automatically."
+        },
+        {
+          "kind": "Section",
+          "name": "Directory layout",
+          "text": "abox README, Directory layout: | Path | Purpose | |---|---| | `bootstrap/` | OpenTofu: KinD + Flux bootstrap (operator, instance, RSIP, ResourceSet) | | `bootstrap/flux-instance.yaml` | `FluxInstance` applied by the bootstrap Job | | `releases/crds/` | CRD HelmReleases: gateway-api, agentgateway, kagent | | `releases/` | App HelmReleases + Gateway + HTTPRoutes | | `scripts/setup.sh` | Full setup script (`make run`) | | `.github/workflows/flux-push.yaml` | CI: publish `releases/` as OCI artifact on `v*` tags |"
+        },
+        {
+          "kind": "Section",
+          "name": "Adding components",
+          "text": "abox README, Adding components: 1. Put CRD charts in `releases/crds/` as HelmReleases. 2. Put app charts in `releases/` as HelmReleases. 3. Run `make push` — the cluster reconciles automatically. The CRD kustomization runs first (`wait: true`), apps run after (`dependsOn: releases-crds`). This ordering is enforced by Flux and must be preserved."
+        }
+      ]
+    },
+    {
+      "kind": "Language",
+      "name": "Shell",
+      "text": "Programming language Shell.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "HCL",
+      "text": "Programming language HCL.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "Makefile",
+      "text": "Programming language Makefile.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "Dockerfile",
+      "text": "Programming language Dockerfile.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Docker",
+      "text": "DevOps tool Docker, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Terraform",
+      "text": "DevOps tool Terraform, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "GitHub Actions",
+      "text": "DevOps tool GitHub Actions, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Make",
+      "text": "DevOps tool Make, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Kustomize",
+      "text": "DevOps tool Kustomize, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Devcontainer",
+      "text": "DevOps tool Devcontainer, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Flux",
+      "text": "DevOps tool Flux, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Upstream",
+      "name": "den-vasyliev/abox",
+      "text": "Upstream repository den-vasyliev/abox, the original that abox was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "alternat",
+      "text": "Repository alternat. High availability implementation of AWS NAT instances. NAT Gateways are dead. Long live NAT instances!. Fork of chime/terraform-aws-alternat. Languages: HCL, Python, Shell, Dockerfile. Tools: Docker, Terraform, GitHub Actions, Python packaging. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "HCL"
+        },
+        {
+          "rel": "written_in",
+          "to": "Python"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        },
+        {
+          "rel": "uses",
+          "to": "Terraform"
+        },
+        {
+          "rel": "uses",
+          "to": "GitHub Actions"
+        },
+        {
+          "rel": "uses",
+          "to": "Python packaging"
+        },
+        {
+          "rel": "forked_from",
+          "to": "chime/terraform-aws-alternat"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Background",
+          "text": "alternat README, Background: On AWS, NAT devices are required for accessing the Internet from private VPC subnets. Usually, the best option is a NAT gateway, a fully managed NAT service. The pricing structure of NAT gateway includes charges of $.045 per hour per NAT Gateway, plus **$.045 per GB** processed. The former charge is reasonable at about $32.40 per month. However, the latter charge can be *extremely* expensive for larger traffic volumes. In addition to the direct NAT Gateway charges, there are also Data Transfer charges for outbound traffic leaving AWS (known as egress traffic). The cost varies depending on destination and volume, ranging from $0.09/GB to $0.01 per GB (after a free tier of 100GB). That’s right: traffic traversing the NAT Gateway is first charged for processing, then charged again for egress "
+        },
+        {
+          "kind": "Section",
+          "name": "Architecture overview",
+          "text": "alternat README, Architecture overview: The two main elements of the NAT instance solution are: 1. The NAT instance Auto Scaling Groups, one per zone, with a corresponding standby NAT Gateway 1. The replace-route Lambda function Both are deployed by the Terraform module located in `modules/terraform-aws-alternat`. ### NAT instance Auto Scaling Group and standby NAT Gateway The solution deploys an Auto Scaling Group (ASG) for each provided public subnet. Each ASG contains a single instance. When the instance boots, the user data initializes the instance to do the NAT stuff. By default, the ASGs are configured with a maximum instance lifetime. This is to facilitate periodic replacement of the instance to automate patching. When the maximum instance lifetime is reached (14 days by default), the following occurs: 1. The instance is "
+        },
+        {
+          "kind": "Section",
+          "name": "Drawbacks",
+          "text": "alternat README, Drawbacks: No solution is without its downsides. To understand the primary drawback of this design, a brief discussion about how NAT works is warranted. NAT stands for Network Address Translation. NAT devices act as proxies, allowing hosts in private networks to communicate over the Internet without public, Internet-routable addresses. They have a network presence in both the private network and on the Internet. NAT devices accept connections from hosts on the private network, mark the connection in a translation table, then open a corresponding connection to the destination using their public-facing Internet connection.  The table, typically stored in memory on the NAT device, tracks the state of open connections. If the state is lost or changes abruptly, the connections will be unexpectedly closed."
+        },
+        {
+          "kind": "Section",
+          "name": "Usage and Considerations",
+          "text": "alternat README, Usage and Considerations: There are two ways to deploy alterNAT: - By building a Docker image and using AWS Lambda support for containers - By using AWS Lambda runtime for Python directly Use this project directly, as provided, or draw inspiration from it and use only the parts you need. We cut releases following the Semantic Versioning method. We recommend pinning to our tagged releases or using the short commit SHA if you decide to use this repo directly. ### Building and pushing the container image Build and push the container image using the `Dockerfile`. We do not provide a public image, so you'll need to build an image and push it to the registry and repo of your choice. Amazon ECR is the obvious choice. ### Use the Terraform module Start by reviewing the available input variables. Example usage: To use AWS L"
+        },
+        {
+          "kind": "Section",
+          "name": "Future work",
+          "text": "alternat README, Future work: We would like this benefit to benefit as many users as possible. Possible future enhancements include: - CloudFormation implementation - Pulumi implementation - Support for maintenance windows - Addition of a CloudWatch dashboard"
+        },
+        {
+          "kind": "Section",
+          "name": "Contributing",
+          "text": "alternat README, Contributing: Issues and pull requests are most welcome! alterNAT is intended to be a safe, welcoming space for collaboration. Contributors are expected to adhere to the Contributor Covenant code of conduct."
+        }
+      ]
+    },
+    {
+      "kind": "Language",
+      "name": "Python",
+      "text": "Programming language Python.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Python packaging",
+      "text": "DevOps tool Python packaging, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Upstream",
+      "name": "chime/terraform-aws-alternat",
+      "text": "Upstream repository chime/terraform-aws-alternat, the original that alternat was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "automation-token-update",
+      "text": "Repository automation-token-update. We’ll create the following resources by terraform:. Original work by vanelin. Languages: HCL, Python. Tools: Terraform, Python packaging. Created 2023, last pushed 2023, 6 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "HCL"
+        },
+        {
+          "rel": "written_in",
+          "to": "Python"
+        },
+        {
+          "rel": "uses",
+          "to": "Terraform"
+        },
+        {
+          "rel": "uses",
+          "to": "Python packaging"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "HCL",
+        "stars": "6"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "List of useful resources:",
+          "text": "automation-token-update README, List of useful resources:: - Google Secret Manager for Terraform - Get secretmanager secrets in GitHub Actions runners - Mozilla SOPS - How does the GCP Workload Identity Federation work with Github Provider? - Securely accessing Google Cloud through GitHub with Workload Identity Federation ### The combination of GCP Workload Identity Federation, GitHub Actions, Secret Manager, and Terraform is aimed at providing a secure and streamlined approach for deploying applications and using resources to Google Cloud Platform (GCP) using GitHub pipelines. Here's how each component plays a role: - GCP Workload Identity Federation: Workload Identity Federation allows you to authenticate and authorize GitHub Actions pipelines to access GCP resources without the need to store and manage service account keys or credentials in Git"
+        }
+      ]
+    },
+    {
+      "kind": "Repo",
+      "name": "configuration-as-code-jenkins-k8s-jobdsl",
+      "text": "Repository configuration-as-code-jenkins-k8s-jobdsl. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-jobdsl. Languages: Groovy. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Groovy"
+        },
+        {
+          "rel": "uses",
+          "to": "Jenkins"
+        },
+        {
+          "rel": "forked_from",
+          "to": "figaw/configuration-as-code-jenkins-k8s-jobdsl"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "true",
+        "language": "Groovy",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Language",
+      "name": "Groovy",
+      "text": "Programming language Groovy.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Jenkins",
+      "text": "DevOps tool Jenkins, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Upstream",
+      "name": "figaw/configuration-as-code-jenkins-k8s-jobdsl",
+      "text": "Upstream repository figaw/configuration-as-code-jenkins-k8s-jobdsl, the original that configuration-as-code-jenkins-k8s-jobdsl was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "configuration-as-code-jenkins-k8s-pipeline",
+      "text": "Repository configuration-as-code-jenkins-k8s-pipeline. Monorepo, Project Example. Demo resources for the Configuration as Code Jenkins (for Kubernetes). Demo resources for the Configuration as Code of Jenkins (for Kubernetes) talk on the 21st of April, for the Jenkins Online Meetup group. Fork of figaw/configuration-as-code-jenkins-k8s-pipeline. Languages: Shell. Tools: Jenkins. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "uses",
+          "to": "Jenkins"
+        },
+        {
+          "rel": "forked_from",
+          "to": "figaw/configuration-as-code-jenkins-k8s-pipeline"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "true",
+        "language": "Shell",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Example projects",
+          "text": "configuration-as-code-jenkins-k8s-pipeline README, Example projects: - `basic`: Basic project with a Jenkinsfile and a `build.sh`-script. - `auth`: Example that uses the config-file-provider plugin, to read some `auth.json` from the Jenkins instance. - `gcloud`: Example that assumes custom build agents, with the Google Cloud SDK installed."
+        }
+      ]
+    },
+    {
+      "kind": "Upstream",
+      "name": "figaw/configuration-as-code-jenkins-k8s-pipeline",
+      "text": "Upstream repository figaw/configuration-as-code-jenkins-k8s-pipeline, the original that configuration-as-code-jenkins-k8s-pipeline was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "django-docker",
+      "text": "Repository django-docker.  Original work by vanelin. Languages: Python, Dockerfile, Shell. Tools: Docker, Python packaging. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Python"
+        },
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        },
+        {
+          "rel": "uses",
+          "to": "Python packaging"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "Python",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Repo",
+      "name": "dotfiles",
+      "text": "Repository dotfiles. Personal shell, editor and AI-agent configuration for macOS, Linux and GitHub Codespaces. Original work by vanelin. Languages: Shell, Vim Script. Created 2023, last pushed 2026, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "Vim Script"
+        }
+      ],
+      "attrs": {
+        "year": "2026",
+        "created": "2023",
+        "fork": "false",
+        "language": "Shell",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Install",
+          "text": "dotfiles README, Install: Requires `curl`, `git`, `zsh` and internet access. `setup` replaces existing shell/editor configuration files with symlinks to this checkout. ### Codespaces Enable **Automatically install dotfiles** in Codespaces settings and select this repo. GitHub runs `install.sh` in new Codespaces; existing ones are not updated automatically. Keep VS Code preferences in Settings Sync and project dependencies in `devcontainer.json`, as described in GitHub's personalization guide. ### Local Or let the installer clone the repo: Start `zsh` afterward. To retry failed optional installs, rerun `bash setup` from the checkout."
+        },
+        {
+          "kind": "Section",
+          "name": "What you get",
+          "text": "dotfiles README, What you get: - **Zsh:** Starship prompt (`starship.toml`, same as on the Mac, with git, Kubernetes, AWS and language modules), Oh My Zsh, autosuggestions, syntax highlighting and fzf integration. The prompt uses Nerd Font glyphs: in Codespaces set VS Code `terminal.integrated.fontFamily` to `Hack Nerd Font`. Shortcuts include `k` (kubectl), `h` (Helm) and `tf` (OpenTofu). - **Vim and tmux:** syntax plugins, persistent undo, mouse support and vi-style copy mode. - **k9s:** Nord skin. - **asciinema:** records zsh sessions, idle time capped at 2s. - **CLI tools:** ripgrep, fd, gh, yq, shellcheck, kubectx, uv, k9s, tflint, asciinema, latest fzf and tenv. With tenv, Terraform/OpenTofu/Terragrunt versions are installed on first use. The listed CLI tools are installed only on Debian/Ubuntu with root or passwo"
+        },
+        {
+          "kind": "Section",
+          "name": "AI agents",
+          "text": "dotfiles README, AI agents: Claude Code and Codex CLI use standalone installers. Both get shared rules and Context7 MCP for library documentation. Claude also gets ccstatusline and the Codex plugin (`/codex:review`). The status line and plugin need Node.js/npm, already included in the Codespaces universal image. Sign in, then run `claude` or `codex` from your project directory: - **Claude:** launch `claude` and use `/login`. Alternatively, run `claude setup-token` locally and save its output as the `CLAUDE_CODE_OAUTH_TOKEN` Codespaces secret. See authentication. - **Codex:** run `codex login --device-auth` for browser login from a Codespace. Enable device-code login first as described in authentication. Claude defaults to auto mode; review its permissions before using infrastructure credentials."
+        },
+        {
+          "kind": "Section",
+          "name": "Customizing",
+          "text": "dotfiles README, Customizing: - Shell/editor configs, `starship.toml`, shared agent rules, k9s skin and ccstatusline settings are **symlinked**. Edit them in the repo, then reload the relevant app or shell. - Claude settings, Claude instructions and Codex config are **copied only when missing**. Apply later changes to existing copies manually. Put secrets and machine-specific shell overrides in `~/.zshrc.local` (loaded by Zsh) or Codespaces Secrets. Never commit credentials."
+        }
+      ]
+    },
+    {
+      "kind": "Language",
+      "name": "Vim Script",
+      "text": "Programming language Vim Script.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "everstake-demo",
+      "text": "Repository everstake-demo. demo. Original work by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
+      "links": [
+        {
+          "rel": "uses",
+          "to": "Helm"
+        },
+        {
+          "rel": "uses",
+          "to": "Kustomize"
+        },
+        {
+          "rel": "uses",
+          "to": "Argo CD"
+        }
+      ],
+      "attrs": {
+        "year": "2025",
+        "created": "2025",
+        "fork": "false",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Helm",
+      "text": "DevOps tool Helm, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Argo CD",
+      "text": "DevOps tool Argo CD, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "flux-monitoring",
+      "text": "Repository flux-monitoring. Control plane dashboard http://localhost:3000/d/flux-control-plane:. Original work by vanelin. Tools: Kustomize, Flux. Created 2023, last pushed 2023, 1 stars.",
+      "links": [
+        {
+          "rel": "uses",
+          "to": "Kustomize"
+        },
+        {
+          "rel": "uses",
+          "to": "Flux"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "none",
+        "stars": "1"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Setup",
+          "text": "flux-monitoring README, Setup: This setup assumes that you have Flux installed on your cluster and it is properly configured."
+        },
+        {
+          "kind": "Section",
+          "name": "Register the Git Repository",
+          "text": "flux-monitoring README, Register the Git Repository: Firstly, register the Git repository on your cluster: Install the Prometheus Stack: Install the Loki Stack + Fluent-bit: Install Flux Grafana Dashboards:  ---"
+        },
+        {
+          "kind": "Section",
+          "name": "Accessing Grafana",
+          "text": "flux-monitoring README, Accessing Grafana: You can access Grafana using port forwarding: Control plane dashboard http://localhost:3000/d/flux-control-plane:  Cluster reconciliation dashboard http://localhost:3000/d/flux-cluster:  ---"
+        }
+      ]
+    },
+    {
+      "kind": "Repo",
+      "name": "k8s-controller",
+      "text": "Repository k8s-controller. Golang Kubernetes Controller. A Go-based Kubernetes controller with structured logging, environment configuration using Viper, FastHTTP server, Deployment informer capabilities, and controller-runtime framework with leader election support. Original work by vanelin. Languages: Go, Shell, Makefile, Dockerfile, Smarty. Tools: Docker, Helm, GitHub Actions, Make, Go modules. Created 2025, last pushed 2025, 2 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Go"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "Makefile"
+        },
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "written_in",
+          "to": "Smarty"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        },
+        {
+          "rel": "uses",
+          "to": "Helm"
+        },
+        {
+          "rel": "uses",
+          "to": "GitHub Actions"
+        },
+        {
+          "rel": "uses",
+          "to": "Make"
+        },
+        {
+          "rel": "uses",
+          "to": "Go modules"
+        }
+      ],
+      "attrs": {
+        "year": "2025",
+        "created": "2025",
+        "fork": "false",
+        "language": "Go",
+        "stars": "2"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "📦 Release Artifacts",
+          "text": "k8s-controller README, 📦 Release Artifacts: - **Docker Image (multi-arch):** - **Binary Archives:** - Linux (amd64) - Linux (arm64) - **Helm Chart:** - k8s-controller-helm-chart.tgz"
+        },
+        {
+          "kind": "Section",
+          "name": "Features",
+          "text": "k8s-controller README, Features: - **FastHTTP Server** - High-performance HTTP server with configurable port and logging - **REST API** - JSON API endpoints for deployment information with multi-namespace support - **Deployment Informer** - Real-time Kubernetes Deployment event monitoring using client-go informers - **Controller-runtime Deployment Controller** - Kubernetes controller using controller-runtime framework with reconciliation loops - **Leader Election** - High availability support using Lease resources for active-passive deployments - **Metrics Server** - Prometheus metrics endpoint for controller monitoring and observability - **Graceful Shutdown** - Proper signal handling and resource cleanup for both HTTP server and controller manager - **Health Checks** - Health and readiness endpoints that consider leader"
+        },
+        {
+          "kind": "Section",
+          "name": "Prerequisites",
+          "text": "k8s-controller README, Prerequisites: - Go 1.24 or newer - Make (install via package manager) - curl (for installing golangci-lint) - Docker (for building images) - Helm (for packaging/deploying charts)"
+        },
+        {
+          "kind": "Section",
+          "name": "Configuration",
+          "text": "k8s-controller README, Configuration: ### Configuration Variables | Variable | Description | Default | CLI Flag | |----------|-------------|---------|----------| | `PORT` | Server port | `8080` | `--port` | | `METRIC_PORT` | Controller-runtime metrics server port | `8081` | `--metric-port` | | `KUBECONFIG` | Path to Kubernetes configuration file | `~/.kube/config` | `--kubeconfig` | | `IN_CLUSTER` | Use in-cluster Kubernetes config | `false` | `--in-cluster` | | `NAMESPACE` | Kubernetes namespace(s) for operations (comma-separated, e.g., \"kube-system,monitoring\") | `default` | `--namespace` | | `LOGGING_LEVEL` | Logging level (trace, debug, info, warn, error) | `info` | `--log-level` | | `ENABLE_LEADER_ELECTION` | Enable leader election for high availability | `true` | `--enable-leader-election` | | `LEADER_ELECTION_NAMESPACE`"
+        },
+        {
+          "kind": "Section",
+          "name": "Commands",
+          "text": "k8s-controller README, Commands: ### FastHTTP Server with Deployment Informer and Controller The main feature of this application is a high-performance FastHTTP server that runs a Deployment informer and controller-runtime manager with leader election support for high availability. #### Basic Usage #### What it does - Starts a FastHTTP server on the specified port (default: 8080) - Starts a controller-runtime manager with Deployment controller on the specified metrics port (default: 8081) - Enables leader election using Lease resources for high availability (enabled by default) - Provides JSON API endpoints for deployment information: - `/` - Root endpoint with version information - `/namespaces` - List all watched namespaces - `/deployments` - List deployments from all watched namespaces - `/deployments/{namespace}` - Li"
+        },
+        {
+          "kind": "Section",
+          "name": "Testing with envtest and Inspecting with kubectl",
+          "text": "k8s-controller README, Testing with envtest and Inspecting with kubectl: This project uses envtest to spin up a local Kubernetes API server for integration tests. The test environment writes a kubeconfig to `/tmp/envtest.kubeconfig` so you can inspect the in-memory cluster with `kubectl` while tests are running. ### How to Run and Inspect 1. **Run the informer test:** This will: - Start envtest and create sample Deployments - Write a kubeconfig to `/tmp/envtest.kubeconfig` - Sleep for 5 minutes at the end of the test so you can inspect the cluster 2. **Run the controller test:** This will: - Start envtest and create sample Deployments - Test the controller-runtime Deployment controller - Verify reconciliation logic and error handling 2. **In another terminal, use kubectl:** You can use any standard kubectl commands to inspect resources created by the test. 3. *"
+        }
+      ]
+    },
+    {
+      "kind": "Language",
+      "name": "Go",
+      "text": "Programming language Go.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "Smarty",
+      "text": "Programming language Smarty.",
+      "links": []
+    },
+    {
+      "kind": "Tool",
+      "name": "Go modules",
+      "text": "DevOps tool Go modules, detected from the repository's files.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "kafka",
+      "text": "Repository kafka. Install Kafka on Kubernetes (K8s) in KRaft mode (Zookeperless). Once installed, you'll need to locate the Metrics Server deployment to patch it. This can typically be found in the kube-system namespace. Use the following command to patch it:. Original work by vanelin. Created 2024, last pushed 2025, 2 stars.",
+      "links": [],
+      "attrs": {
+        "year": "2025",
+        "created": "2024",
+        "fork": "false",
+        "language": "none",
+        "stars": "2"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Mindmap diagram:",
+          "text": "kafka README, Mindmap diagram:: The architecture diagram below represents the resources we will deploy to get a general idea of how our Kafka cluster will look in Kubernetes."
+        },
+        {
+          "kind": "Section",
+          "name": "Run kind cluster:",
+          "text": "kafka README, Run kind cluster:: - install kind to your local machine quick start - create a kind cluster with the following command: - get context for the new cluster - install ingress controller kind ingress - for deleting the cluster run the following command: ### Optional: Install Metrics Server Install the latest Metrics Server release by applying the components.yaml from the official GitHub repository: Once installed, you'll need to locate the Metrics Server deployment to patch it. This can typically be found in the kube-system namespace. Use the following command to patch it: Please be aware that using `--kubelet-insecure-tls` means the Metrics Server will not verify the TLS certificates presented by the Kubelets. This can lead to insecure operation and is not recommended for production environments. It is usually "
+        }
+      ]
+    },
+    {
+      "kind": "Repo",
+      "name": "kbot",
+      "text": "Repository kbot. DevOps application from scratch. DevOps application from scratch. Simple CLI to send on-demand messages on behalf of a Telegram bot. Original work by vanelin. Languages: Go, Groovy, Makefile, Shell, Smarty, Dockerfile. Tools: Docker, Helm, GitHub Actions, Jenkins, Make, Go modules. Created 2023, last pushed 2023, 4 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Go"
+        },
+        {
+          "rel": "written_in",
+          "to": "Groovy"
+        },
+        {
+          "rel": "written_in",
+          "to": "Makefile"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "Smarty"
+        },
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        },
+        {
+          "rel": "uses",
+          "to": "Helm"
+        },
+        {
+          "rel": "uses",
+          "to": "GitHub Actions"
+        },
+        {
+          "rel": "uses",
+          "to": "Jenkins"
+        },
+        {
+          "rel": "uses",
+          "to": "Make"
+        },
+        {
+          "rel": "uses",
+          "to": "Go modules"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "Go",
+        "stars": "4"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Config / flags",
+          "text": "kbot README, Config / flags: URL to Telegram bot: t.me/ivanvoloboyev_bot tested Go version = 1.19.7"
+        },
+        {
+          "kind": "Section",
+          "name": "Usage",
+          "text": "kbot README, Usage: Go to telegram `kbot` @ivanvoloboyev_bot After `./kbot start` go to Telegram bot and type **Srart** Available commands: 1. `/start hello` 2. `/start ping`"
+        },
+        {
+          "kind": "Section",
+          "name": "Makefile allows you to build code on different platforms.",
+          "text": "kbot README, Makefile allows you to build code on different platforms.: To `make push` you need to authorize google: With this Makefile, you can specify the `TARGETOS`, `TARGETOSARCH` and `REGESTRY` variables when running the make command. For example, to build the code for Linux on an AMD64/ARM64 architecture, and push to Google container registry, you would run: For example, to build the code for MacOS on an ARM64/ARM64 architecture, and push to Docker Hub container registry, you would run: For example, to build the code for Windows on an AMD64/ARM64 architecture, you would run: > The full list is based on the result of the command `go tool dist list`. The \"32-bit/64-bit\" information is based on https://golang.org/doc/install/source."
+        },
+        {
+          "kind": "Section",
+          "name": "Support Grid:",
+          "text": "kbot README, Support Grid:: |                   | `darwin` |  `linux` | `windows` |                   | | ----------------: | :------: |  :-----: | :-------: | :---------------- | | **`amd64`**       |  ✅      | ✅       | ✅         | **`amd64`**      | | **`arm`**         |          | ✅       | ✅         | **`arm`**        | | **`arm64`**       | ✅       | ✅       | ✅         | **`arm64`**      | |  |  **`macos`** | **`linux`** | **`windows`** |  | # Kbot Chart A Helm chart for Kbot, a declarative, GitOps continuous delivery tool for Kubernetes. Source code can be found here: https://github.com/vanelin/kbot/helm"
+        },
+        {
+          "kind": "Section",
+          "name": "General parameters",
+          "text": "kbot README, General parameters: | Key | Type | Default | |-----|------|---------| | image.repository | string | `\"gcr.io/minikube-385711\"` | | image.tag | string | `\"v1.0.5-a11547b\"` | | image.os  | string | `\"linux\"` | | image.arch  | string | `\"arm64\"` | | secret.name  | string | `\"kbot\"` | | secret.env  | string | `\"TELE_TOKEN\"` | | secret.key  | string | `\"your_token\"` | | securityContext.privileged | bool | `true` | # GitOps: CI/CD automation workflow using GitHub Actions, ArgoCD, and Helm charts deployed on K8s"
+        },
+        {
+          "kind": "Section",
+          "name": "Requirements:",
+          "text": "kbot README, Requirements:: 1. Grant R/W permissions for workflos in repository settings/Action/General/Workflow permissions 2. Add variables to the repository settings: REGISTRY: `ghcr.io/vanelin` TARGETOS: `linux` TARGETOSARCH: `arm64`"
+        }
+      ]
+    },
+    {
+      "kind": "Repo",
+      "name": "kubectl-kubeplugin",
+      "text": "Repository kubectl-kubeplugin. kubectl krew index add vanelin https://github.com/vanelin/kubectl-kubeplugin kubectl krew install vanelin/kubeplugin. Original work by vanelin. Languages: Shell. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "Shell",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Repo",
+      "name": "kubernetes-the-hard-way",
+      "text": "Repository kubernetes-the-hard-way. Bootstrap Kubernetes the hard way on Google Cloud Platform. No scripts. This tutorial walks you through setting up Kubernetes the hard way. This guide is not for people looking for a fully automated command to bring up a Kubernetes cluster. If that's you then check out Google Kubernetes Engine, or the Getting Started Guides. Fork of kelseyhightower/kubernetes-the-hard-way. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "forked_from",
+          "to": "kelseyhightower/kubernetes-the-hard-way"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Copyright",
+          "text": "kubernetes-the-hard-way README, Copyright: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License."
+        },
+        {
+          "kind": "Section",
+          "name": "Target Audience",
+          "text": "kubernetes-the-hard-way README, Target Audience: The target audience for this tutorial is someone planning to support a production Kubernetes cluster and wants to understand how everything fits together."
+        },
+        {
+          "kind": "Section",
+          "name": "Cluster Details",
+          "text": "kubernetes-the-hard-way README, Cluster Details: Kubernetes The Hard Way guides you through bootstrapping a highly available Kubernetes cluster with end-to-end encryption between components and RBAC authentication. * kubernetes v1.21.0 * containerd v1.4.4 * coredns v1.8.3 * cni v0.9.1 * etcd v3.4.15"
+        },
+        {
+          "kind": "Section",
+          "name": "Labs",
+          "text": "kubernetes-the-hard-way README, Labs: This tutorial assumes you have access to the Google Cloud Platform. While GCP is used for basic infrastructure requirements the lessons learned in this tutorial can be applied to other platforms. * Prerequisites * Installing the Client Tools * Provisioning Compute Resources * Provisioning the CA and Generating TLS Certificates * Generating Kubernetes Configuration Files for Authentication * Generating the Data Encryption Config and Key * Bootstrapping the etcd Cluster * Bootstrapping the Kubernetes Control Plane * Bootstrapping the Kubernetes Worker Nodes * Configuring kubectl for Remote Access * Provisioning Pod Network Routes * Deploying the DNS Cluster Add-on * Smoke Test * Cleaning Up"
+        }
+      ]
+    },
+    {
+      "kind": "Upstream",
+      "name": "kelseyhightower/kubernetes-the-hard-way",
+      "text": "Upstream repository kelseyhightower/kubernetes-the-hard-way, the original that kubernetes-the-hard-way was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "learn-cantrill-io-labs",
+      "text": "Repository learn-cantrill-io-labs. Standard and Advanced Demos for learn.cantrill.io courses. Welcome .. this repo stores a collection of freely available demos and mini projects for AWS (and in the future other cloud platforms) These demos are available in three ways:-. Fork of acantril/learn-cantrill-io-labs. Languages: Python, PowerShell, Shell, JavaScript, HTML, PHP. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Python"
+        },
+        {
+          "rel": "written_in",
+          "to": "PowerShell"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "JavaScript"
+        },
+        {
+          "rel": "written_in",
+          "to": "HTML"
+        },
+        {
+          "rel": "written_in",
+          "to": "PHP"
+        },
+        {
+          "rel": "forked_from",
+          "to": "acantril/learn-cantrill-io-labs"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "VIDEO GUIDED MINI PROJECTS (videos linked inside and on Youtube)",
+          "text": "learn-cantrill-io-labs README, VIDEO GUIDED MINI PROJECTS (videos linked inside and on Youtube): - Web Application Architecture Evolution - Implement a Serverless Application - Implement a Dynamic, BGP Based, Highly-Available Site-to-Site VPN - Building a serverless application using Web Identity Federation - CatPipeline - code commit, build, deploy & pipeline using containers and ECS - Hybrid DNS using Route53 Inbound and Outbound Endpoints - Implement a simple client VPN - Pixel Art Image Processing Workflow - Pixelator 3000 - Database Migration using DMS - Implement Hybrid Directory - On-premises & AWS"
+        },
+        {
+          "kind": "Section",
+          "name": "UNDER CONSTRUCTION OR BROKEN PROJECTS (DON'T USE) - fixes in progress",
+          "text": "learn-cantrill-io-labs README, UNDER CONSTRUCTION OR BROKEN PROJECTS (DON'T USE) - fixes in progress: - Patching AWS and On-premises using Systems Manager Patch Manager"
+        }
+      ]
+    },
+    {
+      "kind": "Language",
+      "name": "PowerShell",
+      "text": "Programming language PowerShell.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "JavaScript",
+      "text": "Programming language JavaScript.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "HTML",
+      "text": "Programming language HTML.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "PHP",
+      "text": "Programming language PHP.",
+      "links": []
+    },
+    {
+      "kind": "Upstream",
+      "name": "acantril/learn-cantrill-io-labs",
+      "text": "Upstream repository acantril/learn-cantrill-io-labs, the original that learn-cantrill-io-labs was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "mikrotik-mcp",
+      "text": "Repository mikrotik-mcp. MCP server for Mikrotik. MikroTik MCP provides a bridge between AI assistants and MikroTik RouterOS devices. It allows AI assistants to interact with MikroTik routers through natural language requests, executing commands like managing VLANs, configuring firewall rules, handling DNS settings, and more. Fork of jeff-nasseri/mikrotik-mcp. Languages: Python, Shell, Dockerfile. Tools: Docker, GitHub Actions, Python packaging. Created 2026, last pushed 2026, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Python"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        },
+        {
+          "rel": "uses",
+          "to": "GitHub Actions"
+        },
+        {
+          "rel": "uses",
+          "to": "Python packaging"
+        },
+        {
+          "rel": "forked_from",
+          "to": "jeff-nasseri/mikrotik-mcp"
+        }
+      ],
+      "attrs": {
+        "year": "2026",
+        "created": "2026",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Overview",
+          "text": "mikrotik-mcp README, Overview: MikroTik MCP provides a bridge between AI assistants and MikroTik RouterOS devices. It allows AI assistants to interact with MikroTik routers through natural language requests, executing commands like managing VLANs, configuring firewall rules, handling DNS settings, and more."
+        },
+        {
+          "kind": "Section",
+          "name": "Demo Videos",
+          "text": "mikrotik-mcp README, Demo Videos: ### Claude Desktop https://github.com/user-attachments/assets/24fadcdc-c6a8-48ed-90ac-74baf8f94b59 ### Inspector https://github.com/user-attachments/assets/e0301ff2-8144-4503-83d0-48589d95027d"
+        },
+        {
+          "kind": "Section",
+          "name": "Documentation",
+          "text": "mikrotik-mcp README, Documentation: 📚 **Full Documentation** - Complete guides, API reference, and examples ### Quick Links - **Installation Guide** - Get started with MikroTik MCP - **Testing Guide** - Run integration tests - **Claude Desktop Integration** - Configure for Claude Desktop - **MCP Inspector** - Interactive testing tool - **Contributing Guide** - Help improve MikroTik MCP - **Articles** - Learning resources and tutorials"
+        },
+        {
+          "kind": "Section",
+          "name": "License",
+          "text": "mikrotik-mcp README, License: This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository."
+        }
+      ]
+    },
+    {
+      "kind": "Upstream",
+      "name": "jeff-nasseri/mikrotik-mcp",
+      "text": "Upstream repository jeff-nasseri/mikrotik-mcp, the original that mikrotik-mcp was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "MikrotikPublicRepository",
+      "text": "Repository MikrotikPublicRepository. My public repository. Fork of YunSergey/PublicRepository. Languages: Python. Created 2020, last pushed 2020, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Python"
+        },
+        {
+          "rel": "forked_from",
+          "to": "YunSergey/PublicRepository"
+        }
+      ],
+      "attrs": {
+        "year": "2020",
+        "created": "2020",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "MikroTik Scripts",
+          "text": "MikrotikPublicRepository README, MikroTik Scripts: - CheckUpdateRouterOS - Checking for RouterOS updates and sending notifications (e-mail, Telegram); - CreatePPPUsers - Bulk create VPN users from a CSV file; - BandwidthExceededNotification - Bandwidth excess notification (email, Telegram); More MikroTik scripts..."
+        }
+      ]
+    },
+    {
+      "kind": "Upstream",
+      "name": "YunSergey/PublicRepository",
+      "text": "Upstream repository YunSergey/PublicRepository, the original that MikrotikPublicRepository was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "module3_containerization",
+      "text": "Repository module3_containerization. Для кожного завдання окремий branch: - task_3 (Container image з нуля) - task_4 (Твій Kubernetes кластер) - task_5 (Makefile+Dockerfile). Original work by vanelin. Created 2023, last pushed 2023, 0 stars.",
+      "links": [],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Repo",
+      "name": "module4-PoC",
+      "text": "Repository module4-PoC. Project concept for a local development system, considering options based on Kubernetes - minikube, kind, and k3d. AsciiArtify створений двома молодими програмістами, які мають досвід у розробці програмного забезпечення та бажання запустити свій власний продукт, але не мають досвіду у DevOps. Original work by vanelin. Tools: Argo CD. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "uses",
+          "to": "Argo CD"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Repo",
+      "name": "nginxconfig.io",
+      "text": "Repository nginxconfig.io. ⚙️ NGINX config generator on steroids 💉. ⚙️ NGINX configuration generator on steroids 💉  The only tool you'll ever need to configure your NGINX server.  do.co/nginxconfig »   Report a bug · Request a feature. Fork of digitalocean/nginxconfig.io. Languages: JavaScript, Vue, SCSS. Tools: GitHub Actions. Created 2021, last pushed 2021, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "JavaScript"
+        },
+        {
+          "rel": "written_in",
+          "to": "Vue"
+        },
+        {
+          "rel": "written_in",
+          "to": "SCSS"
+        },
+        {
+          "rel": "uses",
+          "to": "GitHub Actions"
+        },
+        {
+          "rel": "forked_from",
+          "to": "digitalocean/nginxconfig.io"
+        }
+      ],
+      "attrs": {
+        "year": "2021",
+        "created": "2021",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "🚀 Usage",
+          "text": "nginxconfig.io README, 🚀 Usage: `GOTO` **`do.co/nginxconfig`** **Features:** HTTPS, HTTP/2, IPv6, certbot, HSTS, security headers, SSL profiles, OCSP resolvers, caching, gzip, brotli, fallback routing, reverse proxy, www/non-www redirect, CDN, PHP (TCP/socket, WordPress, Drupal, Magento, Joomla), Node.js support, Python (Django) server, etc."
+        },
+        {
+          "kind": "Section",
+          "name": "👨‍💻 Author",
+          "text": "nginxconfig.io README, 👨‍💻 Author: ### Rewrite & maintenance **Matt (IPv4) Cowley &lt;me@mattcowley.co.uk&gt; (https://mattcowley.co.uk)** * GitHub: @MattIPv4 ### Original version **Bálint Szekeres &lt;balint@szekeres.me&gt; (https://balint.szekeres.me)** * GitHub: @0xB4LINT * LinkedIn: @0xB4LINT"
+        },
+        {
+          "kind": "Section",
+          "name": "▶️ Development",
+          "text": "nginxconfig.io README, ▶️ Development: 1. Clone the repository 2. Install NPM packages 3. Run the development server *(with file watchers)* 4. Open the development site **localhost:8080** 5. Lint your code *(eslint & sass-lint)* 6. Build for production *(to the `dist` directory)*"
+        },
+        {
+          "kind": "Section",
+          "name": "🤝 Contributing",
+          "text": "nginxconfig.io README, 🤝 Contributing: Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**. 1. Fork the Project 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`) 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`) 4. Push to the Branch (`git push origin feature/AmazingFeature`) 5. Open a Pull Request"
+        },
+        {
+          "kind": "Section",
+          "name": "⚒️ Built With",
+          "text": "nginxconfig.io README, ⚒️ Built With: * Vue.js - Template handling & app generation * Bulma - Base styling, customised by do-bulma * Prism - Bash & NGINX syntax highlighting"
+        },
+        {
+          "kind": "Section",
+          "name": "📚 Resources",
+          "text": "nginxconfig.io README, 📚 Resources: * Mozilla SSL Configuration Generator v5 * Mozilla SSL Configuration Generator * OWASP TLS Cipher String Cheat Sheet * Nginx Optimization: understanding sendfile, tcp_nodelay and tcp_nopush * NGINX Tuning For Best Performance * Hardening Your HTTP Security Headers * h5bp/server-configs-nginx * Diffie-Hellman DSA-like parameters * hstspreload.org * Optimal value for nginx worker_connections"
+        }
+      ]
+    },
+    {
+      "kind": "Language",
+      "name": "Vue",
+      "text": "Programming language Vue.",
+      "links": []
+    },
+    {
+      "kind": "Language",
+      "name": "SCSS",
+      "text": "Programming language SCSS.",
+      "links": []
+    },
+    {
+      "kind": "Upstream",
+      "name": "digitalocean/nginxconfig.io",
+      "text": "Upstream repository digitalocean/nginxconfig.io, the original that nginxconfig.io was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "omni",
+      "text": "Repository omni. Talos Linux cluster with Omni. This example shows how to manage a Talos Kubernetes cluster with Sidero Labs' Omni. It deploys a Talos Kubernetes cluster using Omni, with the following tooling:. Original work by vanelin. Tools: Helm, Kustomize, Argo CD. Created 2025, last pushed 2025, 0 stars.",
+      "links": [
+        {
+          "rel": "uses",
+          "to": "Helm"
+        },
+        {
+          "rel": "uses",
+          "to": "Kustomize"
+        },
+        {
+          "rel": "uses",
+          "to": "Argo CD"
+        }
+      ],
+      "attrs": {
+        "year": "2025",
+        "created": "2025",
+        "fork": "false",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Usfull links:",
+          "text": "omni README, Usfull links:: - GitHub - SaaS-simple deployment of Kubernetes - on your own hardware. - GitHub - A homebrew repo for our talos tap - GitHub - Talos: Installing Longhorn on Talos Linux - GitHub - Siderolabs Omni Example - How to enable workers on your control plane nodes \\| Talos Linux - Deploying Metrics Server \\| Talos Linux - Storage \\| Talos Linux"
+        },
+        {
+          "kind": "Section",
+          "name": "Prereqs",
+          "text": "omni README, Prereqs: An Omni account, and some machines registered to it. How the machines are started and joined to the Omni instance are not covered in this README, but documentation is available. With the default configuration, a minimum of 6 machines, 3 of which with additional block devices for persistent storage. This example uses Machine Classes called `omni-contrib-controlplane` and `omni-contrib-workers`. How they are defined is entirely dependent on the infrastructure available, they would need to be configured on the Omni instance. Lastly, `omnictl` the Omni CLI tool would also be needed. See the How-to on how to obtain and configure it."
+        },
+        {
+          "kind": "Section",
+          "name": "Usage",
+          "text": "omni README, Usage: Update the ArgoCD ApplicationSet template to reference your new git repo, and regenerate the ArgoCD bootstrap patch. Once the required machines are registered to Omni and machine classes have been configured, simply run Omni will then being to allocate your machines, install Talos, and configure and bootstrap the cluster. This setup makes use of the Omni Workload Proxy feature, which allows access to the HTTP front end services *without* the need of a separate external Ingress Controller or LoadBalancer. Additionally, it leverages Omni's built-in authentication to protect the services, even those services that don't support authentication themselves."
+        },
+        {
+          "kind": "Section",
+          "name": "Applications",
+          "text": "omni README, Applications: Applications are managed by ArgoCD, and are defined in the `apps` directory. The first subdirectory defines the namespace and the second being the application name. Applications can be made of Helm charts, Kustomize definitions, or just Kubernetes manifest files in YAML format."
+        },
+        {
+          "kind": "Section",
+          "name": "Extending",
+          "text": "omni README, Extending: 1. Commit the contents from the `omni` directory to a new repository 2. Configure ArgoCD to use that repository bootstrap-app-set.yaml 3. Regenerate the ArgoCD bootstrap cluster manifest patch argocd.yaml (instructions can be found at the top of that file). 4. Commit and push these changes to a hosted git repository the Omni instance has access to. 5. Create a cluster with Omni as described above."
+        },
+        {
+          "kind": "Section",
+          "name": "In Progress",
+          "text": "omni README, In Progress: - Node IPAM LB — Cilium 1.18.0-dev documentation - Cert-manager for managing TLS certificates - Basic authentication and authorization for apps - Prometheus & Grafana for monitoring - Investigate secure way to pass secrets by patching control plane machine configuration: - SOPS: Secrets OPerationS"
+        }
+      ]
+    },
+    {
+      "kind": "Repo",
+      "name": "ooniversity_django_courses_04",
+      "text": "Repository ooniversity_django_courses_04.  Fork of BrinNatasha/ooniversity_django_courses_04. Tools: Python packaging. Created 2016, last pushed 2016, 0 stars.",
+      "links": [
+        {
+          "rel": "uses",
+          "to": "Python packaging"
+        },
+        {
+          "rel": "forked_from",
+          "to": "BrinNatasha/ooniversity_django_courses_04"
+        }
+      ],
+      "attrs": {
+        "year": "2016",
+        "created": "2016",
+        "fork": "true",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Upstream",
+      "name": "BrinNatasha/ooniversity_django_courses_04",
+      "text": "Upstream repository BrinNatasha/ooniversity_django_courses_04, the original that ooniversity_django_courses_04 was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "openai-k8s-manifest",
+      "text": "Repository openai-k8s-manifest.  Original work by vanelin. Created 2023, last pushed 2023, 0 stars.",
+      "links": [],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Manifest Portfolio + OpenAI",
+          "text": "openai-k8s-manifest README, Manifest Portfolio + OpenAI: | NAME            | PROMPT                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | DESCRIPTION                                                                                                                                                                                                                                                               "
+        }
+      ]
+    },
+    {
+      "kind": "Repo",
+      "name": "tf-gcp-gke-cluster-flux",
+      "text": "Repository tf-gcp-gke-cluster-flux. Best practices GitOps and DevSecOps. For personal access token (classic), I think the minimum I need for bootstrap to github is: |         | \t\t   \t\t   |\t\t \t\t\t\t\t\t\t                          | | ------: | :----------------- |:------------------------------------ | | ✅      | `repo`             | Full control of private repositories | | ✅      | `admin:public_key` | Full control of user public keys     | |  \t\t    |  \t\t   \t\t         |\t   . Original work by vanelin. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 2 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "HCL"
+        },
+        {
+          "rel": "uses",
+          "to": "Terraform"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "false",
+        "language": "HCL",
+        "stars": "2"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Repo",
+      "name": "tf-google-gke-cluster",
+      "text": "Repository tf-google-gke-cluster. Terraform module to create GKE cluster with custom node pool. This module deploys a Kubernetes cluster on Google Cloud Platform (GCP) using the Google Kubernetes Engine (GKE) service. The GKE cluster is provisioned with a single node pool, and it comes with a generated Kubernetes configuration file (`kubeconfig`) that is stored locally. Fork of den-vasyliev/tf-google-gke-cluster. Languages: HCL. Tools: Terraform. Created 2023, last pushed 2023, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "HCL"
+        },
+        {
+          "rel": "uses",
+          "to": "Terraform"
+        },
+        {
+          "rel": "forked_from",
+          "to": "den-vasyliev/tf-google-gke-cluster"
+        }
+      ],
+      "attrs": {
+        "year": "2023",
+        "created": "2023",
+        "fork": "true",
+        "language": "HCL",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Inputs",
+          "text": "tf-google-gke-cluster README, Inputs: |       Name       |            Description           |  Type  |     Default     | Required | |:----------------:|:--------------------------------:|:------:|:---------------:|:--------:| | GOOGLE_PROJECT   | GCP project name                 | string | no              |    no    | | GOOGLE_REGION    | GCP region name                  | string | \"us-central1-c\" |    no    | | GKE_MACHINE_TYPE | GKE node machine type            | string | \"e2-small\"      |    no    | | GKE_NUM_NODES    | Number of nodes in the node pool | number | 3               |    no    |"
+        },
+        {
+          "kind": "Section",
+          "name": "Requirements",
+          "text": "tf-google-gke-cluster README, Requirements: This module requires Terraform 0.12 or later, and the following provider: hashicorp/google 4.52.0"
+        },
+        {
+          "kind": "Section",
+          "name": "License",
+          "text": "tf-google-gke-cluster README, License: This module is licensed under the MIT License. See the LICENSE file for details."
+        }
+      ]
+    },
+    {
+      "kind": "Upstream",
+      "name": "den-vasyliev/tf-google-gke-cluster",
+      "text": "Upstream repository den-vasyliev/tf-google-gke-cluster, the original that tf-google-gke-cluster was forked from.",
+      "links": []
+    },
+    {
+      "kind": "Repo",
+      "name": "vanelin",
+      "text": "Repository vanelin. As a DevOps, SysOps, and Platform Engineer with a strong background in network engineering, I am a perpetual student who is passionate about cloud platforms, process automation, and technology in general. In my spare time, I enjoy pursuing self-development and exploring new technologies. With a keen eye for detail and a commitment to delivering high-quality results, I am dedicated to driving conti. Original work by vanelin. Created 2023, last pushed 2025, 0 stars.",
+      "links": [],
+      "attrs": {
+        "year": "2025",
+        "created": "2023",
+        "fork": "false",
+        "language": "none",
+        "stars": "0"
+      },
+      "parts": []
+    },
+    {
+      "kind": "Repo",
+      "name": "webserver",
+      "text": "Repository webserver. Similar to installing netcat in Debian based Linux, an nc symlink will be created that points to ncat. For brevity, in the examples that follow, we’ll use nc instead of netcat or ncat when running the command. Original work by vanelin. Languages: Dockerfile, Shell. Tools: Docker. Created 2021, last pushed 2021, 0 stars.",
+      "links": [
+        {
+          "rel": "written_in",
+          "to": "Dockerfile"
+        },
+        {
+          "rel": "written_in",
+          "to": "Shell"
+        },
+        {
+          "rel": "uses",
+          "to": "Docker"
+        }
+      ],
+      "attrs": {
+        "year": "2021",
+        "created": "2021",
+        "fork": "false",
+        "language": "Dockerfile",
+        "stars": "0"
+      },
+      "parts": [
+        {
+          "kind": "Section",
+          "name": "Installing netcat",
+          "text": "webserver README, Installing netcat: netcat is a powerful networking utility tool. Its purpose is reading and writing data across the network, through TCP or UDP."
+        },
+        {
+          "kind": "Section",
+          "name": "Installing netcat in Debian Based Linux",
+          "text": "webserver README, Installing netcat in Debian Based Linux: To install netcat on Debian based Linux (such as Ubuntu), we’ll use the apt-get command:"
+        },
+        {
+          "kind": "Section",
+          "name": "Installing ncat in RHEL Based Linux",
+          "text": "webserver README, Installing ncat in RHEL Based Linux: For RHEL based Linux (such as CentOS) users, we’ll install the ncat program instead of the netcat program. ncat is similar to netcat, except it offers more features than the latter. Despite the differences, examples in this article are compatible with both. Let’s install the ncat program: Similar to installing netcat in Debian based Linux, an nc symlink will be created that points to ncat. For brevity, in the examples that follow, we’ll use nc instead of netcat or ncat when running the command. ### NetCat (nc) as a webserver This command will run http static server, available at http://localhost:8000. ### Building and running the Docker container The web server is available at http://localhost:8000"
+        }
+      ]
+    }
+  ]
+}

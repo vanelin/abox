@@ -1,8 +1,8 @@
 # ModelConfigs for the lab 4 agents. The chart's default-model-config
 # (gpt-4.1-mini) stays for the chart's own agents; this one drives the three
 # retrieval agents and our k8s-agent (docs/adr/0003-agentic-retrieval.md).
-# The key is the same hand-made Secret the default uses -- kagent-openai --
-# so a rebuilt cluster needs only that one Secret created by hand.
+# The key is the same Secret the default uses -- kagent-openai, committed
+# SOPS-encrypted as releases/secrets/kagent-openai.yaml.
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
 metadata:
@@ -33,3 +33,18 @@ spec:
   apiKeySecretKey: OPENAI_API_KEY
   openAI:
     apiFormat: chatCompletions
+---
+# Lab 5: Gemini for kagent agents, the same family the voice agent talks to.
+# This is the TEXT model an Agent reasons with; the voice agent's own Live
+# (audio) model is not a ModelConfig -- it opens a Gemini Live session itself,
+# with the same key. The key is releases/secrets/kagent-gemini.yaml.
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-3-5-flash-lite
+  namespace: kagent
+spec:
+  provider: Gemini
+  model: gemini-3.5-flash-lite
+  apiKeySecret: kagent-gemini
+  apiKeySecretKey: GEMINI_API_KEY

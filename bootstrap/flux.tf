@@ -106,5 +106,11 @@ resource "kubectl_manifest" "rset" {
           prune: true
           wait: true
           retryInterval: 30s
+          # releases/secrets/ is SOPS-encrypted to the recipient in .sops.yaml;
+          # scripts/secrets.sh creates sops-age from SOPS_AGE_KEY.
+          decryption:
+            provider: sops
+            secretRef:
+              name: sops-age
   YAML
 }
