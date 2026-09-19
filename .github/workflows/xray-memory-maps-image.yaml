@@ -66,8 +66,11 @@ jobs:
               -embedding-endpoint http://localhost:8090 \
               -embedding-model nomic-embed-text -embedding-dims 256 \
               -snapshot-recipient "$SNAPSHOT_RECIPIENT" \
-              -summary "$(cat "docs/labs/05/$label.summary.txt")" 2>&1 | tee "build-$label.log"
-            # A link whose target names no entry is dropped without an error.
+              -summary "$(cat "docs/labs/05/$label.summary.txt")" 2>&1 \
+              | sed 's/\x1b\[[0-9;]*m//g' | tee "build-$label.log"
+            # The log is coloured, and a colour code sits between a key and its
+            # value -- hence the sed above. A link whose target names no entry
+            # is dropped without an error.
             grep -q 'skippedLinks=0' "build-$label.log" || { echo "::error::$label: links were skipped"; exit 1; }
             grep -q 'summarySource=explicit' "build-$label.log" || { echo "::error::$label: no explicit summary"; exit 1; }
             grep -q 'encrypted=true' "build-$label.log" || { echo "::error::$label: written in plaintext"; exit 1; }
