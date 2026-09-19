@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/devcontainers/universal:6-noble
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    asciinema build-essential cmake jq libcurl4-openssl-dev shellcheck unzip \
+    age asciinema build-essential cmake jq libcurl4-openssl-dev shellcheck unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Keep Docker's data-root off the 32 GB root overlay. Codespaces mounts a
