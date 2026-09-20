@@ -8,6 +8,12 @@
 #                          Required.
 #   kagent/kagent-gemini   GEMINI_API_KEY, read by the Gemini ModelConfig.
 #                          Optional: without it only that ModelConfig is dead.
+#   ngrok-operator/ngrok-operator-credentials
+#                          NGROK_API_KEY and NGROK_AUTHTOKEN, one Secret with
+#                          the keys API_KEY and AUTHTOKEN. Required: without it
+#                          the ngrok-operator HelmRelease (retries: -1) never
+#                          goes Ready, and the releases Kustomization waits on
+#                          it, so the whole bundle would sit at Ready=False.
 #
 # Provider keys stay env-only: they already live in one durable place (a
 # Codespaces Secret, or ~/.zshrc.local locally) and a copy in git would only
@@ -109,8 +115,33 @@ sops_age_secret() {
   log "Secret flux-system/sops-age set"
 }
 
+# Two keys in one Secret, so not env_secret. Both values or neither: half a
+# credential would only move the failure into the operator's log.
+ngrok_secret() {
+  local namespace=ngrok-operator name=ngrok-operator-credentials
+  ensure_namespace "${namespace}" || return 1
+  if [[ -n "${NGROK_API_KEY:-}" && -n "${NGROK_AUTHTOKEN:-}" ]]; then
+    # A generic Secret takes one --from-file per key; two stdin streams do not
+    # exist, so the pair travels as an env file on stdin instead of in argv.
+    printf 'API_KEY=%s\nAUTHTOKEN=%s\n' "${NGROK_API_KEY}" "${NGROK_AUTHTOKEN}" \
+      | kubectl -n "${namespace}" create secret generic "${name}" \
+          --from-env-file=/dev/stdin --dry-run=client -o yaml \
+      | kubectl apply -f - >/dev/null || return 1
+    log "Secret ${namespace}/${name} set from NGROK_API_KEY and NGROK_AUTHTOKEN"
+    return 0
+  fi
+  secret_state "${namespace}" "${name}"
+  case $? in
+    0) log "NGROK_API_KEY/NGROK_AUTHTOKEN are not both set, existing Secret ${namespace}/${name} kept"; return 0 ;;
+    1) log "ERROR: NGROK_API_KEY and NGROK_AUTHTOKEN must both be set and there is no Secret ${namespace}/${name}" ;;
+    *) log "ERROR: could not read Secret ${namespace}/${name}" ;;
+  esac
+  return 1
+}
+
 rc=0
 sops_age_secret || rc=1
 env_secret kagent kagent-openai OPENAI_API_KEY required || rc=1
 env_secret kagent kagent-gemini GEMINI_API_KEY optional || rc=1
+ngrok_secret || rc=1
 exit "${rc}"
