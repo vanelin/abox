@@ -86,10 +86,57 @@ spec:
     # only log statements and does nothing to a span. Helm replaces a list
     # rather than merging it, so the whole processors list is restated with
     # that one name corrected; receivers and exporters stay the chart's.
+    # Lab 6: at chart limits Prometheus was OOM-killed (400Mi) and OpenSearch
+    # never passed its 5-minute startup check on a loaded 4-CPU host.
+    prometheus:
+      server:
+        resources:
+          limits:
+            memory: 1Gi
+    opensearch:
+      resources:
+        limits:
+          memory: 1500Mi
+      startupProbe:
+        tcpSocket:
+          port: 9200
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 3
+        failureThreshold: 90
     opentelemetry-collector:
       config:
+        # Lab 6: agent spans also go to Phoenix; the shop's stay out of it.
+        exporters:
+          otlphttp/phoenix:
+            endpoint: http://phoenix-svc.phoenix:6006
+        processors:
+          # filter DROPS what matches: everything that is not kagent.
+          filter/kagent_only:
+            error_mode: ignore
+            traces:
+              span:
+                - resource.attributes["service.namespace"] != "kagent"
+                # the UI polling the controller, 9 spans in 10 otherwise
+                - IsMatch(name, "^(GET|POST|PUT|DELETE) /api/")
+          # Phoenix shows Input/Output only from these two attributes.
+          transform/phoenix_io:
+            error_mode: ignore
+            trace_statements:
+              - context: span
+                statements:
+                  - set(attributes["input.value"], attributes["gcp.vertex.agent.llm_request"]) where attributes["gcp.vertex.agent.llm_request"] != nil
+                  - set(attributes["output.value"], attributes["gcp.vertex.agent.llm_response"]) where attributes["gcp.vertex.agent.llm_response"] != nil
+                  - set(attributes["input.value"], attributes["gcp.vertex.agent.tool_call_args"]) where attributes["gcp.vertex.agent.tool_call_args"] != nil
+                  - set(attributes["output.value"], attributes["gcp.vertex.agent.tool_response"]) where attributes["gcp.vertex.agent.tool_response"] != nil
+                  - set(attributes["input.mime_type"], "application/json") where attributes["input.value"] != nil
+                  - set(attributes["output.mime_type"], "application/json") where attributes["output.value"] != nil
         service:
           pipelines:
+            traces/genai:
+              receivers: [otlp]
+              processors: [memory_limiter, filter/kagent_only, transform/phoenix_io, batch]
+              exporters: [otlphttp/phoenix]
             traces:
               processors:
                 - memory_limiter

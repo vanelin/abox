@@ -32,6 +32,10 @@ spec:
     # The cluster routes through the agentgateway Gateway, not an Ingress.
     ingress:
       enabled: false
+    # Lab 6: no login, so the collector can send traces without a key that
+    # dies with the cluster. Lab only; Phoenix stays behind port-forward.
+    auth:
+      enableAuth: false
     # The chart's startup probe allows 31s (periodSeconds 1 x failureThreshold
     # 30). Phoenix runs Alembic migrations against Postgres on first boot, which
     # takes longer than that on KinD, so the probe kills the container before it

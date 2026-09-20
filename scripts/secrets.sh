@@ -8,6 +8,9 @@
 #                          Required.
 #   kagent/kagent-gemini   GEMINI_API_KEY, read by the Gemini ModelConfig.
 #                          Optional: without it only that ModelConfig is dead.
+#   agentgateway-system/agentgateway-llm-gemini
+#                          GEMINI_API_KEY again, for the standalone LLM gateway:
+#                          a pod cannot read a Secret from another namespace.
 #   ngrok-operator/ngrok-operator-credentials
 #                          NGROK_API_KEY and NGROK_AUTHTOKEN, one Secret with
 #                          the keys API_KEY and AUTHTOKEN. Required: without it
@@ -143,5 +146,6 @@ rc=0
 sops_age_secret || rc=1
 env_secret kagent kagent-openai OPENAI_API_KEY required || rc=1
 env_secret kagent kagent-gemini GEMINI_API_KEY optional || rc=1
+env_secret agentgateway-system agentgateway-llm-gemini GEMINI_API_KEY required || rc=1
 ngrok_secret || rc=1
 exit "${rc}"

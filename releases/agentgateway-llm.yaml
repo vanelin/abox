@@ -13,7 +13,7 @@
 #   open http://localhost:15000/ui
 #
 # LLM traffic: http://agentgateway-llm.agentgateway-system.svc.cluster.local
-# (Service port 80 -> bind 8080, once a bind on 8080 is configured).
+# (Service port 80 -> gateway port 8080).
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -23,7 +23,22 @@ data:
   config.yaml: |
     config:
       adminAddr: 0.0.0.0:15000
-    binds: []
+    # The UI is NOT attached to this gateway: it would put the admin API,
+    # which has no auth, on the LLM traffic port.
+    gateways:
+      llm:
+        port: 8080
+    llm:
+      gateways: [llm]
+      models:
+        - name: gemini-3.5-flash-lite
+          # Use Google's OpenAI-compatible API; the Gemini adapter returned 401.
+          provider: openAI
+          params:
+            model: gemini-3.5-flash-lite
+            baseUrl: https://generativelanguage.googleapis.com/v1beta/openai
+            apiKey:
+              file: /secrets/gemini/GEMINI_API_KEY
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -69,11 +84,17 @@ spec:
         - name: agentgateway
           image: cr.agentgateway.dev/agentgateway:v1.5.0
           args: ["-f", "/config/config.yaml"]
+          env:
+            # Existing PVC configs may still reference this variable.
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef: {name: agentgateway-llm-gemini, key: GEMINI_API_KEY}
           ports:
             - {name: llm, containerPort: 8080}
             - {name: admin, containerPort: 15000}
           volumeMounts:
             - {name: config, mountPath: /config}
+            - {name: gemini, mountPath: /secrets/gemini, readOnly: true}
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -81,6 +102,9 @@ spec:
         - name: seed
           configMap:
             name: agentgateway-llm-seed
+        - name: gemini
+          secret:
+            secretName: agentgateway-llm-gemini
 ---
 apiVersion: v1
 kind: Service

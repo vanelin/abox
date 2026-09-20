@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added [Lab 6](docs/labs/06/README.md): OpenTelemetry Demo 0.41.2, Phoenix chart 12.0.14, ngrok-operator and a Gemini gateway. Connected kagent traces to Jaeger/Phoenix, logs to OpenSearch and Grafana MCP to the demo. Added ngrok/gateway Secrets; excluded unused earlier-lab workloads to reduce memory use.
 - Proposed [ADR-0004](docs/adr/0004-agentic-memory.md): xray-memory for structured queries and user notes; Qdrant retained for text retrieval. Added a [135-node profile corpus](docs/labs/05/README.md), an encrypted maps image built in [CI](.github/workflows/xray-memory-maps-image.yaml), and [retrieval-agent-xray](releases/agent-memory.yaml).
 - Added SOPS for the snapshot identity. `make secrets` loads the SOPS key from the environment or its local key file and provider keys from the environment; Gemini is optional. Added ModelConfig `gemini-3-5-flash-lite`; excluded Qwen components from the active bundle.
 - Accepted [ADR-0003](docs/adr/0003-agentic-retrieval.md): the Go `qdrant-mcp` on Qwen3-Embedding-0.6B at 256 dimensions for the retrieval agent, measured in the cluster on three toolsets (tool level) and three agents (two questions each, memory audited against the cluster).
@@ -28,12 +29,15 @@
 
 ### Fixed
 
+- Lab 6: corrected the Collector's span processor, mapped agent input/output for Phoenix and allowed the Grafana MCP service hostname. Raised Prometheus/OpenSearch memory limits and extended OpenSearch startup checks; sustained stability remains unverified.
+- Gemini gateway: used Google's OpenAI-compatible endpoint after native-adapter 401 responses. Kept admin and LLM traffic separate; retained xray-memory chart 0.6.0 after the 0.6.3 image could not be pulled.
 - The kagent chart no longer renders Secret `kagent-openai`: `providers.openAI.apiKey: OPENAI_API_KEY` in [releases/kagent.yaml](releases/kagent.yaml) made every Helm upgrade overwrite the hand-made key with that placeholder, and agents then failed with 401.
 - Graph prompt: an edge target takes the namespace its reference gives, or the ingested object's own when the reference has none, and its kind from the tool entry (`MCPServer` or `RemoteMCPServer`). The only namespace rule used to be "cluster-scoped objects use `cluster`", so targets of `tools[].mcpServer` and `modelConfig` were merged as second nodes under namespace `cluster`.
 - `MCPServer.spec.timeout` for the two Go servers (120s, 300s for Qwen) instead of kmcp's 30s default, `EMBEDDING_MAX_INPUT_CHARS=3500` and a 300s embed timeout for Qwen: large manifests timed out or overflowed the 2048-token slot during an agent's ingest.
 
 ### Verified
 
+- [Lab 6 results](docs/labs/06/demo.md): three fault investigations; [agent traces and correlated logs](docs/labs/06/observations.md), matching Jaeger/Phoenix traces and a successful Gemini gateway request. The observability agent misread query results. Shipping overlapped another fault, restarts lost logs, and no ngrok endpoint was published.
 - [Lab 5 evaluation](docs/labs/05/evaluation-review.md): 87 assistant-reviewed answers across three configurations; xray 25/29, Qdrant+nomic 21/29, Official+MiniLM 18/29. Includes retries after 25 rate-limit failures and reruns of two clarified questions. Tool lookup Hit@1: xray 0.824, Qdrant+nomic 0.882; xray graph 6/6 and facets 4/4 with supplied arguments. Note lifecycle and poisoning resistance were not measured in this campaign.
 - Scored three toolsets in the cluster on 2026-09-17 on the frozen lab 3 corpus (144 chunks, 10 questions): official / MiniLM hit@1 2/10, hit@3 5/10, uk 1/3; nomic 5/10, 7/10, 1/3; Qwen 256 7/10, 9/10, 2/3 -- nomic and Qwen equal their ADR-0001 rows exactly. On 2026-09-18 each agent ingested the same 27 cluster objects (27/27 after one retry pass, no invented objects; `SOURCED_FROM` 15/15 and `DEPENDS_ON` 4/4 identical to the cluster) and answered q02 (en) and q06 (uk) correctly with two find calls each. See [ADR-0003](docs/adr/0003-agentic-retrieval.md).
 - Scored both Qdrant MCP toolsets locally on 2026-09-17 on the frozen lab 3 corpus (144 chunks, 10 questions): official / all-MiniLM-L6-v2 hit@1 2/10, hit@3 5/10; Go qdrant-mcp / nomic-embed-text-v1.5 hit@1 5/10, hit@3 7/10; Ukrainian 1/3 for both. See [ADR-0003](docs/adr/0003-agentic-retrieval.md).
