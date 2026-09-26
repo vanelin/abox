@@ -1,6 +1,6 @@
 # Lab 7: the one public entry. The free plan has a single domain, so it fronts
 # agentgateway-external and HTTPRoutes split it by path: / and /api kagent,
-# /mlflow, /phoenix, and the demo's /feature and /chatbot.
+# /mlflow, /phoenix, /qdrant, /xray, and the demo's /feature and /chatbot.
 #
 # Nothing behind it has its own login, so Google sign-in comes first and only
 # the listed address gets through. Free plan: 20k requests and 1 GB a month --

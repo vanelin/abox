@@ -47,12 +47,20 @@ spec:
               pipelines: [traces/kagent]
       processors:
         # kagent's UI polls the controller every few seconds: one-span traces,
-        # no agent work. The A2A call that starts an agent run is kept.
+        # no agent work. The A2A call that starts an agent run is kept. Matched on
+        # url.path: the demo's collector has already renamed these spans to "GET".
         filter/kagent_polling:
           error_mode: ignore
           traces:
             span:
-              - IsMatch(name, "^(GET|POST|PUT|DELETE) /api/") and not IsMatch(name, "/api/a2a/")
+              - IsMatch(attributes["url.path"], "^/api/") and not IsMatch(attributes["url.path"], "^/api/a2a/")
+        # Every shop service writes short background traces and the agent's
+        # trace drowned in them: keep only the shop's agent and chatbot.
+        filter/shop_agent_only:
+          error_mode: ignore
+          traces:
+            span:
+              - resource.attributes["service.name"] != "agent" and resource.attributes["service.name"] != "chatbot"
       exporters:
         otlp_http/mlflow-otel-demo:
           endpoint: http://mlflow-mlflow.mlflow.svc.cluster.local:5000
@@ -76,6 +84,7 @@ spec:
             exporters: [debug, routing]
           traces/otel-demo:
             receivers: [routing]
+            processors: [filter/shop_agent_only]
             exporters: [otlp_http/mlflow-otel-demo]
           traces/kagent:
             receivers: [routing]

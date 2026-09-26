@@ -187,7 +187,34 @@ spec:
     #
     # Every endpoint the server exposes -- /mcp, /ui, /search, /graph, /node,
     # /status, /metrics -- is unauthenticated, and the writes above go through
-    # /mcp with no auth in front of them, so it stays cluster-internal: no
-    # HTTPRoute onto agentgateway-external, unlike the embeddings backends.
+    # /mcp with no auth in front of them. Lab 7 routes it onto
+    # agentgateway-external only for the ngrok entry, which asks for Google
+    # sign-in first; the UI is at /xray/ui.
     #
     #   in-cluster MCP: http://xray-memory.xray-memory:8085/mcp
+# Lab 7: /xray on the ngrok domain. The UI fetches with relative paths
+# (./graph, ./node), so stripping the prefix is enough.
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: xray-memory
+  namespace: xray-memory
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /xray
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: xray-memory
+          port: 8085

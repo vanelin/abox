@@ -30,3 +30,56 @@ spec:
         namespace: flux-system
   install:
     createNamespace: true
+# Lab 7: the dashboard on the ngrok domain at /qdrant/dashboard. One of its
+# API clients keeps the /qdrant prefix (stripped here), the other drops the
+# path and calls the root, and its assets are hardwired to /dashboard/: the
+# second rule sends those root paths to Qdrant. None of them is a kagent path.
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: qdrant
+  namespace: qdrant
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /qdrant
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: qdrant
+          port: 6333
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /dashboard
+        - path:
+            type: PathPrefix
+            value: /collections
+        - path:
+            type: PathPrefix
+            value: /telemetry
+        - path:
+            type: PathPrefix
+            value: /cluster
+        - path:
+            type: PathPrefix
+            value: /issues
+        - path:
+            type: PathPrefix
+            value: /aliases
+        - path:
+            type: PathPrefix
+            value: /snapshots
+      backendRefs:
+        - name: qdrant
+          port: 6333
