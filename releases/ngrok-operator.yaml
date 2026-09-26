@@ -1,48 +1,29 @@
-# ngrok operator -- https://ngrok.com/docs/k8s/
+# Lab 7: the one public entry. The free plan has a single domain, so it fronts
+# agentgateway-external and HTTPRoutes split it by path: / and /api kagent,
+# /mlflow, /phoenix, and the demo's /jaeger, /grafana, /feature, /chatbot.
 #
-# Publishes in-cluster Services on an ngrok domain through Ingress objects
-# with ingressClassName: ngrok.
-#
-# Credentials are not in this bundle. The chart reads them from an existing
-# Secret, created by hand before the release can become ready:
-#
-#   kubectl -n ngrok-operator create secret generic ngrok-operator-credentials \
-#     --from-literal=API_KEY=<api key> --from-literal=AUTHTOKEN=<authtoken>
-apiVersion: v1
-kind: Namespace
+# Nothing behind it has its own login, so Google sign-in comes first and only
+# the listed address gets through. Free plan: 20k requests and 1 GB a month --
+# for demos; kagent's UI alone polls every few seconds.
+apiVersion: ngrok.k8s.ngrok.com/v1alpha1
+kind: AgentEndpoint
 metadata:
-  name: ngrok-operator
----
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: ngrok
-  namespace: flux-system
+  name: abox
+  namespace: agentgateway-system
 spec:
-  interval: 1h
-  url: https://charts.ngrok.com
----
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: ngrok-operator
-  namespace: ngrok-operator
-spec:
-  interval: 1h
-  releaseName: ngrok-operator
-  chart:
-    spec:
-      chart: ngrok-operator
-      version: "0.24.0"
-      sourceRef:
-        kind: HelmRepository
-        name: ngrok
-        namespace: flux-system
-  install:
-    createNamespace: true
-    remediation:
-      retries: -1
-  values:
-    credentials:
-      secret:
-        name: ngrok-operator-credentials
+  url: https://cape-lethargic-sizing.ngrok-free.dev
+  upstream:
+    url: http://agentgateway-external.agentgateway-system:80
+  trafficPolicy:
+    inline:
+      on_http_request:
+        - actions:
+            - type: oauth
+              config:
+                provider: google
+        - expressions:
+            - "!(actions.ngrok.oauth.identity.email in ['vano3231@gmail.com'])"
+          actions:
+            - type: deny
+              config:
+                status_code: 403

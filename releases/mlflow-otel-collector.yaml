@@ -1,0 +1,83 @@
+# Bridge into MLflow, as in the instructor's setup: MLflow takes OTLP over
+# HTTP only and files spans by the x-mlflow-experiment-id header. The demo's
+# collector forwards every trace here over gRPC, and the routing connector
+# splits them by source into one experiment each (ids made by the Job in
+# releases/mlflow.yaml). Anything else is dropped, not mixed in.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: otel-collector
+  namespace: mlflow
+spec:
+  interval: 1h
+  releaseName: otel-collector
+  chart:
+    spec:
+      chart: opentelemetry-collector
+      version: "0.173.1"
+      sourceRef:
+        kind: HelmRepository
+        name: open-telemetry
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    mode: deployment
+    fullnameOverride: otel-collector
+    # This chart version has no default image.
+    image:
+      repository: otel/opentelemetry-collector-contrib
+    ports:
+      jaeger-compact:
+        enabled: false
+      jaeger-thrift:
+        enabled: false
+      jaeger-grpc:
+        enabled: false
+      zipkin:
+        enabled: false
+    config:
+      connectors:
+        routing:
+          table:
+            # The demo's services set no service.namespace; its collector adds this.
+            - statement: route() where resource.attributes["k8s.namespace.name"] == "otel-demo"
+              pipelines: [traces/otel-demo]
+            - statement: route() where resource.attributes["k8s.namespace.name"] == "kagent" or resource.attributes["service.namespace"] == "kagent"
+              pipelines: [traces/kagent]
+      processors:
+        # kagent's UI polls the controller every few seconds: one-span traces,
+        # no agent work. The A2A call that starts an agent run is kept.
+        filter/kagent_polling:
+          error_mode: ignore
+          traces:
+            span:
+              - IsMatch(name, "^(GET|POST|PUT|DELETE) /api/") and not IsMatch(name, "/api/a2a/")
+      exporters:
+        otlp_http/mlflow-otel-demo:
+          endpoint: http://mlflow-mlflow.mlflow.svc.cluster.local:5000
+          tls:
+            insecure: true
+          headers:
+            x-mlflow-experiment-id: "1"
+        otlp_http/mlflow-kagent:
+          endpoint: http://mlflow-mlflow.mlflow.svc.cluster.local:5000
+          tls:
+            insecure: true
+          headers:
+            x-mlflow-experiment-id: "2"
+      receivers:
+        jaeger: null
+        zipkin: null
+      service:
+        pipelines:
+          traces:
+            receivers: [otlp]
+            exporters: [debug, routing]
+          traces/otel-demo:
+            receivers: [routing]
+            exporters: [otlp_http/mlflow-otel-demo]
+          traces/kagent:
+            receivers: [routing]
+            processors: [filter/kagent_polling]
+            exporters: [otlp_http/mlflow-kagent]

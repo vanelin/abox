@@ -3,19 +3,26 @@ kind: Kustomization
 
 resources:
   - agentgateway.yaml
-  - agentgateway-llm.yaml
   - agentregistry.yaml
   - agent-memory.yaml
   - agent-retrieval.yaml
   - kagent.yaml
+  - llama-cpp-embeddings.yaml
+  - llmd.yaml
   - mcp-servers.yaml
   - metrics-server.yaml
+  - mlflow.yaml
+  - mlflow-otel-collector.yaml
   - model-configs.yaml
+  - neo4j.yaml
   - ngrok-operator.yaml
   - opentelemetry-demo.yaml
   - phoenix.yaml
+  - qdrant.yaml
   - secrets/xray-memory-snapshot-key.yaml
   - xray-memory.yaml
+
+# Lab 7 leaves agentgateway-llm.yaml out: no agent routes through it.
 
 # Lab 5 runs without the Qwen embedder: it idles at 0.5 GiB and peaks at
 # 1.35 GiB, and xray-memory brings its own nomic sidecar. The release file and
@@ -36,43 +43,4 @@ patches:
       kind: Agent
       metadata:
         name: retrieval-agent-qwen
-        namespace: kagent
-# Lab 6 also runs without Qdrant, Neo4j, llama-cpp-embeddings and llm-d: the
-# OpenTelemetry Demo needs their memory on a 16 GB host. Their files stay in
-# the repo; to bring them back, re-add llama-cpp-embeddings.yaml, llmd.yaml,
-# neo4j.yaml and qdrant.yaml above and drop the patches below.
-  - patch: |
-      $patch: delete
-      apiVersion: kagent.dev/v1alpha1
-      kind: MCPServer
-      metadata:
-        name: neo4j-mcp
-        namespace: kagent
-  - patch: |
-      $patch: delete
-      apiVersion: kagent.dev/v1alpha1
-      kind: MCPServer
-      metadata:
-        name: qdrant-mcp
-        namespace: kagent
-  - patch: |
-      $patch: delete
-      apiVersion: kagent.dev/v1alpha1
-      kind: MCPServer
-      metadata:
-        name: qdrant-mcp-official
-        namespace: kagent
-  - patch: |
-      $patch: delete
-      apiVersion: kagent.dev/v1alpha2
-      kind: Agent
-      metadata:
-        name: retrieval-agent
-        namespace: kagent
-  - patch: |
-      $patch: delete
-      apiVersion: kagent.dev/v1alpha2
-      kind: Agent
-      metadata:
-        name: retrieval-agent-nomic
         namespace: kagent

@@ -1,0 +1,131 @@
+# MLflow tracking server, the third trace backend for lab 7, as in the
+# instructor's feat/otel-demo (ce50380): official chart, SQLite and artifacts
+# on one PVC. Traces arrive through releases/mlflow-otel-collector.yaml.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mlflow
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: mlflow
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: oci://ghcr.io/mlflow/charts/mlflow
+  ref:
+    tag: "0.1.0"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mlflow
+  namespace: mlflow
+spec:
+  interval: 1h
+  releaseName: mlflow
+  # The chart leaves probe timeouts at the 1s default; under trace ingest that
+  # got the pod killed while it was up (instructor, live). No value for it, so patch.
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              - op: replace
+                path: /spec/template/spec/containers/0/livenessProbe/timeoutSeconds
+                value: 5
+              - op: replace
+                path: /spec/template/spec/containers/0/livenessProbe/failureThreshold
+                value: 5
+              - op: replace
+                path: /spec/template/spec/containers/0/readinessProbe/timeoutSeconds
+                value: 5
+              - op: replace
+                path: /spec/template/spec/containers/0/readinessProbe/failureThreshold
+                value: 5
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/name=mlflow
+  chartRef:
+    kind: OCIRepository
+    name: mlflow
+    namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    storage:
+      enabled: true
+    mlflow:
+      backendStoreUri: "sqlite:////mlflow/mlflow.db"
+      defaultArtifactRoot: "mlflow-artifacts:/"
+      artifactsDestination: "/mlflow/artifacts"
+    server:
+      # UI and REST API under /mlflow on the ngrok domain; OTLP stays at /v1/traces.
+      staticPrefix: /mlflow
+      flag_options:
+        - serve_artifacts
+      value_options:
+        # Host header must match exactly, so every name needs a ":*" form too.
+        allowed-hosts: "mlflow-mlflow.mlflow.svc.cluster.local,mlflow-mlflow.mlflow.svc.cluster.local:*,cape-lethargic-sizing.ngrok-free.dev,cape-lethargic-sizing.ngrok-free.dev:*,localhost,localhost:*,127.0.0.1,127.0.0.1:*"
+        # POSTs with any other Origin are refused, the ngrok page's own included.
+        cors-allowed-origins: "https://cape-lethargic-sizing.ngrok-free.dev"
+        # One worker shares its event loop between /health and ingest, and a slow
+        # SQLite write then fails the probe (instructor, live).
+        workers: 2
+    # 2 workers of the full image OOM-killed at 1Gi (instructor, live).
+    resources:
+      requests:
+        cpu: 250m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+---
+# The bridge files spans by experiment id. Creating the two experiments in a
+# fixed order on a fresh database gives otel-demo 1 and kagent 2 (Default is
+# 0); the Job fails if they differ. The PVC dies with the cluster, so this runs
+# on every rebuild.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mlflow-experiments
+  namespace: mlflow
+spec:
+  backoffLimit: 20
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: create
+          image: curlimages/curl:8.10.1
+          command:
+            - sh
+            - -c
+            - |
+              api=http://mlflow-mlflow.mlflow.svc.cluster.local:5000/mlflow/api/2.0/mlflow/experiments
+              for pair in otel-demo:1 kagent:2; do
+                name=${pair%:*} want=${pair#*:}
+                curl -sf -X POST "$api/create" -H 'Content-Type: application/json' -d "{\"name\": \"$name\"}" >/dev/null
+                got=$(curl -sf "$api/get-by-name?experiment_name=$name" | sed -n 's/.*"experiment_id": *"\([0-9]*\)".*/\1/p')
+                # the bridge hardcodes these ids; a mismatch would file traces silently elsewhere
+                [ "$got" = "$want" ] || { echo "$name has id '$got', bridge expects $want"; exit 1; }
+                echo "$name = $got"
+              done
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: mlflow
+  namespace: mlflow
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /mlflow
+      backendRefs:
+        - name: mlflow-mlflow
+          port: 5000

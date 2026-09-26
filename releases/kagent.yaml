@@ -100,8 +100,9 @@ spec:
     # kagent-openai), which is created by hand and never enters git.
     providers:
       default: openAI
-    # Lab 6: traces go to the demo's collector, then Jaeger. Not to Phoenix
-    # directly: the chart cannot set OTLP headers (kagent #2126).
+    # Traces go to the demo's collector, which fans them out to Jaeger, Phoenix
+    # and MLflow. Not to a backend directly: the chart cannot set OTLP headers
+    # (kagent #2126).
     # Prompts and answers are captured by default; public lab data only.
     otel:
       tracing:
@@ -112,16 +113,8 @@ spec:
             protocol: grpc
             timeout: 15000   # milliseconds
             insecure: true
-      # Agent logs to the same collector; it sends them to OpenSearch.
-      logging:
-        enabled: true
-        exporter:
-          otlp:
-            endpoint: http://otel-collector.otel-demo:4317
-            timeout: 15000   # milliseconds
-            insecure: true
     # Grafana MCP for observability-agent: base URL, no /api, no token
-    # (the demo's Grafana is anonymous Admin, so never expose it).
+    # (the demo's Grafana is anonymous Admin: outside only behind ngrok's sign-in).
     grafana-mcp:
       grafana:
         url: http://grafana.otel-demo

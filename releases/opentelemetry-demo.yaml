@@ -86,40 +86,39 @@ spec:
     # only log statements and does nothing to a span. Helm replaces a list
     # rather than merging it, so the whole processors list is restated with
     # that one name corrected; receivers and exporters stay the chart's.
-    # Lab 6: at chart limits Prometheus was OOM-killed (400Mi) and OpenSearch
-    # never passed its 5-minute startup check on a loaded 4-CPU host.
+    # Lab 6: at the chart's 400Mi Prometheus was OOM-killed.
     prometheus:
       server:
         resources:
           limits:
             memory: 1Gi
+    # Lab 7: off, as in the instructor's setup; it crash-looped here in lab 6.
+    # Jaeger, Grafana and Prometheus stay: they are the "standard OTel" side of
+    # the lab 7 comparison, and observability-agent reads Prometheus via Grafana.
     opensearch:
-      resources:
-        limits:
-          memory: 1500Mi
-      startupProbe:
-        tcpSocket:
-          port: 9200
-        initialDelaySeconds: 5
-        periodSeconds: 10
-        timeoutSeconds: 3
-        failureThreshold: 90
+      enabled: false
     opentelemetry-collector:
       config:
-        # Lab 6: agent spans also go to Phoenix; the shop's stay out of it.
         exporters:
+          # Agent spans (kagent and the shop's agent) also go to Phoenix.
           otlphttp/phoenix:
             endpoint: http://phoenix-svc.phoenix:6006
+          # Lab 7: every trace also goes to MLflow, via releases/mlflow-otel-collector.yaml.
+          otlp_grpc/mlflow-bridge:
+            endpoint: otel-collector.mlflow.svc.cluster.local:4317
+            tls:
+              insecure: true
         processors:
-          # filter DROPS what matches: everything that is not kagent.
-          filter/kagent_only:
+          # filter DROPS what matches: everything but kagent and the shop's agent.
+          filter/genai_only:
             error_mode: ignore
             traces:
               span:
-                - resource.attributes["service.namespace"] != "kagent"
-                # the UI polling the controller, 9 spans in 10 otherwise
-                - IsMatch(name, "^(GET|POST|PUT|DELETE) /api/")
-          # Phoenix shows Input/Output only from these two attributes.
+                - resource.attributes["service.namespace"] != "kagent" and resource.attributes["service.name"] != "agent" and resource.attributes["service.name"] != "chatbot"
+                # kagent's UI polling the controller; the A2A call of an agent run is kept
+                - resource.attributes["service.namespace"] == "kagent" and IsMatch(name, "^(GET|POST|PUT|DELETE) /api/") and not IsMatch(name, "/api/a2a/")
+          # Phoenix-only extra on top of the shared gen_ai_normalizer: Phoenix
+          # shows Input/Output only from these two attributes.
           transform/phoenix_io:
             error_mode: ignore
             trace_statements:
@@ -135,12 +134,45 @@ spec:
           pipelines:
             traces/genai:
               receivers: [otlp]
-              processors: [memory_limiter, filter/kagent_only, transform/phoenix_io, batch]
+              processors: [memory_limiter, filter/genai_only, gen_ai_normalizer, transform/phoenix_io, batch]
               exporters: [otlphttp/phoenix]
+            # OpenSearch is off; otherwise its exporter retries and queues every batch.
+            logs:
+              exporters: [debug]
             traces:
+              exporters: [otlp_grpc/jaeger, debug, span_metrics, otlp_grpc/mlflow-bridge]
               processors:
                 - memory_limiter
                 - resourcedetection
                 - resource
                 - transform/sanitize_spans
                 - gen_ai_normalizer
+---
+# Lab 7: the demo's UIs on the ngrok domain. frontend-proxy already serves each
+# under its own prefix; the shop itself stays off, / belongs to kagent.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: otel-demo
+  namespace: otel-demo
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /jaeger
+        - path:
+            type: PathPrefix
+            value: /grafana
+        - path:
+            type: PathPrefix
+            value: /feature
+        - path:
+            type: PathPrefix
+            value: /chatbot
+      backendRefs:
+        - name: frontend-proxy
+          port: 8080

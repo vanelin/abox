@@ -28,7 +28,7 @@ variable "releases_artifact" {
   # main publishes to "releases". Every v* tag cut from a feature branch would
   # land in that same stream -- the RSIP filter is ^\d+\.\d+\.\d+$ with
   # limit 1, so the newest tag from any branch would win and a cluster
-  # bootstrapped from main would get this branch's bundle. lab/06-observability
+  # bootstrapped from main would get this branch's bundle. lab/07-olly
   # therefore has its own repository, matching the name
   # .github/workflows/flux-push.yaml derives from the branch (everything after
   # the last "/", lower-cased, prefixed with "releases-").
@@ -36,7 +36,7 @@ variable "releases_artifact" {
   # It is empty until the first v* tag is cut FROM THIS BRANCH -- the RSIP has
   # nothing to resolve before that, and the branch must be pushed first or
   # `git branch -r --contains` in the workflow cannot map the tag back to it.
-  default = "releases-06-observability"
+  default = "releases-07-olly"
 }
 
 variable "releases_version" {

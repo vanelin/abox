@@ -33,9 +33,14 @@ spec:
     ingress:
       enabled: false
     # Lab 6: no login, so the collector can send traces without a key that
-    # dies with the cluster. Lab only; Phoenix stays behind port-forward.
+    # dies with the cluster. Lab only; outside it sits behind ngrok's Google sign-in.
     auth:
       enableAuth: false
+    # Lab 7: served at /phoenix on the ngrok domain. The route strips the prefix,
+    # as in Phoenix's own reverse-proxy example; the collector keeps using /.
+    server:
+      hostRootPath: /phoenix
+      rootUrl: https://cape-lethargic-sizing.ngrok-free.dev/phoenix
     # The chart's startup probe allows 31s (periodSeconds 1 x failureThreshold
     # 30). Phoenix runs Alembic migrations against Postgres on first boot, which
     # takes longer than that on KinD, so the probe kills the container before it
@@ -52,3 +57,27 @@ spec:
         initialDelaySeconds: 5
         periodSeconds: 5
         failureThreshold: 120
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: phoenix
+  namespace: phoenix
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /phoenix
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: phoenix-svc
+          port: 6006
