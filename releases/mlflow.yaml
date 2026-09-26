@@ -66,7 +66,8 @@ spec:
         - serve_artifacts
       value_options:
         # Host header must match exactly, so every name needs a ":*" form too.
-        allowed-hosts: "mlflow-mlflow.mlflow.svc.cluster.local,mlflow-mlflow.mlflow.svc.cluster.local:*,cape-lethargic-sizing.ngrok-free.dev,cape-lethargic-sizing.ngrok-free.dev:*,localhost,localhost:*,127.0.0.1,127.0.0.1:*"
+        # 10.244.* is the pod network: kubelet probes send Host <pod IP>:5000.
+        allowed-hosts: "10.244.*,mlflow-mlflow.mlflow.svc.cluster.local,mlflow-mlflow.mlflow.svc.cluster.local:*,cape-lethargic-sizing.ngrok-free.dev,cape-lethargic-sizing.ngrok-free.dev:*,localhost,localhost:*,127.0.0.1,127.0.0.1:*"
         # POSTs with any other Origin are refused, the ngrok page's own included.
         cors-allowed-origins: "https://cape-lethargic-sizing.ngrok-free.dev"
         # One worker shares its event loop between /health and ingest, and a slow

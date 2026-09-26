@@ -80,21 +80,39 @@ spec:
             value: "false"
         service:
           port: 8089
+      # Lab 7: the load generator starts paused (flag default "on" in the chart's
+      # flag file, which values cannot reach), so a cold start is lighter.
+      # Turn it on in /feature when shop traffic is needed.
+      flagd:
+        initContainers:
+          - name: init-config
+            image: busybox
+            command:
+              - sh
+              - -c
+              - |
+                cp /config-ro/demo.flagd.json /config-rw/demo.flagd.json
+                sed -i '/"loadGeneratorTraffic"/,/defaultVariant/ s/"defaultVariant": "on"/"defaultVariant": "off"/' /config-rw/demo.flagd.json
+            volumeMounts:
+              - mountPath: /config-ro
+                name: config-ro
+              - mountPath: /config-rw
+                name: config-rw
     # Lab 6: chart 0.41.2 defines transform/sanitize_spans -- it normalises span
     # names so the span_metrics connector does not mint a series per URL -- but
     # its traces pipeline lists transform/sanitize_logs instead, which holds
     # only log statements and does nothing to a span. Helm replaces a list
     # rather than merging it, so the whole processors list is restated with
     # that one name corrected; receivers and exporters stay the chart's.
-    # Lab 6: at the chart's 400Mi Prometheus was OOM-killed.
+    # Lab 7: the demo's own backends are off, as in the instructor's setup --
+    # with them on, a cold start pushed this 4-CPU host to load 74 and froze it.
+    # Traces go to MLflow and Phoenix only.
+    jaeger:
+      enabled: false
     prometheus:
-      server:
-        resources:
-          limits:
-            memory: 1Gi
-    # Lab 7: off, as in the instructor's setup; it crash-looped here in lab 6.
-    # Jaeger, Grafana and Prometheus stay: they are the "standard OTel" side of
-    # the lab 7 comparison, and observability-agent reads Prometheus via Grafana.
+      enabled: false
+    grafana:
+      enabled: false
     opensearch:
       enabled: false
     opentelemetry-collector:
@@ -136,17 +154,19 @@ spec:
               receivers: [otlp]
               processors: [memory_limiter, filter/genai_only, gen_ai_normalizer, transform/phoenix_io, batch]
               exporters: [otlphttp/phoenix]
-            # OpenSearch is off; otherwise its exporter retries and queues every batch.
+            # Their backends are off; a dead exporter would retry and queue every batch.
             logs:
               exporters: [debug]
             traces:
-              exporters: [otlp_grpc/jaeger, debug, span_metrics, otlp_grpc/mlflow-bridge]
+              exporters: [debug, span_metrics, otlp_grpc/mlflow-bridge]
               processors:
                 - memory_limiter
                 - resourcedetection
                 - resource
                 - transform/sanitize_spans
                 - gen_ai_normalizer
+            metrics:
+              exporters: [debug]
 ---
 # Lab 7: the demo's UIs on the ngrok domain. frontend-proxy already serves each
 # under its own prefix; the shop itself stays off, / belongs to kagent.
@@ -161,12 +181,6 @@ spec:
       namespace: agentgateway-system
   rules:
     - matches:
-        - path:
-            type: PathPrefix
-            value: /jaeger
-        - path:
-            type: PathPrefix
-            value: /grafana
         - path:
             type: PathPrefix
             value: /feature
