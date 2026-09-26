@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added [Lab 7](docs/labs/07/README.md): Phoenix/MLflow trace comparison and selected UIs behind ngrok with Google sign-in. Compared 15 traces from 14 test messages; token totals matched in 14, with two spans missing from MLflow in one trace. Restored the lab 5 backends and disabled the demo’s Jaeger, Prometheus, Grafana and OpenSearch to reduce resource use. See [results and limitations](docs/labs/07/comparison.md).
 - Added [Lab 6](docs/labs/06/README.md): OpenTelemetry Demo 0.41.2, Phoenix chart 12.0.14, ngrok-operator and a Gemini gateway. Connected kagent traces to Jaeger/Phoenix, logs to OpenSearch and Grafana MCP to the demo. Added ngrok/gateway Secrets; excluded unused earlier-lab workloads to reduce memory use.
 - Proposed [ADR-0004](docs/adr/0004-agentic-memory.md): xray-memory for structured queries and user notes; Qdrant retained for text retrieval. Added a [135-node profile corpus](docs/labs/05/README.md), an encrypted maps image built in [CI](.github/workflows/xray-memory-maps-image.yaml), and [retrieval-agent-xray](releases/agent-memory.yaml).
 - Added SOPS for the snapshot identity. `make secrets` loads the SOPS key from the environment or its local key file and provider keys from the environment; Gemini is optional. Added ModelConfig `gemini-3-5-flash-lite`; excluded Qwen components from the active bundle.

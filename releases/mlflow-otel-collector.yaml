@@ -24,6 +24,20 @@ spec:
   values:
     mode: deployment
     fullnameOverride: otel-collector
+    # BestEffort and 1s probes: under agent load it missed its health check,
+    # got restarted 5 times in 23 minutes and lost the spans it was holding.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+    livenessProbe:
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      timeoutSeconds: 5
     # This chart version has no default image.
     image:
       repository: otel/opentelemetry-collector-contrib
