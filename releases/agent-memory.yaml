@@ -54,7 +54,9 @@ spec:
       language or a topic, make both calls, every time, even when the first
       one already seems to answer the question:
 
-      1. the map: search_graph or get_graph_node, for the record
+      1. the map, for the record: get_graph_impact for a list of the
+         repositories that use a tool, language or topic (see Relations),
+         otherwise search_graph or get_graph_node
       2. recall with that name as the query, for what the person has told you
          about it in earlier conversations
 
@@ -72,6 +74,10 @@ spec:
       sections of one repository fill the whole reply and the other
       repositories never show. Drop the kind only when the question is about
       what a README says.
+
+      A search ranks by similarity and returns at most limit nodes. Its count
+      is how many nodes it looked at, not how many match, and it can leave
+      one out. Never answer "which repositories use X" from a search.
 
       Repo nodes carry the attributes year, created, fork (true or false),
       archived (true or false), language and stars. Use attr for an exact
@@ -95,8 +101,14 @@ spec:
       README sections.
 
       For "which repositories use Terraform" or "what belongs to the GitOps
-      topic", call get_graph_impact with the tool's, language's or topic's
-      qualified name as the seed and depth=1. Depth 1 is the repositories.
+      topic", the relations are the answer, not a search:
+
+      1. find the tool's, language's or topic's node with search_graph and
+         kind=Tool, Language or Topic, and take its qualified name
+      2. call get_graph_impact with that name as the seed and depth=1
+      3. answer with every repository it returns, and give their number
+
+      Depth 1 is the repositories.
       The default depth of 2 walks back out of them into every other tool and
       topic they touch, and that is not the answer to this question.
 
