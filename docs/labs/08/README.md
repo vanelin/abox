@@ -4,7 +4,7 @@
 
 ## Setup
 
-Everything runs in the cluster, from git, like the other labs. It is not deployed yet: the results below come from a prototype.
+Everything runs in the cluster, from git, like the other labs (released as v0.6.28).
 
 ```mermaid
 flowchart LR
@@ -24,9 +24,10 @@ flowchart LR
 
 ## Working with it
 
-1. Ask an agent in kagent (`/`). Its run appears as a session in `/evals`.
-2. Check the answer against the source (the corpus, the manifests; checked answers are under Results) and save only a correct session as an eval set: its question, tool calls and answer become the golden case.
-3. Evaluate other sessions of that agent against it with the built-in metrics. Run history is kept on the PVC until the cluster is rebuilt.
+1. Ask an agent in kagent (`/`), one question per new chat. The run appears as a session in `/evals`, Live Agent Sessions.
+2. Click the session to use as the golden and tick Compare on the runs to score, then Continue to Evaluation. With nothing ticked, the golden session is scored against itself.
+3. Check the golden answer against the source (the corpus, the manifests). If it is wrong, click the eval set file name, correct Final Response and Apply Changes; the tool calls stay those of the session.
+4. Pick the judge, the match type and the metrics, and run. Run history is kept on the PVC.
 
 Rubric metrics need rubric text, which the UI cannot take yet, so they go through the API (`kubectl -n agentevals port-forward svc/agentevals 8001`; a session's trace comes from `POST /api/streaming/get-trace` with `{"session_id": ...}`):
 
@@ -37,6 +38,25 @@ curl -F trace_files=@trace.jsonl -F eval_set_file=@evalset.json \
 ```
 
 ## Results
+
+### In the cluster
+
+`retrieval-agent-xray`, "Which repositories use Terraform?", three runs in new chats, judge `gemini-3.8-flash`, trajectory ANY_ORDER. All three made the same calls: `recall`, `search_graph` (20 of 27 repositories), then `get_graph_node` on the same four repositories. All three missed `abox`, which was among the search results, and two claimed 27 Terraform repositories: 27 is the number of all repositories in the map. No run could be the golden as it was, so the golden is one run with its answer corrected to the five repositories.
+
+| Golden answer | Scored run | trajectory | final response v2 |
+|---|---|---|---|
+| corrected: five repositories | `01a0e429` | 1 PASS | **0 FAIL** |
+| corrected: five repositories | `01a0e42a` (the golden run itself) | 1 PASS | **0 FAIL** |
+| the run's own, unchecked | `01a0e429` | 1 PASS | **1 PASS** |
+| the run's own, unchecked | `01a0e42a` | 1 PASS | **1 PASS** |
+
+Same traces, same judge: only the golden answer changed the verdict. Trajectory passed every run, since all took the same path to the same incomplete answer.
+
+Pushed in the same chat, the agent found `abox` on the sixth turn and explained: "I stopped at the first high-signal hits instead of reading the full repo set". It still called all 27 repositories Terraform matches. Such a session cannot be the golden for one-turn runs: trajectory needs the same number of turns.
+
+Sessions and run history survived a pod restart.
+
+### Prototype round
 
 From the prototype round: upstream's build as a process in the Codespace, fed by the collector through the KinD gateway; each question asked twice, the better-looking run saved as the eval set and the other scored through the API. It also found the gzip and judge-model gaps below, now fixed in our copy.
 
@@ -72,7 +92,7 @@ So the scores above measure agreement with a flawed run, not correctness. They s
 
 **A failed run cannot be scored.** The empty `retrieval-agent` run produced no invocation, so every metric errored instead of failing: an evaluator has to treat "nothing to score" as a failure, or a broken agent looks like a skipped test.
 
-**A golden set has to be checked first.** `create-eval-set` turns a session into an eval set with the question, the tool calls and the answer, with no hand-written JSON. But none of the three better-looking runs was fully right; an unchecked golden turns a regression run into a comparison of two mistakes.
+**A golden set has to be checked first.** `create-eval-set` turns a session into an eval set with the question, the tool calls and the answer, with no hand-written JSON. But none of the three better-looking prototype runs was fully right, and in the cluster the same runs passed against an unchecked golden and failed against the checked one: an unchecked golden turns a regression run into a comparison of two mistakes.
 
 ## Gaps found in agentevals-go
 
@@ -84,6 +104,7 @@ So the scores above measure agreement with a flawed run, not correctness. They s
 | `hallucinations_v1` gets no tool output, for any trace | grounded answers score 0 | none; not used for a verdict |
 | kagent's parallel-call span appears as a `(merged tools)` call | inflates the trajectory with pseudo tool calls | none |
 | Root HTTP spans carry no `gen_ai.conversation.id` | each run splits into its session and an `otlp-<trace>` stub | ignore the stubs |
+| `/auth/me` answers 401 when the tool's own login is off | the UI shows "Your session has expired" on every page; its "Log in" links lead to kagent | fixed in our copy, with a test |
 | Requests take `session_id`, responses return `sessionId` | first calls returned "session not found" | read the handler |
 
 ## Roadmap ideas (task 3)
@@ -96,5 +117,5 @@ So the scores above measure agreement with a flawed run, not correctness. They s
 
 ## Limits
 
-- Two runs per question, goldens checked only afterwards: enough to show what each metric does, not to measure an agent.
-- The results are from the prototype, judged by `gemini-3.5-flash-lite`. The in-cluster setup (judge `gemini-3.8-flash`) is not deployed yet.
+- One question and three runs in the cluster, two runs per question in the prototype: enough to show what each metric does, not to measure an agent.
+- The cluster runs were judged by `gemini-3.8-flash`, the prototype by `gemini-3.5-flash-lite`.

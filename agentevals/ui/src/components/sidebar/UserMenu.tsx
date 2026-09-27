@@ -6,6 +6,7 @@ import { config } from '../../config';
 interface MeState {
   authenticated: boolean;
   username?: string;
+  authEnabled?: boolean;
 }
 
 export function UserMenu() {
@@ -31,6 +32,8 @@ export function UserMenu() {
   if (!me) return null;
 
   if (!me.authenticated) {
+    // No login to offer when the server runs without one.
+    if (me.authEnabled === false) return null;
     return (
       <a href="/auth/login" css={loginLinkStyle}>
         <User size={14} />

@@ -41,7 +41,7 @@ spec:
         fsGroup: 65532
       containers:
         - name: agentevals
-          image: ghcr.io/vanelin/abox/agentevals-go:54107cf-abox.1
+          image: ghcr.io/vanelin/abox/agentevals-go:54107cf-abox.2
           args:
             - serve
             - --addr=:8001

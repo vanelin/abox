@@ -32,7 +32,7 @@ clean:
 
 # abox: the image releases/agentevals.yaml runs, UI served under /evals.
 # Bump the tag on every change to this copy, here and in the release.
-IMAGE ?= ghcr.io/vanelin/abox/agentevals-go:54107cf-abox.1
+IMAGE ?= ghcr.io/vanelin/abox/agentevals-go:54107cf-abox.2
 
 image:
 	docker build --build-arg UI_BASE_PATH=/evals/ -t $(IMAGE) .

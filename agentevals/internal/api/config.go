@@ -112,6 +112,12 @@ func metricsHandler(w http.ResponseWriter, r *http.Request) {
 func authMeHandler(sessionSecret string, ghTokens *githubTokenValidator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		// Without a secret there is no login (requireSession lets everyone
+		// in); a 401 here made the UI show "session expired" on every page.
+		if sessionSecret == "" {
+			_ = json.NewEncoder(w).Encode(map[string]bool{"authenticated": false, "authEnabled": false})
+			return
+		}
 		username, ok := extractSessionUsername(r, sessionSecret, ghTokens)
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
