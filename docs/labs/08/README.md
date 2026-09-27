@@ -56,6 +56,20 @@ Pushed in the same chat, the agent found `abox` on the sixth turn and explained:
 
 Sessions and run history survived a pod restart.
 
+### Fixing the agent
+
+The traces showed why: the prompt already told the agent to answer "which repositories use Terraform" with `get_graph_impact` from the Terraform node, but its search rules came first, and every run searched instead. The prompt ([releases/agent-memory.yaml](../../../releases/agent-memory.yaml)) was changed twice; after each change the question was asked three times in new chats and scored against a correct run of that round, unedited.
+
+| Prompt | Path | Complete lists (5 repositories) | Other runs pass response match | Other runs pass trajectory |
+|---|---|---|---|---|
+| before | search, then four repositories opened | 0 of 3 | 0 of 2 (checked golden) | 2 of 2 |
+| v1: lists come from graph relations; a search count is not a match count | `get_graph_impact`, 3 of 3 | 1 of 3: `tf-google-gke-cluster`, the last item, dropped twice | 0 of 2 | 1 of 2 |
+| v2: the seed is counted at depth 0; every depth-1 node is a repository | `get_graph_impact`, 3 of 3 | 3 of 3 | 2 of 2 | 0 of 2 |
+
+v2 is not flawless: one run opened with "4 repositories" above a list of five, another added "12 Tool nodes", misread from the search note. The judge passed both, since all five names were there.
+
+Trajectory failed both correct v2 runs, and one correct-path v1 run, on an argument the model picks freely: `limit` 10 or 20 where the golden had 20 or 5. It flagged the switch from search to the graph, but with exact argument matching it cannot gate a regression run.
+
 ### Prototype round
 
 From the prototype round: upstream's build as a process in the Codespace, fed by the collector through the KinD gateway; each question asked twice, the better-looking run saved as the eval set and the other scored through the API. It also found the gzip and judge-model gaps below, now fixed in our copy.
@@ -104,6 +118,7 @@ So the scores above measure agreement with a flawed run, not correctness. They s
 | `hallucinations_v1` gets no tool output, for any trace | grounded answers score 0 | none; not used for a verdict |
 | kagent's parallel-call span appears as a `(merged tools)` call | inflates the trajectory with pseudo tool calls | none |
 | Root HTTP spans carry no `gen_ai.conversation.id` | each run splits into its session and an `otlp-<trace>` stub | ignore the stubs |
+| Trajectory matches arguments exactly | a correct run that asked for `limit=10` instead of 20 scores 0 | none; see roadmap |
 | `/auth/me` answers 401 when the tool's own login is off | the UI shows "Your session has expired" on every page; its "Log in" links lead to kagent | fixed in our copy, with a test |
 | Requests take `session_id`, responses return `sessionId` | first calls returned "session not found" | read the handler |
 
@@ -111,7 +126,8 @@ So the scores above measure agreement with a flawed run, not correctness. They s
 
 - **Continuous evaluation.** Keep the collector → agentevals pipeline running; promote a reviewed session to a golden set per agent and question; score every new session of that agent against it on completion; keep run history (`--session-db`) and alert when a metric flips from pass to fail. The MCP server (`list_runs`, `get_run_results`) lets an agent or Claude Code read those results.
 - **Scores next to traces.** Post each result as an MLflow assessment or a Phoenix span annotation, so a failing run is visible where it is debugged.
-- **Upstream the fixes.** Offer the gzip and judge-model changes from our copy as a PR, then the harder one: tool context for `hallucinations_v1`, which decides whether that metric can be trusted.
+- **Upstream the fixes.** Offer the fixes from our copy ([ABOX.md](../../../agentevals/ABOX.md)) as a PR, then the harder one: tool context for `hallucinations_v1`, which decides whether that metric can be trusted.
+- **Trajectory without incidental arguments.** Match tool names, or only the arguments that decide the answer (the seed, the depth), so a different `limit` does not fail a correct run.
 - **Skills.** Score skill use like tool use: which skill the agent loaded (`list_skills`, `get_skill`) against the one the golden run used.
 - **External evals.** Keep the lab 5 gold answers (`docs/labs/05/data/`) as eval sets and score them with the same metrics, so memory changes are measured, not eyeballed.
 

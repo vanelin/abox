@@ -8,6 +8,7 @@ Upstream [triageagent-dev/evals](https://github.com/triageagent-dev/evals) at `5
 | `internal/judge/client.go` | default judge from `AGENTEVALS_JUDGE_MODEL`, else `gemini-3.8-flash`; `gemini-2.5-flash` answers 404 for new keys |
 | `ui/src/context/TraceProvider.tsx`, `ui/src/components/upload/UploadView.tsx` | UI judge default and list: 3.8 Flash, 3.5 Flash-Lite, 3.1 Pro instead of the closed 2.5/2.0 Flash; the OpenAI and Anthropic options are gone, the judge calls Gemini only |
 | `internal/api/config.go`, `ui/src/components/sidebar/UserMenu.tsx` | with the login off, `/auth/me` answers 200 `authEnabled: false` instead of 401, which made the UI show "session expired" on every page; the UI then hides "Log in" |
+| `ui/src/components/sidebar/Sidebar.tsx`, `ui/src/components/welcome/WelcomeView.tsx` | the logo loads from the UI's base path, not `/logo.svg` at the domain root |
 | `internal/api/otlphttp_test.go`, `internal/judge/default_test.go`, `internal/api/authme_test.go` | tests for the three server changes |
 | `Makefile` | `image` and `push` targets for the image `releases/agentevals.yaml` runs |
 

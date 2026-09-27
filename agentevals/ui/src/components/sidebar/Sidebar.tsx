@@ -49,7 +49,7 @@ export const Sidebar: React.FC = () => {
     <>
       <nav css={sidebarStyle}>
         <div css={brandStyle} onClick={() => actions.setCurrentView('welcome')}>
-          <img src="/logo.svg" alt="agentevals" css={brandLogoStyle} />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="agentevals" css={brandLogoStyle} />
         </div>
 
         <div css={navListStyle}>

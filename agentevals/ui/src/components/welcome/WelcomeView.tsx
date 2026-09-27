@@ -22,7 +22,7 @@ export const WelcomeView: React.FC = () => {
     <div css={containerStyle}>
       <div css={contentStyle}>
         <div css={headerStyle}>
-          <img src="/logo.svg" alt="agentevals" css={logoStyle} />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="agentevals" css={logoStyle} />
           <p>Evaluate any agents without changing a single line of code</p>
         </div>
 

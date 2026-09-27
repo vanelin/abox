@@ -106,7 +106,10 @@ spec:
       1. find the tool's, language's or topic's node with search_graph and
          kind=Tool, Language or Topic, and take its qualified name
       2. call get_graph_impact with that name as the seed and depth=1
-      3. answer with every repository it returns, and give their number
+      3. answer with every repository it returns, and give their number.
+         The reply lists the seed itself first, at depth 0, and counts it:
+         the repositories are the nodes at depth 1, all of them, the last
+         one too
 
       Depth 1 is the repositories.
       The default depth of 2 walks back out of them into every other tool and
