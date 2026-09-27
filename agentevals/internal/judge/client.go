@@ -9,17 +9,25 @@ package judge
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"google.golang.org/genai"
 )
 
-// DefaultModel and DefaultNumSamples match google-adk's JudgeModelOptions
-// defaults (eval_metrics.py): gemini-2.5-flash, 5 samples per invocation
-// aggregated by majority vote.
-const (
-	DefaultModel      = "gemini-2.5-flash"
-	DefaultNumSamples = 5
-)
+// DefaultModel is the judge when a request names none: AGENTEVALS_JUDGE_MODEL,
+// else gemini-3.8-flash. google-adk's default, gemini-2.5-flash, answers 404
+// for new API keys. DefaultNumSamples matches google-adk: 5 samples per
+// invocation, majority vote.
+var DefaultModel = defaultModel()
+
+const DefaultNumSamples = 5
+
+func defaultModel() string {
+	if m := os.Getenv("AGENTEVALS_JUDGE_MODEL"); m != "" {
+		return m
+	}
+	return "gemini-3.8-flash"
+}
 
 // Model is a single-turn text-in/text-out judge model call, abstracted so
 // FinalResponseMatchV2 (and future judge metrics) can be tested against a

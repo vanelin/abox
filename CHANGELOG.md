@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added [lab 8](docs/labs/08/README.md): agentevals-go in the cluster (our copy of `triageagent-dev/evals` in `agentevals/` with gzip ingest and a configurable judge model, image built by CI with its Makefile, UI at `/evals` on the ngrok domain), fed by the demo collector's GenAI pipeline; kagent agent runs scored with its built-in metrics against golden sets made from real sessions; gaps found in the tool and a roadmap for continuous evaluation.
 - Added [Lab 7](docs/labs/07/README.md): Phoenix/MLflow trace comparison and selected UIs behind ngrok with Google sign-in. Compared 15 traces from 14 test messages; token totals matched in 14, with two spans missing from MLflow in one trace. Restored the lab 5 backends and disabled the demo’s Jaeger, Prometheus, Grafana and OpenSearch to reduce resource use. See [results and limitations](docs/labs/07/comparison.md).
 - Added [Lab 6](docs/labs/06/README.md): OpenTelemetry Demo 0.41.2, Phoenix chart 12.0.14, ngrok-operator and a Gemini gateway. Connected kagent traces to Jaeger/Phoenix, logs to OpenSearch and Grafana MCP to the demo. Added ngrok/gateway Secrets; excluded unused earlier-lab workloads to reduce memory use.
 - Proposed [ADR-0004](docs/adr/0004-agentic-memory.md): xray-memory for structured queries and user notes; Qdrant retained for text retrieval. Added a [135-node profile corpus](docs/labs/05/README.md), an encrypted maps image built in [CI](.github/workflows/xray-memory-maps-image.yaml), and [retrieval-agent-xray](releases/agent-memory.yaml).

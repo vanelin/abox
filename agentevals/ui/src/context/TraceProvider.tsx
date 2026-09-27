@@ -15,7 +15,7 @@ export const TraceProvider: React.FC<TraceProviderProps> = ({ children }) => {
     traceFiles: [],
     evalSetFile: null,
     selectedEvaluatorNames: ['tool_trajectory_avg_score'],
-    judgeModel: 'gemini-2.5-flash',
+    judgeModel: 'gemini-3.8-flash',
     threshold: 0.8,
     trajectoryMatchType: 'EXACT',
     traceMetadata: new Map(),

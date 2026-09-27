@@ -175,10 +175,10 @@ const uploadViewStyle = css`
 `;
 
 const JUDGE_MODELS = [
-  { value: 'gemini-2.5-flash', provider: 'google' },
-  { value: 'gemini-2.0-flash', provider: 'google' },
-  { value: 'anthropic/claude-3.5-sonnet', provider: 'anthropic' },
-  { value: 'openai/gpt-4o', provider: 'openai' },
+  // The judge calls Gemini only. gemini-2.5-flash and gemini-2.0-flash answer 404 for new API keys.
+  { value: 'gemini-3.8-flash', provider: 'google' },
+  { value: 'gemini-3.5-flash-lite', provider: 'google' },
+  { value: 'gemini-3.1-pro-preview', provider: 'google' },
 ] as const;
 
 type JudgeModelProvider = typeof JUDGE_MODELS[number]['provider'];
@@ -485,8 +485,6 @@ export const UploadView: React.FC = () => {
               <div style={{ display: 'flex', gap: 10, marginTop: 4, flexWrap: 'wrap' }}>
                 {([
                   { label: 'GOOGLE_API_KEY', provider: 'google' as const },
-                  { label: 'ANTHROPIC_API_KEY', provider: 'anthropic' as const },
-                  { label: 'OPENAI_API_KEY', provider: 'openai' as const },
                 ] as const).map(({ label, provider }) => {
                   const ok = state.apiKeyStatus![provider];
                   return (
@@ -502,9 +500,7 @@ export const UploadView: React.FC = () => {
               const selected = JUDGE_MODELS.find((m) => m.value === state.judgeModel);
               const provider = selected?.provider as JudgeModelProvider | undefined;
               if (!provider || !state.apiKeyStatus || state.apiKeyStatus[provider]) return null;
-              const keyName = provider === 'google' ? 'GOOGLE_API_KEY / GEMINI_API_KEY'
-                : provider === 'anthropic' ? 'ANTHROPIC_API_KEY'
-                : 'OPENAI_API_KEY';
+              const keyName = 'GOOGLE_API_KEY / GEMINI_API_KEY';
               return (
                 <span style={{ fontSize: '11px', color: 'var(--status-failure)', marginTop: 2 }}>
                   {keyName} is not set - this model will fail

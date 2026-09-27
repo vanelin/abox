@@ -8,6 +8,9 @@
 #                          Required.
 #   kagent/kagent-gemini   GEMINI_API_KEY, read by the Gemini ModelConfig.
 #                          Optional: without it only that ModelConfig is dead.
+#   agentevals/agentevals-gemini
+#                          GEMINI_API_KEY again, for agentevals' judge metrics.
+#                          Optional: without it only the judge-free metrics work.
 #   ngrok-operator/ngrok-operator-credentials
 #                          NGROK_API_KEY and NGROK_AUTHTOKEN, one Secret with
 #                          the keys API_KEY and AUTHTOKEN. Required: without it
@@ -143,5 +146,6 @@ rc=0
 sops_age_secret || rc=1
 env_secret kagent kagent-openai OPENAI_API_KEY required || rc=1
 env_secret kagent kagent-gemini GEMINI_API_KEY optional || rc=1
+env_secret agentevals agentevals-gemini GEMINI_API_KEY optional || rc=1
 ngrok_secret || rc=1
 exit "${rc}"

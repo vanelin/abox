@@ -6,6 +6,7 @@ resources:
   - agentregistry.yaml
   - agent-memory.yaml
   - agent-retrieval.yaml
+  - agentevals.yaml
   - kagent.yaml
   - llama-cpp-embeddings.yaml
   - llmd.yaml

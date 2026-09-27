@@ -1,0 +1,100 @@
+# Lab 8: Evaluating our agents with agentevals-go
+
+[agentevals-go](https://github.com/triageagent-dev/evals) scores agent behaviour from OpenTelemetry traces, without re-running the agent. Our copy of it, upstream `54107cf` plus the fixes this lab needed, is [agentevals/](../../../agentevals/) in the repository root ([what we changed](../../../agentevals/ABOX.md)). kagent's Go ADK traces are its native input: the repo's own samples are kagent `helm-agent` traces.
+
+## Setup
+
+Everything runs in the cluster, from git, like the other labs. It is not deployed yet: the results below come from a prototype.
+
+```mermaid
+flowchart LR
+  agents[kagent agents] -->|OTLP| col[demo collector<br/>GenAI pipeline]
+  col --> phoenix[(Phoenix)]
+  col -->|OTLP/HTTP| ae[agentevals<br/>namespace agentevals]
+  user((browser)) -->|ngrok, Google sign-in| ui[/evals UI and API/] --> ae
+```
+
+| Piece | Where |
+|---|---|
+| Image | `make -C agentevals push`, run by [.github/workflows/agentevals-image.yaml](../../../.github/workflows/agentevals-image.yaml) after `go test ./...`; UI built for `/evals`. Upstream publishes no image |
+| Server | [releases/agentevals.yaml](../../../releases/agentevals.yaml): Deployment, Service, a PVC for sessions, eval sets and run history, HTTPRoute `/evals` |
+| Traces in | a third exporter in the demo collector's GenAI pipeline, next to Phoenix ([releases/opentelemetry-demo.yaml](../../../releases/opentelemetry-demo.yaml)) |
+| Judge | model from `AGENTEVALS_JUDGE_MODEL` in the release (`gemini-3.8-flash`); key `agentevals/agentevals-gemini` from `GEMINI_API_KEY`, made by `scripts/secrets.sh`, optional |
+| UI | `https://cape-lethargic-sizing.ngrok-free.dev/evals/` |
+
+## Working with it
+
+1. Ask an agent in kagent (`/`). Its run appears as a session in `/evals`.
+2. Check the answer against the source (the corpus, the manifests; checked answers are under Results) and save only a correct session as an eval set: its question, tool calls and answer become the golden case.
+3. Evaluate other sessions of that agent against it with the built-in metrics. Run history is kept on the PVC until the cluster is rebuilt.
+
+Rubric metrics need rubric text, which the UI cannot take yet, so they go through the API (`kubectl -n agentevals port-forward svc/agentevals 8001`; a session's trace comes from `POST /api/streaming/get-trace` with `{"session_id": ...}`):
+
+```bash
+curl -F trace_files=@trace.jsonl -F eval_set_file=@evalset.json \
+  -F 'config={"evaluators":[{"type":"builtin","name":"rubric_based_final_response_quality_v1","rubrics":["Answers the question directly"]}]}' \
+  localhost:8001/api/evaluate
+```
+
+## Results
+
+From the prototype round: upstream's build as a process in the Codespace, fed by the collector through the KinD gateway; each question asked twice, the better-looking run saved as the eval set and the other scored through the API. It also found the gzip and judge-model gaps below, now fixed in our copy.
+
+| Agent, question | Scored run vs golden | trajectory | final response v2 | rubric quality | hallucinations |
+|---|---|---|---|---|---|
+| `retrieval-agent-xray`, "Which repositories use Terraform?" | "I found **27** total…" vs "I found 4…" | **0** FAIL | 1 PASS | 1 PASS | 0.14 FAIL |
+| `retrieval-agent-nomic`, "Which agents use … default-model-config?" | `helm-agent` vs `helm-agent` | 1 PASS | 1 PASS | 1 PASS | **0** FAIL |
+| `retrieval-agent`, "Which model does k8s-agent use?" | empty answer vs `openai-gpt-5-4-nano` | error: *No invocations extracted from trace* | | | |
+
+Built-in metrics used: `tool_trajectory_avg_score` (ANY_ORDER), `final_response_match_v2`, `rubric_based_final_response_quality_v1` (one rubric: answers directly, names the items), `hallucinations_v1`.
+
+The golden runs were checked against the source only afterwards, and none was fully right:
+
+| Question | Golden run said | Correct | Source |
+|---|---|---|---|
+| Terraform repositories | 4, without `abox` | 5: `abox`, `alternat`, `automation-token-update`, `tf-gcp-gke-cluster-flux`, `tf-google-gke-cluster` | lab 5 gold `g01` in [questions.json](../05/data/questions.json); the corpus links `abox` to Terraform |
+| Agents on `default-model-config` | `helm-agent` only | in the cluster, the chart's five agents: `helm-agent`, `kgateway-agent`, `promql-agent`, `observability-agent`, `argo-rollouts-conversion-agent` | kagent chart 0.10.1 rendered with [releases/kagent.yaml](../../../releases/kagent.yaml) |
+| Model of `k8s-agent` | config `openai-gpt-5-4-nano`, then `gpt-4.1-mini` from `default-model-config` | `openai-gpt-5-4-nano`, model `gpt-5.4-nano` | [agent-retrieval.yaml](../../../releases/agent-retrieval.yaml), [model-configs.yaml](../../../releases/model-configs.yaml) |
+
+The nomic answer claims only what its store returned, and the lab 4 ingest skips the chart's agents, so the store likely lacks the other four: a gap in the corpus, not a made-up answer. A golden has to match what the agent can know.
+
+So the scores above measure agreement with a flawed run, not correctness. They stay as an experiment on unchecked goldens; the in-cluster round uses new, checked ones.
+
+## What the scores mean
+
+**Trajectory compares calls, not answers.** With ANY_ORDER a run scores 1 only if every golden call, name and arguments, appears among its calls; order and extra calls do not matter. The two xray runs made the same seven tool calls (plus two `(merged tools)` records) except one: the golden opened the `webserver` node where the other opened `abox`, and that call is why the golden missed `abox`. The other run listed all five but invented a total of 27 ("I can list the remaining 22"). Trajectory flagged the differing call, not which answer was right.
+
+**Response match accepts extra information by design.** `final_response_match_v2` asks whether the answer holds the reference's key entities and allows more. The "27" run holds all four golden repositories and passed; the metric cannot catch an item the golden misses, and it let the wrong total through.
+
+**A rubric checks only what it says.** Ours asked for a direct answer that names the items, not for the complete list, so a pass says nothing about correctness. A completeness rubric has to spell out the expected items.
+
+**Hallucinations gets no tool output.** agentevals gives the judge only the user prompt and "Agent has no tools.", for any trace. An agent that answers from tools scores low however grounded it is: the nomic answer quotes the stored manifest word for word, and every sentence came back "unsupported". Not used for a verdict.
+
+**A failed run cannot be scored.** The empty `retrieval-agent` run produced no invocation, so every metric errored instead of failing: an evaluator has to treat "nothing to score" as a failure, or a broken agent looks like a skipped test.
+
+**A golden set has to be checked first.** `create-eval-set` turns a session into an eval set with the question, the tool calls and the answer, with no hand-written JSON. But none of the three better-looking runs was fully right; an unchecked golden turns a regression run into a comparison of two mistakes.
+
+## Gaps found in agentevals-go
+
+| Gap | Effect here | Handled by |
+|---|---|---|
+| OTLP/HTTP receiver does not decompress gzip | every collector export was refused with 400 | fixed in our copy, with a test |
+| CLI `run` reads only Jaeger JSON | sessions exported by `get-trace` (OTLP JSONL) cannot be scored from the CLI | `/api/evaluate`, which reads both |
+| Default judge `gemini-2.5-flash` and the UI's other Gemini option, `gemini-2.0-flash`, answer 404 for new keys; the UI's Anthropic and OpenAI options cannot work, the Go judge calls Gemini only | all judge metrics errored with 404 | fixed in our copy: default from `AGENTEVALS_JUDGE_MODEL`, the UI lists only Gemini 3.8 Flash, 3.5 Flash-Lite and 3.1 Pro |
+| `hallucinations_v1` gets no tool output, for any trace | grounded answers score 0 | none; not used for a verdict |
+| kagent's parallel-call span appears as a `(merged tools)` call | inflates the trajectory with pseudo tool calls | none |
+| Root HTTP spans carry no `gen_ai.conversation.id` | each run splits into its session and an `otlp-<trace>` stub | ignore the stubs |
+| Requests take `session_id`, responses return `sessionId` | first calls returned "session not found" | read the handler |
+
+## Roadmap ideas (task 3)
+
+- **Continuous evaluation.** Keep the collector → agentevals pipeline running; promote a reviewed session to a golden set per agent and question; score every new session of that agent against it on completion; keep run history (`--session-db`) and alert when a metric flips from pass to fail. The MCP server (`list_runs`, `get_run_results`) lets an agent or Claude Code read those results.
+- **Scores next to traces.** Post each result as an MLflow assessment or a Phoenix span annotation, so a failing run is visible where it is debugged.
+- **Upstream the fixes.** Offer the gzip and judge-model changes from our copy as a PR, then the harder one: tool context for `hallucinations_v1`, which decides whether that metric can be trusted.
+- **Skills.** Score skill use like tool use: which skill the agent loaded (`list_skills`, `get_skill`) against the one the golden run used.
+- **External evals.** Keep the lab 5 gold answers (`docs/labs/05/data/`) as eval sets and score them with the same metrics, so memory changes are measured, not eyeballed.
+
+## Limits
+
+- Two runs per question, goldens checked only afterwards: enough to show what each metric does, not to measure an agent.
+- The results are from the prototype, judged by `gemini-3.5-flash-lite`. The in-cluster setup (judge `gemini-3.8-flash`) is not deployed yet.

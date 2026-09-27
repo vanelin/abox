@@ -121,6 +121,9 @@ spec:
           # Agent spans (kagent and the shop's agent) also go to Phoenix.
           otlphttp/phoenix:
             endpoint: http://phoenix-svc.phoenix:6006
+          # Lab 8: agent spans also go to agentevals for scoring.
+          otlphttp/agentevals:
+            endpoint: http://agentevals.agentevals:4318
           # Lab 7: every trace also goes to MLflow, via releases/mlflow-otel-collector.yaml.
           otlp_grpc/mlflow-bridge:
             endpoint: otel-collector.mlflow.svc.cluster.local:4317
@@ -153,7 +156,7 @@ spec:
             traces/genai:
               receivers: [otlp]
               processors: [memory_limiter, filter/genai_only, gen_ai_normalizer, transform/phoenix_io, batch]
-              exporters: [otlphttp/phoenix]
+              exporters: [otlphttp/phoenix, otlphttp/agentevals]
             # Their backends are off; a dead exporter would retry and queue every batch.
             logs:
               exporters: [debug]

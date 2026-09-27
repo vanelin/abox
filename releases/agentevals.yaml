@@ -1,0 +1,128 @@
+# Lab 8: agentevals-go scores agent runs from their traces, no re-run. The demo
+# collector sends it the agents' spans (releases/opentelemetry-demo.yaml); UI
+# and API are at /evals on the ngrok domain, behind its Google sign-in, so the
+# tool's own GitHub login stays off. Image: built from agentevals/
+# by .github/workflows/agentevals-image.yaml.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agentevals
+---
+# Sessions, eval sets and run history survive a pod restart (not a cluster rebuild).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agentevals-sessions
+  namespace: agentevals
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentevals
+  namespace: agentevals
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: agentevals
+  template:
+    metadata:
+      labels:
+        app: agentevals
+    spec:
+      securityContext:
+        fsGroup: 65532
+      containers:
+        - name: agentevals
+          image: ghcr.io/vanelin/abox/agentevals-go:54107cf-abox.1
+          args:
+            - serve
+            - --addr=:8001
+            - --otlp-addr=:4318
+            - --otlp-grpc-addr=:4317
+            - --health-addr=:9090
+            - --session-db=/data/sessions.db
+          env:
+            # The judge when a request names none; change here when Google retires it.
+            - name: AGENTEVALS_JUDGE_MODEL
+              value: gemini-3.8-flash
+            # Judge metrics call Gemini. Optional: without it only the
+            # judge-free metrics (trajectory, response match) work.
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: agentevals-gemini
+                  key: GEMINI_API_KEY
+                  optional: true
+          ports:
+            - {name: http, containerPort: 8001}
+            - {name: otlp-http, containerPort: 4318}
+            - {name: otlp-grpc, containerPort: 4317}
+            - {name: health, containerPort: 9090}
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: health
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: health
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: sessions
+              mountPath: /data
+      volumes:
+        - name: sessions
+          persistentVolumeClaim:
+            claimName: agentevals-sessions
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentevals
+  namespace: agentevals
+spec:
+  selector:
+    app: agentevals
+  ports:
+    - {name: http, port: 8001, targetPort: http}
+    - {name: otlp-http, port: 4318, targetPort: otlp-http}
+    - {name: otlp-grpc, port: 4317, targetPort: otlp-grpc}
+---
+# The image's UI is built for /evals; the server itself answers at /.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: agentevals
+  namespace: agentevals
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /evals
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: agentevals
+          port: 8001

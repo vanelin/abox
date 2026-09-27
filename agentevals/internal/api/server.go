@@ -13,6 +13,7 @@
 package api
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -225,11 +226,23 @@ func otlpTracesHandler(store *SessionStore) http.HandlerFunc {
 			return
 		}
 
+		// OTLP exporters gzip by default (the OTel Collector's otlphttp does).
+		reader := io.Reader(r.Body)
+		if strings.EqualFold(r.Header.Get("Content-Encoding"), "gzip") {
+			gz, err := gzip.NewReader(r.Body)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			defer gz.Close()
+			reader = gz
+		}
+
 		contentType := r.Header.Get("Content-Type")
 		var body map[string]any
 
 		if strings.Contains(contentType, "application/x-protobuf") {
-			raw, err := io.ReadAll(r.Body)
+			raw, err := io.ReadAll(reader)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
@@ -240,7 +253,7 @@ func otlpTracesHandler(store *SessionStore) http.HandlerFunc {
 				return
 			}
 		} else {
-			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			if err := json.NewDecoder(reader).Decode(&body); err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
